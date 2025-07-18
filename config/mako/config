@@ -1,0 +1,45 @@
+# Mako 通知配置
+# 高质量半透明通知，支持自动消失
+
+# 外观设置
+background-color=#1e1e2e88
+text-color=#cdd6f4
+border-color=#89b4fa
+border-size=2
+border-radius=8
+font=Sans 12
+
+# 位置和大小
+anchor=top-right
+margin=10
+padding=15
+width=350
+height=100
+
+# 透明度设置
+default-timeout=5000
+ignore-timeout=0
+
+# 图标设置
+icon-path=/usr/share/icons/Papirus-Dark
+icons=1
+max-icon-size=48
+
+# 分组设置
+group-by=app-name
+max-visible=3
+
+# 交互设置
+on-button-left=dismiss
+on-button-right=dismiss-all
+on-touch=dismiss
+
+# 进度条
+progress-color=#89b4fa
+
+# 多显示器支持
+output=HDMI-A-1
+
+# 格式化
+format=<b>%s</b>\n%b
+markup=1

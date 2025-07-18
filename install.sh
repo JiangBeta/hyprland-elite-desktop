@@ -20,6 +20,8 @@ declare -A CONFIG_FILES=(
     ["$DOTFILES_DIR/config/waybar"]="$HOME/.config/waybar"
     ["$DOTFILES_DIR/config/fcitx5"]="$HOME/.config/fcitx5"
     ["$DOTFILES_DIR/config/kitty"]="$HOME/.config/kitty"
+    ["$DOTFILES_DIR/config/swww"]="$HOME/.config/swww"
+    ["$DOTFILES_DIR/config/mako"]="$HOME/.config/mako"
 )
 
 declare -A SHELL_FILES=(

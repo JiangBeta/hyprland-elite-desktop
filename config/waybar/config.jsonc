@@ -19,11 +19,7 @@
         "idle_inhibitor",
         "cpu",
         "memory",
-        "temperature",
-        "network",
-        "bluetooth",
         "pulseaudio",
-        "pulseaudio#microphone",
         "battery",
         "custom/power"
     ],
