@@ -12,19 +12,8 @@ cd ~/dotfiles
 
 ### 2. 安装依赖软件
 ```bash
-# 基础软件包
-sudo pacman -S hyprland waybar kitty fcitx5 fcitx5-chinese-addons fcitx5-gtk fcitx5-qt
+sudo pacman -S hyprland waybar kitty fcitx5 fcitx5-chinese-addons fcitx5-gtk fcitx5-qt swww mako network-manager-applet blueman wofi brightnessctl playerctl wpctl wget
 
-# 壁纸和通知
-sudo pacman -S swww mako
-
-# 网络和蓝牙管理
-sudo pacman -S network-manager-applet blueman
-
-# 其他工具
-sudo pacman -S wofi brightnessctl playerctl wpctl wget
-
-# yay
 yay -S lunar-calendar-bin
 ```
 
