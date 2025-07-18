@@ -46,18 +46,18 @@ echo "设置壁纸: $(basename "$RANDOM_WALLPAPER")"
 if [[ -f "$CONFIG_FILE" ]]; then
     swww img "$RANDOM_WALLPAPER" \
         --transition-type fade \
-        --transition-duration 2000 \
+        --transition-duration 2 \
         --transition-step 20 \
         --transition-fps 60 \
-        --fill crop \
-        --resize lanczos3
+        --resize crop \
+        --filter Lanczos3
 else
     # 回退到基本高质量设置
     swww img "$RANDOM_WALLPAPER" \
         --transition-type fade \
-        --transition-duration 2000 \
-        --fill crop \
-        --resize lanczos3
+        --transition-duration 2 \
+        --resize crop \
+        --filter Lanczos3
 fi
 
 echo "壁纸设置完成"

@@ -28,7 +28,7 @@ else
     if [[ -d "$WALLPAPER_DIR" ]]; then
         FIRST_WALLPAPER=$(find "$WALLPAPER_DIR" -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" -o -iname "*.webp" \) | head -1)
         if [[ -n "$FIRST_WALLPAPER" ]]; then
-            swww img "$FIRST_WALLPAPER" --transition-type fade --transition-duration 2000 --fill crop --resize lanczos3
+            swww img "$FIRST_WALLPAPER" --transition-type fade --transition-duration 2  --resize crop --filter Lanczos3
         fi
     fi
 fi

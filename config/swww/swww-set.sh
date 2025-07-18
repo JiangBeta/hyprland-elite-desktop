@@ -27,11 +27,11 @@ if [[ -n "$1" ]]; then
     # 设置指定的壁纸
     swww img "$WALLPAPER" \
         --transition-type fade \
-        --transition-duration 2000 \
+        --transition-duration 2 \
         --transition-step 20 \
         --transition-fps 60 \
-        --fill crop \
-        --resize lanczos3
+         \
+        --resize crop --filter Lanczos3
     
     echo "壁纸设置完成"
     
@@ -45,11 +45,11 @@ else
             
             swww img "$WALLPAPER" \
                 --transition-type fade \
-                --transition-duration 2000 \
+                --transition-duration 2 \
                 --transition-step 20 \
                 --transition-fps 60 \
-                --fill crop \
-                --resize lanczos3
+                 \
+                --resize crop --filter Lanczos3
             
             echo "壁纸设置完成"
         else
@@ -67,11 +67,11 @@ else
                 
                 swww img "$WALLPAPER" \
                     --transition-type fade \
-                    --transition-duration 2000 \
+                    --transition-duration 2 \
                     --transition-step 20 \
                     --transition-fps 60 \
-                    --fill crop \
-                    --resize lanczos3
+                     \
+                    --resize crop --filter Lanczos3
                 
                 echo "壁纸设置完成"
             else
