@@ -1,0 +1,47 @@
+[general]
+# Copy to clipboard after editing
+copy-command = "wl-copy"
+# Early exit after copying
+early-exit = true
+# Default annotation style
+default-tool = "brush"
+# Output format
+output-filename = "/tmp/satty-{t}.png"
+# Save to file and copy to clipboard
+save-after-copy = false
+# Initial annotation color (red like WeChat)
+initial-tool = "brush"
+
+[brush]
+# Brush size similar to WeChat
+size = 5
+
+[line]
+# Line thickness
+size = 3
+
+[arrow]
+# Arrow thickness
+size = 3
+
+[rectangle]
+# Rectangle border thickness
+size = 3
+
+[text]
+# Text size
+size = 16
+# Text family
+family = "Sans"
+
+[circle]
+# Circle border thickness  
+size = 3
+
+[blur]
+# Blur radius for mosaic effect
+size = 10
+
+[crop]
+# Crop mode settings
+save-after-crop = false

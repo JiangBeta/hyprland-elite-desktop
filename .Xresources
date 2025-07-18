@@ -1,0 +1,10 @@
+! X resources configuration
+! DPI Settings
+Xft.dpi: 144
+
+! Font rendering
+Xft.antialias: true
+Xft.hinting: true
+Xft.hintstyle: hintslight
+Xft.rgba: rgb
+Xft.lcdfilter: lcddefault

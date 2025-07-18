@@ -22,12 +22,15 @@ declare -A CONFIG_FILES=(
     ["$DOTFILES_DIR/config/kitty"]="$HOME/.config/kitty"
     ["$DOTFILES_DIR/config/swww"]="$HOME/.config/swww"
     ["$DOTFILES_DIR/config/mako"]="$HOME/.config/mako"
+    ["$DOTFILES_DIR/config/satty"]="$HOME/.config/satty"
+    ["$DOTFILES_DIR/config/swappy"]="$HOME/.config/swappy"
 )
 
 declare -A SHELL_FILES=(
     ["$DOTFILES_DIR/shell/bashrc"]="$HOME/.bashrc"
     ["$DOTFILES_DIR/shell/zshrc"]="$HOME/.zshrc"
     ["$DOTFILES_DIR/shell/screenrc"]="$HOME/.screenrc"
+    ["$DOTFILES_DIR/.Xresources"]="$HOME/.Xresources"
 )
 
 # 确保 .config 目录存在
