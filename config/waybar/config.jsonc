@@ -48,12 +48,15 @@
     },
     "custom/power": {
         "format": "󰐥",
-        "on-click": "hyprctl dispatch exit",
-        "tooltip": false
+        "on-click": "~/.config/hypr/power-menu.sh",
+        "on-click-right": "systemctl suspend",
+        "tooltip": "左键: 电源菜单 | 右键: 休眠"
     },
     "clock": {
         "format": "{:%H:%M  %A, %B %d}",
-        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+        "on-click": "gnome-calendar",
+        "on-click-right": "~/.config/waybar/lunar-calendar.sh"
     },
     "network": {
         "tooltip": true,

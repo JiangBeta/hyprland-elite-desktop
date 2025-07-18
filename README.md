@@ -23,6 +23,9 @@ sudo pacman -S network-manager-applet blueman
 
 # 其他工具
 sudo pacman -S wofi brightnessctl playerctl wpctl wget
+
+# yay
+yay -S lunar-calendar-bin
 ```
 
 ### 3. 启用系统服务
