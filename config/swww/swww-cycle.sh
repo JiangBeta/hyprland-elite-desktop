@@ -4,7 +4,7 @@
 # 可以设置定时器自动切换壁纸
 
 WALLPAPER_DIR="$HOME/Pictures/wallpapers"
-INTERVAL="${1:-1800}"  # 默认30分钟切换一次 (1800秒)
+INTERVAL="${1:-3600}"  # 默认60分钟切换一次 (3600秒)
 RANDOM_SCRIPT="$HOME/.config/swww/swww-random.sh"
 
 echo "启动 swww 定时切换壁纸服务，间隔: ${INTERVAL} 秒"

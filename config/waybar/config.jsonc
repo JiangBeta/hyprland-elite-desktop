@@ -13,7 +13,8 @@
         "custom/power",
         "tray",
         "custom/totp",
-        "custom/weather"
+        "custom/weather",
+        "custom/pomodoro"
     ],
     "modules-center": [
         "clock"
@@ -153,7 +154,8 @@
         "exec": "~/.config/waybar/notification.sh",
         "interval": 1,
         "return-type": "json",
-        "on-click": "swaync-client -t -sw"
+        "on-click": "makoctl dismiss --all",
+        "on-click-right": "makoctl restore"
     },
     "custom/totp": {
         "format": "{}",
@@ -162,6 +164,19 @@
         "return-type": "json",
         "on-click": "~/.config/waybar/totp-copy.sh",
         "on-click-right": "~/.config/waybar/totp-switch.sh",
+        "signal": 8,
+        "tooltip": true
+    },
+    "custom/pomodoro": {
+        "format": "{}",
+        "exec": "~/.config/waybar/pomodoro.sh",
+        "interval": 5,
+        "return-type": "json",
+        "on-click": "~/.config/waybar/pomodoro-control.sh toggle",
+        "on-click-right": "~/.config/waybar/pomodoro-control.sh stop",
+        "on-click-middle": "~/.config/waybar/pomodoro-control.sh skip",
+        "on-scroll-up": "~/.config/waybar/pomodoro-config.sh up",
+        "on-scroll-down": "~/.config/waybar/pomodoro-config.sh down",
         "signal": 8,
         "tooltip": true
     }

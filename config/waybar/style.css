@@ -353,7 +353,8 @@ tooltip label {
 #custom-updates,
 #custom-netspeed,
 #custom-notification,
-#custom-totp {
+#custom-totp,
+#custom-pomodoro {
     color: #ffffff;
     background: rgba(40, 44, 52, 0.6);
     border-radius: 20px;
@@ -368,7 +369,37 @@ tooltip label {
 #custom-updates:hover,
 #custom-netspeed:hover,
 #custom-notification:hover,
-#custom-totp:hover {
+#custom-totp:hover,
+#custom-pomodoro:hover {
     background: rgba(40, 44, 52, 0.8);
     color: #61afef;
+}
+
+/* 番茄计时器特殊样式 */
+#custom-pomodoro.working {
+    background: rgba(180, 80, 100, 0.4); /* 柔和的红色背景 */
+    animation: gentle-pulse 4s ease-in-out infinite;
+    border: 1px solid rgba(180, 80, 100, 0.3);
+}
+
+#custom-pomodoro.break {
+    background: rgba(100, 160, 100, 0.4); /* 柔和的绿色背景 */
+    animation: gentle-pulse 3s ease-in-out infinite;
+    border: 1px solid rgba(100, 160, 100, 0.3);
+}
+
+#custom-pomodoro.idle {
+    background: rgba(40, 44, 52, 0.4); /* 空闲时暗背景 */
+}
+
+@keyframes gentle-pulse {
+    0% { 
+        opacity: 0.8; 
+    }
+    50% { 
+        opacity: 1.0; 
+    }
+    100% { 
+        opacity: 0.8; 
+    }
 }
