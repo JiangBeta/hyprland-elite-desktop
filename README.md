@@ -202,20 +202,36 @@ cd ~/dotfiles
 
 ## 🆕 最新功能
 
-### TOTP 二步验证功能
+### 🎨 桌面美化和登录管理
+- **SDDM**: 现代化登录管理器
+- **Sugar Candy Theme**: 美观的登录界面主题
+- **登录用户管理**: 支持多用户登录和安全配置
+
+### 📱 手机桌面协作
+- **智能解锁方案**: 小米手机信任位置、设备、WiFi
+- **Join**: 手机通知同步到桌面（过滤重复通知）
+- **scrcpy**: 手机屏幕镜像和控制（配合智能解锁）
+- **AirDroid**: 备用远程控制方案
+
+### 📧 邮件和日程管理
+- **Thunderbird**: 统一邮件管理客户端
+- **KOrganizer**: KDE日历和任务管理
+- **通知集成**: 邮件、日程、手机通知统一显示
+
+### 🔧 TOTP 二步验证功能
 - **totp.sh**: 显示当前 TOTP 验证码和倒计时
 - **totp-switch.sh**: 在多个 TOTP 账户间切换
 - **totp-selector.sh**: 图形化选择 TOTP 账户
 - **totp-copy.sh**: 一键复制 TOTP 验证码
 
-### 实时信息显示
+### 📊 实时信息显示
 - **netspeed.sh**: 网络速度监控
 - **updates.sh**: 系统更新提醒
 - **lunar-calendar.sh**: 农历日期显示
 - **weather.sh**: 天气信息
 - **notification.sh**: 智能通知管理
 
-### 媒体和娱乐
+### 🎵 媒体和娱乐
 - **YouTube Music**: 支持桌面应用和图标
 
 ## 📋 完整目录结构
@@ -241,3 +257,57 @@ dotfiles/
 ├── CLAUDE.md           # Claude AI 使用指南
 └── README.md           # 说明文档
 ```
+
+## 🔧 故障排除
+
+### fcitx5 主题未生效
+fcitx5 查找用户主题的路径是 `~/.local/share/fcitx5/themes/`，而不是 `~/.config/fcitx5/themes/`。安装脚本已经正确处理了这个路径。
+
+如果主题仍未生效：
+```bash
+# 检查主题是否正确链接
+ls -la ~/.local/share/fcitx5/themes/
+
+# 重启 fcitx5
+pkill fcitx5 && fcitx5 -d
+```
+
+### VS Code 主题未切换到亮色
+VS Code OSS 的配置文件位于 `~/.config/Code - OSS/User/settings.json`，需要手动添加主题配置：
+```json
+{
+    "workbench.colorTheme": "Default Light Modern",
+    "window.autoDetectColorScheme": false
+}
+```
+
+### wofi 配置缺失
+如果 wofi 样式未生效，检查软链接：
+```bash
+# 创建 wofi 配置链接
+ln -sf ~/dotfiles/config/wofi ~/.config/wofi
+```
+
+### TOTP 配置
+使用提供的导入脚本导入 Google Authenticator 的 TOTP 账户：
+```bash
+python3 ~/dotfiles/scripts/import-totp.py 'otpauth-migration://...'
+```
+
+### YouTube Music 无法启动
+如果 YouTube Music 无法从应用启动器启动，检查 wrapper 脚本：
+```bash
+# 检查脚本链接是否存在
+ls -la ~/.local/bin/youtube-music-wrapper.sh
+
+# 如果不存在，重新创建
+mkdir -p ~/.local/bin
+ln -sf ~/dotfiles/scripts/youtube-music-wrapper.sh ~/.local/bin/
+update-desktop-database ~/.local/share/applications/
+```
+
+### 自动验证
+install.sh 现在包含自动验证功能，会检查关键配置是否正确链接：
+- YouTube Music wrapper script
+- fcitx5 modern theme  
+- wofi configuration

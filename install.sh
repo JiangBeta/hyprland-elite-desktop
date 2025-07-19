@@ -195,6 +195,34 @@ if [[ ! -f "$HOME/.config/totp/secrets.conf" && -f "$DOTFILES_DIR/config/totp/se
     echo "⚠️  请编辑 ~/.config/totp/secrets.conf 添加您的TOTP密钥"
 fi
 
+# 验证关键链接
+echo "🔍 验证安装..."
+MISSING_LINKS=()
+
+# 检查重要的脚本链接
+if [[ ! -L "$HOME/.local/bin/youtube-music-wrapper.sh" ]]; then
+    MISSING_LINKS+=("YouTube Music wrapper script")
+fi
+
+if [[ ! -L "$HOME/.local/share/fcitx5/themes/modern" ]]; then
+    MISSING_LINKS+=("fcitx5 modern theme")
+fi
+
+if [[ ! -L "$HOME/.config/wofi" ]]; then
+    MISSING_LINKS+=("wofi configuration")
+fi
+
+if [[ ${#MISSING_LINKS[@]} -gt 0 ]]; then
+    echo "⚠️  发现缺失的链接:"
+    for link in "${MISSING_LINKS[@]}"; do
+        echo "   - $link"
+    done
+    echo "   请重新运行安装脚本或手动创建链接"
+else
+    echo "✅ 所有关键链接验证通过"
+fi
+
+echo ""
 echo "✅ Dotfiles 安装完成!"
 echo "备份文件保存在: $BACKUP_DIR"
 echo ""
@@ -202,3 +230,12 @@ echo "📋 后续步骤:"
 echo "1. 编辑 ~/.config/totp/secrets.conf 添加TOTP密钥"
 echo "2. 安装TOTP依赖: sudo pacman -S oath-toolkit"
 echo "3. 重新登录或运行 'source ~/.bashrc' 来应用更改"
+echo "4. 使用 Super+W 切换壁纸，Super+T 查看TOTP验证码"
+echo ""
+echo "🎨 桌面美化和协作:"
+echo "5. 安装登录管理器: sudo pacman -S sddm"
+echo "6. 安装Sugar Candy主题: yay -S sddm-sugar-candy-git"
+echo "7. 安装邮件客户端: sudo pacman -S thunderbird"
+echo "8. 安装日历管理: sudo pacman -S kontact korganizer"
+echo "9. 安装手机协作: sudo pacman -S scrcpy"
+echo "10. 配置小米智能解锁（信任位置、设备、WiFi）"
