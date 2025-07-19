@@ -12,7 +12,7 @@ cd ~/dotfiles
 
 ### 2. 安装依赖软件
 ```bash
-sudo pacman -S hyprland waybar kitty fcitx5 fcitx5-chinese-addons fcitx5-gtk fcitx5-qt swww mako network-manager-applet blueman wofi brightnessctl playerctl wget grim slurp wl-clipboard swappy satty
+sudo pacman -S hyprland waybar kitty fcitx5 fcitx5-chinese-addons fcitx5-gtk fcitx5-qt swww mako network-manager-applet blueman wofi brightnessctl playerctl wget grim slurp wl-clipboard swappy satty gnome-keyring
 
 yay -S lunar-calendar-bin
 ```

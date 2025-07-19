@@ -1,110 +1,88 @@
-/* Wofi Style Configuration */
 * {
-    font-family: "Noto Sans CJK SC", "JetBrains Mono", monospace;
+    font-family: "JetBrainsMono Nerd Font", "Noto Sans CJK SC", sans-serif;
     font-size: 14px;
+    font-weight: 500;
 }
 
-/* Main window */
 window {
-    margin: 0px;
-    border: 2px solid #7aa2f7;
-    border-radius: 15px;
-    background-color: rgba(26, 27, 38, 0.95);
-    animation: slideIn 0.3s ease-out;
+    background-color: rgba(0, 0, 0, 0.85);
+    border: 2px solid rgba(94, 129, 172, 0.6);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(16px);
+    animation: slideIn 0.25s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
-/* Animation effects */
 @keyframes slideIn {
     from {
         opacity: 0;
-        transform: translateY(-30px);
+        transform: translateY(-20px) scale(0.95);
     }
     to {
         opacity: 1;
-        transform: translateY(0);
+        transform: translateY(0) scale(1);
     }
 }
 
-/* Input box */
 #input {
-    margin: 10px;
-    padding: 10px 15px;
-    border: 2px solid #565f89;
-    border-radius: 10px;
-    background-color: #1f2335;
-    color: #c0caf5;
-    font-size: 16px;
-}
-
-#input:focus {
-    border-color: #7aa2f7;
-    outline: none;
-}
-
-/* Inner container */
-#inner-box {
-    margin: 10px;
-    background-color: transparent;
-}
-
-/* Scrollbar */
-#scroll {
-    margin: 0px;
-    background-color: transparent;
-}
-
-#scroll scrollbar {
-    width: 4px;
-    background-color: transparent;
-}
-
-#scroll scrollbar:hover {
-    background-color: #565f89;
-}
-
-/* List items */
-#entry {
-    margin: 5px 10px;
-    padding: 10px 15px;
-    border-radius: 10px;
-    background-color: transparent;
+    background-color: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(94, 129, 172, 0.3);
+    border-radius: 12px;
+    padding: 12px 16px;
+    margin: 12px;
+    color: #eceff4;
+    font-weight: 500;
     transition: all 0.2s ease;
 }
 
-#entry:hover {
-    background-color: rgba(122, 162, 247, 0.1);
-    transform: translateX(5px);
+#input:focus {
+    border-color: rgba(94, 129, 172, 0.7);
+    background-color: rgba(94, 129, 172, 0.1);
+    box-shadow: 0 0 0 3px rgba(94, 129, 172, 0.15);
+}
+
+#inner-box {
+    margin: 8px;
+}
+
+#outer-box {
+    margin: 0px;
+}
+
+#scroll {
+    margin: 0px;
+}
+
+#text {
+    color: #eceff4;
+    padding: 10px 16px;
+    font-weight: 500;
+}
+
+#entry {
+    border: none;
+    border-radius: 10px;
+    margin: 3px 8px;
+    background-color: transparent;
+    transition: all 0.2s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 #entry:selected {
-    background-color: rgba(122, 162, 247, 0.2);
-    border: 1px solid #7aa2f7;
+    background-color: rgba(94, 129, 172, 0.25);
+    border: 1px solid rgba(94, 129, 172, 0.5);
+    transform: translateX(4px);
 }
 
-/* Text */
-#text {
-    margin-left: 10px;
-    color: #c0caf5;
+#entry:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+    transform: translateX(2px);
 }
 
 #entry:selected #text {
-    color: #7dcfff;
-    font-weight: bold;
+    color: #88c0d0;
+    font-weight: 600;
 }
 
-/* Icons */
 #img {
-    margin-right: 10px;
-    background-color: transparent;
-}
-
-/* Match text highlighting */
-#text:selected {
-    color: #7dcfff;
-}
-
-/* No results message */
-#entry.no-results {
-    color: #f7768e;
-    font-style: italic;
+    margin-right: 12px;
 }

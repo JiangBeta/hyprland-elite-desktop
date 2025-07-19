@@ -50,7 +50,13 @@
       "Bash(~/.config/swww/swww-random.sh:*)",
       "Bash(swww img:*)",
       "Bash(sed:*)",
-      "Bash(chinese-calendar:*)"
+      "Bash(chinese-calendar:*)",
+      "Bash(claude --version)",
+      "Bash(claude auth status)",
+      "Bash(ping:*)",
+      "Bash(claude config list)",
+      "Bash(claude setup-token:*)",
+      "Bash(claude check)"
     ],
     "deny": []
   }

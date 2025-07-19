@@ -1,101 +1,75 @@
-# CLAUDE.md
+# Claude全局配置
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+这个文件提供Claude在工作时的全局指导原则和特殊功能。
 
-## Repository Overview
+## Gemini协商功能
 
-This is a personal dotfiles repository for managing Linux desktop environment configurations, specifically for Arch Linux with Hyprland (Wayland compositor). The repository is primarily documented in Chinese.
+当用户提到与Gemini协商、讨论或需要Gemini帮助时，Claude应该：
 
-## Project Structure
+1. **上下文整理**：
+   - 提取当前对话的关键信息
+   - 总结用户的具体需求和问题
+   - 整理相关的技术细节和背景信息
 
-- `config/` - Application configurations that get symlinked to `~/.config/`
-  - `hypr/` - Hyprland window manager configuration
-  - `waybar/` - Status bar configuration
-  - `kitty/` - Terminal emulator configuration
-  - `fcitx5/` - Chinese input method configuration
-  - `swww/` - Wallpaper manager with scripts
-  - `mako/` - Notification daemon
-  - `satty/` & `swappy/` - Screenshot tools
-  - `wofi/` - Application launcher configuration
-  - `Code/` - VSCode configuration (settings, extensions)
-  - `applications/` - Custom .desktop files
-- `shell/` - Shell configuration files (bashrc, zshrc, screenrc)
-- `claude/` - Claude Code configuration and settings
-- `scripts/` - Custom utility scripts
-- `install.sh` - Installation script that creates symlinks
-- `sync.sh` - Synchronization script to update dotfiles from live configs
+2. **Gemini交互**：
+   - 将整理好的上下文发送给Gemini
+   - 包含明确的问题描述和期望的回答类型
+   - 请求Gemini的专业建议或解决方案
 
-## Common Commands
+3. **结果处理**：
+   - 分析Gemini的回答
+   - 结合自己的理解提供综合建议
+   - 如果需要，可以进行多轮协商
 
-### Initial Setup
-```bash
-# Clone and install dotfiles on a new machine
-git clone <repo> ~/dotfiles
-cd ~/dotfiles
-./install.sh
-```
+## 触发关键词
 
-### Sync Changes
-```bash
-# After modifying configurations, sync back to dotfiles
-cd ~/dotfiles
-./sync.sh
+用户使用以下关键词时，启动Gemini协商功能：
+- "与Gemini协商"
+- "问问Gemini"
+- "Gemini怎么看"
+- "咨询Gemini"
+- "Gemini建议"
+- "双AI协商"
 
-# Then commit changes
-git add .
-git commit -m "Update configurations"
-git push
-```
+## 工作流程
 
-### Test Configurations
-```bash
-# Reload Hyprland config
-hyprctl reload
+1. 用户提及Gemini协商 → 整理上下文
+2. 向Gemini发送结构化请求
+3. 接收并分析Gemini回答
+4. 提供综合解决方案
+5. 如需要，继续多轮协商
 
-# Restart services after config changes
-pkill waybar && waybar &
-pkill mako && mako &
-pkill fcitx5 && fcitx5 -d
+## 系统操作指导
 
-# Test wallpaper switching
-~/.config/swww/swww-random.sh
+### sudo权限操作
+当需要执行需要sudo权限的操作时（如安装软件包、修改系统文件等）：
 
-# Test notifications
-notify-send "Test" "Notification test"
-```
+1. **不要直接执行sudo命令**
+   - Claude不应该直接运行需要sudo的命令
+   - 避免潜在的安全风险
 
-## Architecture
+2. **提供命令让用户执行**：
+   - 给出完整的命令行指令
+   - 解释命令的作用和目的
+   - 让用户自己决定是否执行
 
-### Configuration Management
-- Uses **symlinks** from dotfiles to actual config locations
-- `install.sh` - **初始安装**：创建从dotfiles到系统位置的软链接，备份已有配置
-- `sync.sh` - **同步更新**：将系统中的配置变更同步回dotfiles（跳过软链接文件）
-- 推荐工作流：在实际配置位置修改 → 运行sync.sh → 提交到git
+3. **示例格式**：
+   ```bash
+   # 安装软件包
+   sudo pacman -S package-name
+   
+   # 或者从AUR安装
+   yay -S package-name
+   ```
 
-### 脚本用途区别
-- **install.sh**：新机器初始化，建立软链接系统
-- **sync.sh**：日常使用，同步配置更改回dotfiles
+4. **后续处理**：
+   - 提醒用户安装完成后通知Claude继续
+   - 准备好后续的配置步骤
 
-### Key Components
-1. **Hyprland** - Main window manager with keybindings and animations
-2. **Waybar** - Minimal status bar (CPU, memory, volume, battery, clock)
-3. **swww** - Wallpaper system with automatic downloading and cycling
-4. **fcitx5** - Chinese input support
-5. **Shell configs** - Bash, Zsh, and Screen configurations
+## 注意事项
 
-### Wallpaper System
-- `swww-daemon` manages wallpaper display
-- Scripts in `config/swww/`:
-  - `download-wallpapers.sh` - Downloads sample wallpapers
-  - `auto-download-wallpapers.sh` - Automatic wallpaper fetching
-  - `swww-random.sh` - Random wallpaper switching
-  - `swww-set.sh` - Manual wallpaper selection
-  - `swww-cycle.sh` - Timed wallpaper rotation
-
-## Important Notes
-
-- Repository uses Chinese documentation and comments
-- No build system, tests, or linting - pure configuration files
-- Keybindings are defined in `config/hypr/hyprland.conf`
-- High-quality wallpaper settings (95% quality, Lanczos3 scaling, 2s fade)
-- Notifications configured for 5-second auto-dismiss with transparency
+- 保持专业和客观的态度
+- 确保信息准确传递
+- 避免重复无效的协商
+- 优先用户需求和实际解决方案
+- 涉及sudo操作时给出命令而非直接执行

@@ -345,7 +345,8 @@ tooltip label {
 #custom-updates,
 #custom-netspeed,
 #custom-notification,
-#custom-totp {
+#custom-totp,
+#custom-youtube-music {
     color: #ffffff;
     background: rgba(0, 0, 0, 0.5);
     border-radius: 20px;
@@ -359,7 +360,26 @@ tooltip label {
 #custom-updates:hover,
 #custom-netspeed:hover,
 #custom-notification:hover,
-#custom-totp:hover {
+#custom-totp:hover,
+#custom-youtube-music:hover {
     background: rgba(0, 0, 0, 0.7);
     border-color: rgba(255, 255, 255, 0.4);
+}
+
+/* YouTube Music 特定样式 */
+#custom-youtube-music.playing {
+    background: rgba(255, 61, 0, 0.5);
+    border-color: rgba(255, 61, 0, 0.4);
+}
+
+#custom-youtube-music.paused {
+    background: rgba(255, 193, 7, 0.5);
+    border-color: rgba(255, 193, 7, 0.4);
+}
+
+#custom-youtube-music.stopped,
+#custom-youtube-music.inactive {
+    background: rgba(0, 0, 0, 0.5);
+    border-color: rgba(255, 255, 255, 0.2);
+    opacity: 0.6;
 }

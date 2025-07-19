@@ -14,9 +14,19 @@
 *_history
 *.secret
 *.key
-*.pem
+.pem
 
 # 忽略缓存文件
 .cache/
 __pycache__/
 *.pyc
+
+# Claude specific ignores
+claude/.credentials.json
+claude/.anthropic/
+claude/downloads/
+claude/ide/
+claude/projects/
+claude/shell-snapshots/
+claude/statsig/
+claude/todos/

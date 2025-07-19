@@ -2,11 +2,11 @@
 # High-quality translucent notifications with auto-dismiss
 
 # Appearance settings
-background-color=#1e1e2e88
-text-color=#cdd6f4
-border-color=#89b4fa
+background-color=#00000088
+text-color=#ffffff
+border-color=#ffffff33
 border-size=2
-border-radius=8
+border-radius=12
 font=Sans 12
 
 # Position and size

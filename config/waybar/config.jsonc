@@ -14,7 +14,8 @@
         "custom/totp",
         "custom/notification",
         "custom/updates",
-        "custom/weather"
+        "custom/weather",
+        "custom/youtube-music"
     ],
     "modules-center": [
         "clock"
@@ -164,5 +165,19 @@
         "on-click-right": "~/.config/waybar/totp-switch.sh",
         "signal": 8,
         "tooltip": true
+    },
+    "custom/youtube-music": {
+        "format": "{}",
+        "exec": "~/.config/waybar/youtube-music.sh",
+        "interval": 3,
+        "return-type": "json",
+        "on-click": "~/.config/waybar/youtube-music-control.sh play-pause",
+        "on-click-right": "~/.config/waybar/youtube-music-control.sh next",
+        "on-click-middle": "~/.config/waybar/youtube-music-control.sh lyrics",
+        "on-scroll-up": "~/.config/waybar/youtube-music-control.sh next",
+        "on-scroll-down": "~/.config/waybar/youtube-music-control.sh previous",
+        "signal": 11,
+        "tooltip": true,
+        "tooltip-format": "Left click: Play/Pause\nRight click: Next track\nMiddle click: View lyrics help\nScroll: Switch tracks"
     }
 }
