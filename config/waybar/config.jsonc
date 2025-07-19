@@ -10,16 +10,21 @@
     "margin-left": 3,
     "margin-right": 8,
     "modules-left": [
-        "tray"
+        "tray",
+        "custom/totp",
+        "custom/notification",
+        "custom/updates",
+        "custom/weather"
     ],
     "modules-center": [
         "clock"
     ],
     "modules-right": [
+        "custom/netspeed",
         "idle_inhibitor",
         "cpu",
         "memory",
-        "custom/weather",
+        "temperature",
         "pulseaudio",
         "battery",
         "custom/power"
@@ -117,8 +122,10 @@
     },
     "temperature": {
         "format": "󰔏 {temperatureC}°C",
+        "hwmon-path": "/sys/class/hwmon/hwmon3/temp1_input",
         "critical-threshold": 80,
-        "format-critical": "󰸁 {temperatureC}°C"
+        "format-critical": "󰸁 {temperatureC}°C",
+        "tooltip": false
     },
     "custom/weather": {
         "format": "{}",
@@ -127,5 +134,35 @@
         "tooltip": true,
         "on-click": "pkill -RTMIN+10 waybar; kitty --title='天气详情' -e bash -c '~/.config/waybar/weather.sh --detailed; read -p \"按回车键关闭...\"'",
         "signal": 10
+    },
+    "custom/updates": {
+        "format": "{}",
+        "exec": "~/.config/waybar/updates.sh",
+        "interval": 3600,
+        "on-click": "kitty -e sudo pacman -Syu",
+        "return-type": "json"
+    },
+    "custom/netspeed": {
+        "format": "{}",
+        "exec": "~/.config/waybar/netspeed.sh",
+        "interval": 3,
+        "return-type": "json"
+    },
+    "custom/notification": {
+        "format": "{}",
+        "exec": "~/.config/waybar/notification.sh",
+        "interval": 1,
+        "return-type": "json",
+        "on-click": "swaync-client -t -sw"
+    },
+    "custom/totp": {
+        "format": "{}",
+        "exec": "~/.config/waybar/totp.sh",
+        "interval": 1,
+        "return-type": "json",
+        "on-click": "~/.config/waybar/totp-copy.sh",
+        "on-click-right": "~/.config/waybar/totp-switch.sh",
+        "signal": 8,
+        "tooltip": true
     }
 }

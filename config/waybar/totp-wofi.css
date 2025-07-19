@@ -1,0 +1,61 @@
+* {
+    font-family: "JetBrainsMono Nerd Font", "Noto Sans CJK SC", sans-serif;
+    font-size: 14px;
+}
+
+window {
+    background-color: rgba(0, 0, 0, 0.9);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+}
+
+#input {
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    padding: 8px 12px;
+    margin: 8px;
+    color: #ffffff;
+    font-weight: 600;
+}
+
+#input:focus {
+    border-color: rgba(137, 180, 250, 0.6);
+    background-color: rgba(137, 180, 250, 0.1);
+}
+
+#inner-box {
+    margin: 8px;
+}
+
+#outer-box {
+    margin: 0px;
+}
+
+#scroll {
+    margin: 0px;
+}
+
+#text {
+    color: #ffffff;
+    padding: 8px 12px;
+    font-weight: 500;
+}
+
+#entry {
+    border: none;
+    border-radius: 6px;
+    margin: 2px;
+    background-color: transparent;
+    transition: all 0.2s ease;
+}
+
+#entry:selected {
+    background-color: rgba(137, 180, 250, 0.2);
+    border: 1px solid rgba(137, 180, 250, 0.4);
+}
+
+#entry:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}

@@ -11,6 +11,38 @@ BACKUP_DIR="$HOME/dotfiles_backup_$(date +%Y%m%d_%H%M%S)"
 echo "开始安装 dotfiles..."
 echo "备份目录: $BACKUP_DIR"
 
+# 备份清理函数
+cleanup_old_backups() {
+    local backup_pattern="$HOME/dotfiles_backup_*"
+    local max_backups=5
+    
+    echo "检查旧备份文件..."
+    
+    # 获取所有备份目录，按时间排序
+    local backup_dirs=($(ls -dt $backup_pattern 2>/dev/null | head -20))
+    local backup_count=${#backup_dirs[@]}
+    
+    if [[ $backup_count -gt $max_backups ]]; then
+        echo "发现 $backup_count 个备份，保留最新的 $max_backups 个..."
+        
+        # 删除多余的备份
+        for ((i=$max_backups; i<$backup_count; i++)); do
+            local old_backup="${backup_dirs[$i]}"
+            if [[ -d "$old_backup" ]]; then
+                echo "删除旧备份: $old_backup"
+                rm -rf "$old_backup"
+            fi
+        done
+        
+        echo "✅ 备份清理完成"
+    else
+        echo "备份数量正常 ($backup_count/$max_backups)"
+    fi
+}
+
+# 清理旧备份
+cleanup_old_backups
+
 # 创建备份目录
 mkdir -p "$BACKUP_DIR"
 
@@ -26,6 +58,7 @@ declare -A CONFIG_FILES=(
     ["$DOTFILES_DIR/config/swappy"]="$HOME/.config/swappy"
     ["$DOTFILES_DIR/config/wofi"]="$HOME/.config/wofi"
     ["$DOTFILES_DIR/config/Code"]="$HOME/.config/Code"
+    ["$DOTFILES_DIR/config/totp"]="$HOME/.config/totp"
 )
 
 declare -A CLAUDE_FILES=(
@@ -108,6 +141,27 @@ for src in "${!CLAUDE_FILES[@]}"; do
     ln -sf "$src" "$dst"
 done
 
+# 处理 fcitx5 用户词库和主题
+echo "处理 fcitx5 用户数据..."
+mkdir -p "$HOME/.local/share/fcitx5"
+
+# 处理 fcitx5 用户词库
+if [[ -d "$DOTFILES_DIR/config/fcitx5/pinyin" ]]; then
+    if [[ -e "$HOME/.local/share/fcitx5/pinyin" ]]; then
+        echo "备份: $HOME/.local/share/fcitx5/pinyin -> $BACKUP_DIR/"
+        mv "$HOME/.local/share/fcitx5/pinyin" "$BACKUP_DIR/"
+    fi
+    echo "链接: $DOTFILES_DIR/config/fcitx5/pinyin -> $HOME/.local/share/fcitx5/pinyin"
+    ln -sf "$DOTFILES_DIR/config/fcitx5/pinyin" "$HOME/.local/share/fcitx5/pinyin"
+fi
+
+# 处理 fcitx5 主题
+mkdir -p "$HOME/.local/share/fcitx5/themes"
+if [[ -d "$DOTFILES_DIR/config/fcitx5/themes/modern" ]]; then
+    echo "链接: $DOTFILES_DIR/config/fcitx5/themes/modern -> $HOME/.local/share/fcitx5/themes/modern"
+    ln -sf "$DOTFILES_DIR/config/fcitx5/themes/modern" "$HOME/.local/share/fcitx5/themes/modern"
+fi
+
 # 处理 desktop 应用程序文件
 echo "处理 desktop 应用程序文件..."
 mkdir -p "$HOME/.local/share/applications"
@@ -133,6 +187,18 @@ if [[ -d "$DOTFILES_DIR/config/applications" ]]; then
     update-desktop-database "$HOME/.local/share/applications/" 2>/dev/null || true
 fi
 
+# 初始化TOTP配置
+echo "初始化TOTP配置..."
+if [[ ! -f "$HOME/.config/totp/secrets.conf" && -f "$DOTFILES_DIR/config/totp/secrets.conf.template" ]]; then
+    echo "创建TOTP配置文件: $HOME/.config/totp/secrets.conf"
+    cp "$DOTFILES_DIR/config/totp/secrets.conf.template" "$HOME/.config/totp/secrets.conf"
+    echo "⚠️  请编辑 ~/.config/totp/secrets.conf 添加您的TOTP密钥"
+fi
+
 echo "✅ Dotfiles 安装完成!"
 echo "备份文件保存在: $BACKUP_DIR"
-echo "请重新登录或运行 'source ~/.bashrc' 来应用更改"
+echo ""
+echo "📋 后续步骤:"
+echo "1. 编辑 ~/.config/totp/secrets.conf 添加TOTP密钥"
+echo "2. 安装TOTP依赖: sudo pacman -S oath-toolkit"
+echo "3. 重新登录或运行 'source ~/.bashrc' 来应用更改"
