@@ -125,6 +125,7 @@
         "exec": "~/.config/waybar/weather.sh",
         "interval": 1800,
         "tooltip": true,
-        "on-click": "kitty --title='天气详情' -e bash -c '~/.config/waybar/weather.sh --detailed; read -p \"按回车键关闭...\"'"
+        "on-click": "pkill -RTMIN+10 waybar; kitty --title='天气详情' -e bash -c '~/.config/waybar/weather.sh --detailed; read -p \"按回车键关闭...\"'",
+        "signal": 10
     }
 }

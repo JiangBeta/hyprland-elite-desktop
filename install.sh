@@ -24,6 +24,12 @@ declare -A CONFIG_FILES=(
     ["$DOTFILES_DIR/config/mako"]="$HOME/.config/mako"
     ["$DOTFILES_DIR/config/satty"]="$HOME/.config/satty"
     ["$DOTFILES_DIR/config/swappy"]="$HOME/.config/swappy"
+    ["$DOTFILES_DIR/config/wofi"]="$HOME/.config/wofi"
+    ["$DOTFILES_DIR/config/Code"]="$HOME/.config/Code"
+)
+
+declare -A CLAUDE_FILES=(
+    ["$DOTFILES_DIR/claude"]="$HOME/.claude"
 )
 
 declare -A SHELL_FILES=(
@@ -87,6 +93,20 @@ if [[ -d "$DOTFILES_DIR/scripts" ]]; then
         fi
     done
 fi
+
+# 处理 Claude 配置文件
+echo "处理 Claude 配置文件..."
+for src in "${!CLAUDE_FILES[@]}"; do
+    dst="${CLAUDE_FILES[$src]}"
+    
+    if [[ -e "$dst" ]]; then
+        echo "备份: $dst -> $BACKUP_DIR/"
+        mv "$dst" "$BACKUP_DIR/"
+    fi
+    
+    echo "链接: $src -> $dst"
+    ln -sf "$src" "$dst"
+done
 
 # 处理 desktop 应用程序文件
 echo "处理 desktop 应用程序文件..."

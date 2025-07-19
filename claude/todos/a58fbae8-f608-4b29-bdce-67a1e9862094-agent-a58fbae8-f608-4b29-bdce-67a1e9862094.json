@@ -1,0 +1,14 @@
+[
+  {
+    "content": "Fix xdpi configuration in Hyprland config",
+    "status": "completed",
+    "priority": "high",
+    "id": "1"
+  },
+  {
+    "content": "Check WeChat icon issue",
+    "status": "completed",
+    "priority": "medium",
+    "id": "2"
+  }
+]

@@ -1,0 +1,32 @@
+[
+  {
+    "content": "执行AI Guardian验证",
+    "status": "completed",
+    "priority": "high",
+    "id": "1"
+  },
+  {
+    "content": "修复缺失的createSupabaseUserService导入错误",
+    "status": "in_progress",
+    "priority": "high",
+    "id": "2"
+  },
+  {
+    "content": "修复Supabase环境变量错误",
+    "status": "pending",
+    "priority": "high",
+    "id": "3"
+  },
+  {
+    "content": "清理Next.js编译缓存",
+    "status": "pending",
+    "priority": "medium",
+    "id": "4"
+  },
+  {
+    "content": "测试修复后的认证系统",
+    "status": "pending",
+    "priority": "high",
+    "id": "5"
+  }
+]

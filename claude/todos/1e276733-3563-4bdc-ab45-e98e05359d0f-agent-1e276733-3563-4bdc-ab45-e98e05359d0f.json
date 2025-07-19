@@ -1,0 +1,20 @@
+[
+  {
+    "content": "Check existing keybindings for conflicts",
+    "status": "completed",
+    "priority": "high",
+    "id": "1"
+  },
+  {
+    "content": "Add WeChat toggle shortcut (Alt+W)",
+    "status": "completed",
+    "priority": "high",
+    "id": "2"
+  },
+  {
+    "content": "Add Feishu toggle shortcut (Alt+F)",
+    "status": "completed",
+    "priority": "high",
+    "id": "3"
+  }
+]

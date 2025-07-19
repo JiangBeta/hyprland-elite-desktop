@@ -1,28 +1,28 @@
 #!/bin/bash
 
-# swww 随机壁纸脚本
-# 高质量配置，支持多种图片格式
+# swww random wallpaper script
+# High-quality configuration with multi-format support
 
 WALLPAPER_DIR="$HOME/Pictures/wallpapers"
 CONFIG_FILE="$HOME/.config/swww/swww.conf"
 
-# 检查 swww daemon 是否运行
+# Check if swww daemon is running
 if ! pgrep -x "swww-daemon" > /dev/null; then
-    echo "启动 swww daemon..."
+    echo "Starting swww daemon..."
     swww-daemon &
     sleep 2
 fi
 
-# 检查壁纸目录是否存在
+# Check if wallpaper directory exists
 if [[ ! -d "$WALLPAPER_DIR" ]]; then
-    echo "错误: 壁纸目录 $WALLPAPER_DIR 不存在"
+    echo "Error: Wallpaper directory $WALLPAPER_DIR does not exist"
     exit 1
 fi
 
-# 支持的图片格式
+# Supported image formats
 EXTENSIONS=("jpg" "jpeg" "png" "webp" "bmp" "tiff" "gif")
 
-# 查找所有支持的图片文件
+# Find all supported image files
 WALLPAPERS=()
 for ext in "${EXTENSIONS[@]}"; do
     while IFS= read -r -d '' file; do

@@ -1,0 +1,110 @@
+/* Wofi Style Configuration */
+* {
+    font-family: "Noto Sans CJK SC", "JetBrains Mono", monospace;
+    font-size: 14px;
+}
+
+/* Main window */
+window {
+    margin: 0px;
+    border: 2px solid #7aa2f7;
+    border-radius: 15px;
+    background-color: rgba(26, 27, 38, 0.95);
+    animation: slideIn 0.3s ease-out;
+}
+
+/* Animation effects */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Input box */
+#input {
+    margin: 10px;
+    padding: 10px 15px;
+    border: 2px solid #565f89;
+    border-radius: 10px;
+    background-color: #1f2335;
+    color: #c0caf5;
+    font-size: 16px;
+}
+
+#input:focus {
+    border-color: #7aa2f7;
+    outline: none;
+}
+
+/* Inner container */
+#inner-box {
+    margin: 10px;
+    background-color: transparent;
+}
+
+/* Scrollbar */
+#scroll {
+    margin: 0px;
+    background-color: transparent;
+}
+
+#scroll scrollbar {
+    width: 4px;
+    background-color: transparent;
+}
+
+#scroll scrollbar:hover {
+    background-color: #565f89;
+}
+
+/* List items */
+#entry {
+    margin: 5px 10px;
+    padding: 10px 15px;
+    border-radius: 10px;
+    background-color: transparent;
+    transition: all 0.2s ease;
+}
+
+#entry:hover {
+    background-color: rgba(122, 162, 247, 0.1);
+    transform: translateX(5px);
+}
+
+#entry:selected {
+    background-color: rgba(122, 162, 247, 0.2);
+    border: 1px solid #7aa2f7;
+}
+
+/* Text */
+#text {
+    margin-left: 10px;
+    color: #c0caf5;
+}
+
+#entry:selected #text {
+    color: #7dcfff;
+    font-weight: bold;
+}
+
+/* Icons */
+#img {
+    margin-right: 10px;
+    background-color: transparent;
+}
+
+/* Match text highlighting */
+#text:selected {
+    color: #7dcfff;
+}
+
+/* No results message */
+#entry.no-results {
+    color: #f7768e;
+    font-style: italic;
+}

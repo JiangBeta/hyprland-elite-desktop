@@ -1,0 +1,44 @@
+[
+  {
+    "content": "修复 @linch-kit/core 依赖问题，使 ai:session 和 deps:check 脚本正常工作",
+    "status": "completed",
+    "priority": "high",
+    "id": "1"
+  },
+  {
+    "content": "查找现有 neo4j 配置相关代码和环境变量",
+    "status": "completed",
+    "priority": "high",
+    "id": "2"
+  },
+  {
+    "content": "根据 neo4j 连接信息创建环境变量配置文件",
+    "status": "completed",
+    "priority": "medium",
+    "id": "3"
+  },
+  {
+    "content": "测试 ai:session 命令是否正常工作",
+    "status": "completed",
+    "priority": "medium",
+    "id": "4"
+  },
+  {
+    "content": "修复 UI 包缺失 @radix-ui/react-scroll-area 依赖的错误",
+    "status": "completed",
+    "priority": "high",
+    "id": "5"
+  },
+  {
+    "content": "修复 ai-platform 脚本缺失 dist 文件的错误",
+    "status": "completed",
+    "priority": "high",
+    "id": "6"
+  },
+  {
+    "content": "再次测试 ai:session 命令是否正常工作",
+    "status": "completed",
+    "priority": "medium",
+    "id": "7"
+  }
+]

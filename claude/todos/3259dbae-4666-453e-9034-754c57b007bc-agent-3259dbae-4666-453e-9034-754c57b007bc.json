@@ -1,0 +1,38 @@
+[
+  {
+    "content": "检查 swww 快捷键设置",
+    "status": "completed",
+    "priority": "medium",
+    "id": "check_swww_shortcuts"
+  },
+  {
+    "content": "添加自动下载壁纸功能",
+    "status": "completed",
+    "priority": "medium",
+    "id": "auto_download_wallpapers"
+  },
+  {
+    "content": "从 waybar 中移除不需要的模块",
+    "status": "completed",
+    "priority": "medium",
+    "id": "remove_waybar_modules"
+  },
+  {
+    "content": "更新 dotfiles 中的配置",
+    "status": "completed",
+    "priority": "high",
+    "id": "update_dotfiles"
+  },
+  {
+    "content": "为 dotfiles 创建 README 文档",
+    "status": "completed",
+    "priority": "high",
+    "id": "create_readme"
+  },
+  {
+    "content": "设置定时自动下载壁纸",
+    "status": "completed",
+    "priority": "medium",
+    "id": "setup_auto_wallpaper"
+  }
+]

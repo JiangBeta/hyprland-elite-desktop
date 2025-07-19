@@ -16,8 +16,11 @@ This is a personal dotfiles repository for managing Linux desktop environment co
   - `swww/` - Wallpaper manager with scripts
   - `mako/` - Notification daemon
   - `satty/` & `swappy/` - Screenshot tools
+  - `wofi/` - Application launcher configuration
+  - `Code/` - VSCode configuration (settings, extensions)
   - `applications/` - Custom .desktop files
 - `shell/` - Shell configuration files (bashrc, zshrc, screenrc)
+- `claude/` - Claude Code configuration and settings
 - `scripts/` - Custom utility scripts
 - `install.sh` - Installation script that creates symlinks
 - `sync.sh` - Synchronization script to update dotfiles from live configs
@@ -65,9 +68,13 @@ notify-send "Test" "Notification test"
 
 ### Configuration Management
 - Uses **symlinks** from dotfiles to actual config locations
-- `install.sh` creates symlinks and backs up existing configs
-- `sync.sh` copies changes from live configs back to dotfiles (skips symlinks)
-- All config changes should be made in the actual config locations, then synced
+- `install.sh` - **初始安装**：创建从dotfiles到系统位置的软链接，备份已有配置
+- `sync.sh` - **同步更新**：将系统中的配置变更同步回dotfiles（跳过软链接文件）
+- 推荐工作流：在实际配置位置修改 → 运行sync.sh → 提交到git
+
+### 脚本用途区别
+- **install.sh**：新机器初始化，建立软链接系统
+- **sync.sh**：日常使用，同步配置更改回dotfiles
 
 ### Key Components
 1. **Hyprland** - Main window manager with keybindings and animations

@@ -1,59 +1,59 @@
 #!/bin/bash
 
-# 天气脚本 - 使用中国天气API
-# 手动设置城市，如果不设置则自动获取
-MANUAL_CITY="诸城"  # 设置你的城市，留空则自动获取
+# Weather script - Using weather API
+# Manually set city, auto-detect if not set
+MANUAL_CITY="Zhucheng"  # Set your city, leave empty for auto-detect
 
-# 获取城市名称
+# Get city name
 get_city() {
-    # 如果手动设置了城市，直接使用
+    # If city is manually set, use it directly
     if [ -n "$MANUAL_CITY" ]; then
         echo "$MANUAL_CITY"
         return
     fi
     
-    # 否则通过IP自动获取（不使用代理）
-    local ip_info=$(env -u http_proxy -u https_proxy -u HTTP_PROXY -u HTTPS_PROXY curl -s --noproxy "*" "http://ip-api.com/json/?lang=zh-CN" 2>/dev/null)
+    # Otherwise auto-detect via IP (without proxy)
+    local ip_info=$(env -u http_proxy -u https_proxy -u HTTP_PROXY -u HTTPS_PROXY curl -s --noproxy "*" "http://ip-api.com/json/?lang=en" 2>/dev/null)
     if [ -n "$ip_info" ]; then
         echo "$ip_info" | grep -o '"city":"[^"]*"' | cut -d'"' -f4
     else
-        echo "北京"
+        echo "Beijing"
     fi
 }
 
-# 使用免费的天气API
+# Use free weather API
 get_weather_simple() {
     local city=$(get_city)
     
-    # 在子shell中禁用代理，不影响父shell
-    local backup_weather=$(env -u http_proxy -u https_proxy -u HTTP_PROXY -u HTTPS_PROXY curl -s --noproxy "*" "https://wttr.in/${city}?lang=zh&format=%C+%t&m" 2>/dev/null)
+    # Disable proxy in subshell, doesn't affect parent shell
+    local backup_weather=$(env -u http_proxy -u https_proxy -u HTTP_PROXY -u HTTPS_PROXY curl -s --noproxy "*" "https://wttr.in/${city}?format=%C+%t&m" 2>/dev/null)
     if [ -n "$backup_weather" ]; then
-        # 根据天气状况选择图标
+        # Choose icon based on weather condition
         local icon="🌤️"
         case "$backup_weather" in
-            *晴*|*Sunny*) icon="☀️" ;;
-            *多云*|*Cloudy*) icon="⛅" ;;
-            *阴*|*Overcast*) icon="☁️" ;;
-            *雨*|*Rain*) icon="🌧️" ;;
-            *雪*|*Snow*) icon="❄️" ;;
-            *雾*|*Fog*) icon="🌫️" ;;
+            *Clear*|*Sunny*) icon="☀️" ;;
+            *Partly*|*Cloudy*) icon="⛅" ;;
+            *Overcast*) icon="☁️" ;;
+            *Rain*|*Drizzle*) icon="🌧️" ;;
+            *Snow*) icon="❄️" ;;
+            *Fog*|*Mist*) icon="🌫️" ;;
         esac
         echo "$icon $backup_weather"
     else
-        echo "🌤️ 获取天气失败"
+        echo "🌤️ Weather unavailable"
     fi
 }
 
-# 获取详细天气信息
+# Get detailed weather information
 get_weather_detailed() {
     local city=$(get_city)
-    echo "=== 天气详情 ==="
-    echo "位置: $city"
+    echo "=== Weather Details ==="
+    echo "Location: $city"
     echo ""
     
-    # 在子shell中禁用代理，不影响父shell
-    echo "获取详细天气信息..."
-    env -u http_proxy -u https_proxy -u HTTP_PROXY -u HTTPS_PROXY curl -s --noproxy "*" "https://wttr.in/${city}?lang=zh&M" 2>/dev/null | head -n 25
+    # Disable proxy in subshell, doesn't affect parent shell
+    echo "Getting detailed weather information..."
+    env -u http_proxy -u https_proxy -u HTTP_PROXY -u HTTPS_PROXY curl -s --noproxy "*" "https://wttr.in/${city}?M" 2>/dev/null | head -n 25
 }
 
 if [ "$1" = "--detailed" ]; then

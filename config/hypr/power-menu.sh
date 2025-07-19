@@ -1,15 +1,15 @@
 #!/bin/bash
 
-# Hyprland 电源管理菜单
-# 使用 wofi 显示电源选项
+# Hyprland power management menu
+# Uses wofi to display power options
 
-# 检查是否安装了必要的工具
+# Check if required tools are installed
 if ! command -v wofi &> /dev/null; then
-    notify-send "错误" "需要安装 wofi" --urgency=critical
+    notify-send "Error" "wofi is required" --urgency=critical
     exit 1
 fi
 
-# 电源选项
+# Power options
 options="🔒 Lock
 😴 Sleep
 🔄 Restart
@@ -17,42 +17,42 @@ options="🔒 Lock
 🚪 Exit Hyprland
 ❌ Cancel"
 
-# 显示菜单并获取选择
+# Show menu and get selection
 selected=$(echo "$options" | wofi --dmenu --prompt "Power Menu" --width 300 --height 400)
 
-# 根据选择执行相应操作
+# Execute action based on selection
 case $selected in
     "🔒 Lock")
-        # 检查是否安装了锁屏工具
+        # Check if lock screen tool is installed
         if command -v swaylock &> /dev/null; then
             swaylock -f -c 000000
         elif command -v hyprlock &> /dev/null; then
             hyprlock
         else
-            notify-send "错误" "未安装锁屏工具 (swaylock/hyprlock)" --urgency=critical
+            notify-send "Error" "No lock screen tool installed (swaylock/hyprlock)" --urgency=critical
         fi
         ;;
     "😴 Sleep")
-        notify-send "系统" "正在休眠..." --urgency=normal
+        notify-send "System" "Suspending..." --urgency=normal
         sleep 1
         systemctl suspend
         ;;
     "🔄 Restart")
-        notify-send "系统" "正在重启..." --urgency=normal
+        notify-send "System" "Restarting..." --urgency=normal
         sleep 1
         systemctl reboot
         ;;
     "⚡ Shutdown")
-        notify-send "系统" "正在关机..." --urgency=normal
+        notify-send "System" "Shutting down..." --urgency=normal
         sleep 1
         systemctl poweroff
         ;;
     "🚪 Exit Hyprland")
-        notify-send "系统" "正在退出 Hyprland..." --urgency=normal
+        notify-send "System" "Exiting Hyprland..." --urgency=normal
         sleep 1
         hyprctl dispatch exit
         ;;
     "❌ Cancel")
-        # 什么都不做
+        # Do nothing
         ;;
 esac

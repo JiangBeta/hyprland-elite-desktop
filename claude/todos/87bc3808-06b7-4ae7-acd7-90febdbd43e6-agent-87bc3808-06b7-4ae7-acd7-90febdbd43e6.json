@@ -1,0 +1,14 @@
+[
+  {
+    "content": "Add Clash Verge to Hyprland autostart",
+    "status": "completed",
+    "priority": "medium",
+    "id": "1"
+  },
+  {
+    "content": "Add notification manager (mako) to Hyprland",
+    "status": "completed",
+    "priority": "medium",
+    "id": "2"
+  }
+]

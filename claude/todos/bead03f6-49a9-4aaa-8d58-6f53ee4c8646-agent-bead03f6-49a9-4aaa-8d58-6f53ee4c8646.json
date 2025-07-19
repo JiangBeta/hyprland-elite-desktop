@@ -1,0 +1,38 @@
+[
+  {
+    "content": "Find and clean up auto-generated prompt in Hyprland config",
+    "status": "completed",
+    "priority": "medium",
+    "id": "1"
+  },
+  {
+    "content": "Research modern top bar options for Hyprland",
+    "status": "completed",
+    "priority": "high",
+    "id": "2"
+  },
+  {
+    "content": "Install and configure chosen top bar",
+    "status": "completed",
+    "priority": "high",
+    "id": "3"
+  },
+  {
+    "content": "Add window rules for Chrome/WeChat/Feishu/WPS scaling issues",
+    "status": "completed",
+    "priority": "high",
+    "id": "4"
+  },
+  {
+    "content": "Add Kitty Ctrl+T shortcut for new tab",
+    "status": "completed",
+    "priority": "medium",
+    "id": "5"
+  },
+  {
+    "content": "Test and verify waybar and window rules",
+    "status": "completed",
+    "priority": "medium",
+    "id": "6"
+  }
+]

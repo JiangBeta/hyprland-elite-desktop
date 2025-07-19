@@ -1,0 +1,32 @@
+[
+  {
+    "content": "分析 @linch-kit/ui/client 模块解析错误的根本原因",
+    "status": "completed",
+    "priority": "high",
+    "id": "1"
+  },
+  {
+    "content": "检查 @linch-kit/ui 包的条件导出配置",
+    "status": "completed",
+    "priority": "high",
+    "id": "2"
+  },
+  {
+    "content": "验证相关文件和构建配置",
+    "status": "completed",
+    "priority": "medium",
+    "id": "3"
+  },
+  {
+    "content": "修复导入路径和包结构问题",
+    "status": "completed",
+    "priority": "high",
+    "id": "4"
+  },
+  {
+    "content": "测试修复后的启动流程",
+    "status": "in_progress",
+    "priority": "medium",
+    "id": "5"
+  }
+]

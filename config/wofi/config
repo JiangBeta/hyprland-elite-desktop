@@ -1,0 +1,27 @@
+# Wofi Configuration
+# Window size and position
+width=600
+height=400
+location=center
+show=drun
+prompt=Search applications
+filter_rate=100
+allow_markup=true
+no_actions=true
+halign=fill
+orientation=vertical
+content_halign=fill
+insensitive=true
+allow_images=true
+image_size=24
+gtk_dark=true
+dynamic_lines=true
+
+# Cache
+cache=/home/laofahai/.cache/wofi/drun
+no-actions=true
+
+# Other settings
+term=kitty
+hide_scroll=true
+matching=fuzzy

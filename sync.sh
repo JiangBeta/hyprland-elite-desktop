@@ -19,6 +19,12 @@ declare -A CONFIG_FILES=(
     ["$HOME/.config/mako"]="$DOTFILES_DIR/config/mako"
     ["$HOME/.config/satty"]="$DOTFILES_DIR/config/satty"
     ["$HOME/.config/swappy"]="$DOTFILES_DIR/config/swappy"
+    ["$HOME/.config/wofi"]="$DOTFILES_DIR/config/wofi"
+    ["$HOME/.config/Code"]="$DOTFILES_DIR/config/Code"
+)
+
+declare -A CLAUDE_FILES=(
+    ["$HOME/.claude"]="$DOTFILES_DIR/claude"
 )
 
 declare -A SHELL_FILES=(
@@ -109,6 +115,25 @@ if [[ -d "$HOME/.local/share/applications" ]]; then
         fi
     done
 fi
+
+# 同步 Claude 配置文件
+echo "同步 Claude 配置文件..."
+for src in "${!CLAUDE_FILES[@]}"; do
+    dst="${CLAUDE_FILES[$src]}"
+    
+    if [[ -e "$src" ]]; then
+        if [[ -L "$src" ]]; then
+            echo "跳过软链接: $src"
+            continue
+        fi
+        
+        echo "同步: $src -> $dst"
+        # 排除敏感文件
+        rsync -av --delete --exclude='.credentials.json' "$src/" "$dst/"
+    else
+        echo "警告: $src 不存在"
+    fi
+done
 
 # 检查 CLAUDE.md 文件
 if [[ -f "$DOTFILES_DIR/CLAUDE.md" ]]; then
