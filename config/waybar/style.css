@@ -8,11 +8,12 @@
 }
 
 window#waybar {
-    background: rgba(21, 18, 27, 0.9);
+    background: rgba(0, 0, 0, 0.0);
     color: #cdd6f4;
     transition-property: background-color;
     transition-duration: .5s;
-    border-bottom: 3px solid rgba(100, 114, 125, 0.5);
+    border-radius: 0px;
+    border: none;
 }
 
 window#waybar.hidden {
@@ -25,34 +26,36 @@ window#waybar.hidden {
 
 #workspaces button {
     padding: 0 10px;
-    background-color: transparent;
-    color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.6);
+    color: #5e81ac;
     border: none;
-    border-radius: 16px;
-    box-shadow: inset 0 -3px transparent;
+    border-radius: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease-in-out;
 }
 
 #workspaces button.active {
-    background: rgba(245, 194, 231, 0.2);
-    color: #f5c2e7;
-    box-shadow: inset 0 -3px #f5c2e7;
+    background: rgba(94, 129, 172, 0.8);
+    color: #ffffff;
+    box-shadow: 0 4px 16px rgba(94, 129, 172, 0.3);
 }
 
 #workspaces button:hover {
-    background: rgba(245, 194, 231, 0.1);
-    color: #f5c2e7;
+    background: rgba(94, 129, 172, 0.6);
+    color: #ffffff;
+    box-shadow: 0 3px 12px rgba(94, 129, 172, 0.2);
 }
 
 #workspaces button.urgent {
-    background: rgba(243, 139, 168, 0.2);
-    color: #f38ba8;
-    box-shadow: inset 0 -3px #f38ba8;
+    background: rgba(235, 86, 87, 0.8);
+    color: #ffffff;
+    box-shadow: 0 4px 16px rgba(235, 86, 87, 0.4);
+    animation: pulse 1s infinite;
 }
 
 #custom-launcher {
-    color: #89b4fa;
-    background: rgba(137, 180, 250, 0.1);
+    color: #5e81ac;
+    background: rgba(94, 129, 172, 0.1);
     border-radius: 16px;
     padding: 0 12px;
     margin: 0 4px;
@@ -60,29 +63,32 @@ window#waybar.hidden {
 }
 
 #custom-launcher:hover {
-    background: rgba(137, 180, 250, 0.2);
+    background: rgba(94, 129, 172, 0.2);
 }
 
 #window {
     margin: 0 4px;
     padding: 0 10px;
     border-radius: 16px;
-    background: rgba(116, 199, 236, 0.1);
-    color: #74c7ec;
+    background: rgba(136, 192, 208, 0.1);
+    color: #88c0d0;
     transition: all 0.3s ease-in-out;
 }
 
 #clock {
-    color: #fab387;
-    background: rgba(250, 179, 135, 0.1);
-    border-radius: 16px;
-    padding: 0 16px;
-    margin: 0 4px;
+    color: #ffffff;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 20px;
+    padding: 0 20px;
+    margin: 0 8px;
     transition: all 0.3s ease-in-out;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    font-weight: 600;
 }
 
 #clock:hover {
-    background: rgba(250, 179, 135, 0.2);
+    background: rgba(0, 0, 0, 0.7);
+    border-color: rgba(255, 255, 255, 0.4);
 }
 
 #network {
@@ -112,16 +118,19 @@ window#waybar.hidden {
 }
 
 #pulseaudio {
-    color: #f9e2af;
-    background: rgba(249, 226, 175, 0.1);
-    border-radius: 16px;
-    padding: 0 12px;
+    color: #ffffff;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 20px;
+    padding: 0 16px;
     margin: 0 4px;
     transition: all 0.3s ease-in-out;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    font-weight: 600;
 }
 
 #pulseaudio:hover {
-    background: rgba(249, 226, 175, 0.2);
+    background: rgba(0, 0, 0, 0.7);
+    border-color: rgba(255, 255, 255, 0.4);
 }
 
 #pulseaudio.microphone {
@@ -138,75 +147,113 @@ window#waybar.hidden {
 }
 
 #battery {
-    color: #a6e3a1;
-    background: rgba(166, 227, 161, 0.1);
-    border-radius: 16px;
-    padding: 0 12px;
+    color: #ffffff;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 20px;
+    padding: 0 16px;
     margin: 0 4px;
     transition: all 0.3s ease-in-out;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    font-weight: 600;
 }
 
 #battery:hover {
-    background: rgba(166, 227, 161, 0.2);
+    background: rgba(0, 0, 0, 0.7);
+    border-color: rgba(255, 255, 255, 0.4);
 }
 
 #battery.charging {
-    color: #f9e2af;
-    background: rgba(249, 226, 175, 0.1);
+    color: #ebcb8b;
+    background: rgba(235, 203, 139, 0.1);
 }
 
 #battery.warning:not(.charging) {
-    color: #fab387;
-    background: rgba(250, 179, 135, 0.1);
+    color: #d08770;
+    background: rgba(208, 135, 112, 0.1);
 }
 
 #battery.critical:not(.charging) {
-    color: #f38ba8;
-    background: rgba(243, 139, 168, 0.1);
+    color: #bf616a;
+    background: rgba(191, 97, 106, 0.1);
     animation: blink 0.5s linear infinite alternate;
 }
 
 @keyframes blink {
     to {
-        background-color: rgba(243, 139, 168, 0.3);
+        background-color: rgba(191, 97, 106, 0.3);
     }
 }
 
-#custom-power {
-    color: #f38ba8;
-    background: rgba(243, 139, 168, 0.1);
-    border-radius: 16px;
-    padding: 0 12px;
+@keyframes pulse {
+    0% {
+        box-shadow: 0 4px 16px rgba(235, 86, 87, 0.4);
+    }
+    50% {
+            box-shadow: 0 6px 20px rgba(235, 86, 87, 0.6);
+    }
+    100% {
+        box-shadow: 0 4px 16px rgba(235, 86, 87, 0.4);
+    }
+}
+
+#custom-weather {
+    color: #ffffff;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 20px;
+    padding: 0 16px;
     margin: 0 4px;
     transition: all 0.3s ease-in-out;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    font-weight: 600;
+}
+
+#custom-weather:hover {
+    background: rgba(0, 0, 0, 0.7);
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+#custom-power {
+    color: #ffffff;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 20px;
+    padding: 0 16px;
+    margin: 0 4px;
+    transition: all 0.3s ease-in-out;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    font-weight: 600;
 }
 
 #custom-power:hover {
-    background: rgba(243, 139, 168, 0.2);
+    background: rgba(0, 0, 0, 0.7);
+    border-color: rgba(255, 255, 255, 0.4);
 }
 
 tooltip {
-    background: rgba(21, 18, 27, 0.9);
-    border-radius: 10px;
-    border-width: 2px;
+    background: rgba(24, 24, 37, 0.95);
+    border-radius: 12px;
+    border-width: 1px;
     border-style: solid;
-    border-color: rgba(100, 114, 125, 0.5);
+    border-color: rgba(137, 180, 250, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
 }
 
 tooltip label {
     color: #cdd6f4;
+    font-weight: 500;
 }
 
 #tray {
-    background: rgba(116, 199, 236, 0.1);
-    border-radius: 16px;
-    padding: 0 12px;
-    margin: 0 4px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 20px;
+    padding: 0 16px;
+    margin: 0 8px;
     transition: all 0.3s ease-in-out;
+    border: 2px solid rgba(255, 255, 255, 0.2);
 }
 
 #tray:hover {
-    background: rgba(116, 199, 236, 0.2);
+    background: rgba(0, 0, 0, 0.7);
+    border-color: rgba(255, 255, 255, 0.4);
 }
 
 #tray > .passive {
@@ -219,52 +266,62 @@ tooltip label {
 }
 
 #idle_inhibitor {
-    color: #89b4fa;
-    background: rgba(137, 180, 250, 0.1);
-    border-radius: 16px;
-    padding: 0 12px;
+    color: #ffffff;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 20px;
+    padding: 0 16px;
     margin: 0 4px;
     transition: all 0.3s ease-in-out;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    font-weight: 600;
 }
 
 #idle_inhibitor:hover {
-    background: rgba(137, 180, 250, 0.2);
+    background: rgba(0, 0, 0, 0.7);
+    border-color: rgba(255, 255, 255, 0.4);
 }
 
 #idle_inhibitor.activated {
-    color: #f9e2af;
-    background: rgba(249, 226, 175, 0.1);
+    color: #ffffff;
+    background: rgba(0, 0, 0, 0.7);
+    border-color: rgba(255, 255, 255, 0.4);
 }
 
 #cpu {
-    color: #f38ba8;
-    background: rgba(243, 139, 168, 0.1);
-    border-radius: 16px;
-    padding: 0 12px;
+    color: #ffffff;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 20px;
+    padding: 0 16px;
     margin: 0 4px;
     transition: all 0.3s ease-in-out;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    font-weight: 600;
 }
 
 #cpu:hover {
-    background: rgba(243, 139, 168, 0.2);
+    background: rgba(0, 0, 0, 0.7);
+    border-color: rgba(255, 255, 255, 0.4);
 }
 
 #memory {
-    color: #cba6f7;
-    background: rgba(203, 166, 247, 0.1);
-    border-radius: 16px;
-    padding: 0 12px;
+    color: #ffffff;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 20px;
+    padding: 0 16px;
     margin: 0 4px;
     transition: all 0.3s ease-in-out;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    font-weight: 600;
 }
 
 #memory:hover {
-    background: rgba(203, 166, 247, 0.2);
+    background: rgba(0, 0, 0, 0.7);
+    border-color: rgba(255, 255, 255, 0.4);
 }
 
 #temperature {
-    color: #fab387;
-    background: rgba(250, 179, 135, 0.1);
+    color: #d08770;
+    background: rgba(208, 135, 112, 0.1);
     border-radius: 16px;
     padding: 0 12px;
     margin: 0 4px;
@@ -272,10 +329,10 @@ tooltip label {
 }
 
 #temperature:hover {
-    background: rgba(250, 179, 135, 0.2);
+    background: rgba(208, 135, 112, 0.2);
 }
 
 #temperature.critical {
-    color: #f38ba8;
-    background: rgba(243, 139, 168, 0.1);
+    color: #bf616a;
+    background: rgba(191, 97, 106, 0.1);
 }

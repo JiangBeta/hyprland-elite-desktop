@@ -1,0 +1,159 @@
+[Hotkey]
+# Trigger Input Method
+TriggerKeys=
+# Enumerate when press trigger key repeatedly
+EnumerateWithTriggerKeys=True
+# Temporally switch between first and current Input Method
+AltTriggerKeys=
+# Enumerate Input Method Forward
+EnumerateForwardKeys=
+# Enumerate Input Method Backward
+EnumerateBackwardKeys=
+# Skip first input method while enumerating
+EnumerateSkipFirst=False
+# Enumerate Input Method Group Forward
+EnumerateGroupForwardKeys=
+# Enumerate Input Method Group Backward
+EnumerateGroupBackwardKeys=
+# Activate Input Method
+ActivateKeys=
+# Deactivate Input Method
+DeactivateKeys=
+
+[Hotkey/TriggerKeys]
+0=Control+space
+1=Zenkaku_Hankaku
+2=Hangul
+3=Shift_L
+4=Shift_R
+
+[Hotkey/EnumerateForwardKeys]
+0=Control+Shift_L
+
+[Hotkey/EnumerateBackwardKeys]
+0=Control+Shift_R
+
+[Hotkey/EnumerateGroupForwardKeys]
+0=Super+space
+
+[Hotkey/ActivateKeys]
+0=Hangul_Hanja
+
+[Hotkey/DeactivateKeys]
+0=Hangul_Romaja
+
+[Behavior]
+# Active By Default
+ActiveByDefault=False
+# Share Input State
+ShareInputState=No
+# Show preedit in application
+PreeditEnabledByDefault=True
+# Show Input Method Information when switch input method
+ShowInputMethodInformation=True
+# Show Input Method Information when changing focus
+ShowInputMethodInformationWhenFocusIn=False
+# Show compact input method information
+CompactInputMethodInformation=True
+# Show first input method information
+ShowFirstInputMethodInformation=True
+# Default page size
+DefaultPageSize=5
+# Override Xkb Option
+OverrideXkbOption=False
+# Custom Xkb Option
+CustomXkbOption=
+# Force Enabled Addons
+EnabledAddons=
+# Force Disabled Addons
+DisabledAddons=
+# Preload input method to be used by default
+PreloadInputMethod=True
+# Allow input method in the password field
+AllowInputMethodForPassword=False
+# Show preedit text when typing password
+ShowPreeditForPassword=False
+# Interval of saving user data in minutes
+AutoSavePeriod=30
+
+[Behavior/DisabledAddons]
+0=imselector
+
+[GlobalConfig]
+# Show preedit text in application
+ShowPreedit=True
+# Enable Emoji
+EnableEmoji=True
+# Enable Clipboard
+EnableClipboard=True
+# Enable Quick Phrase
+EnableQuickPhrase=True
+# Enable Unicode
+EnableUnicode=True
+
+[GlobalConfig/TriggerKeys]
+0=Control+semicolon
+
+[GlobalConfig/EnumerateWithTriggerKeys]
+# Enumerate when press trigger key repeatedly
+EnumerateWithTriggerKeys=True
+
+[GlobalConfig/PreeditEnabledByDefault]
+# Show preedit in application
+PreeditEnabledByDefault=True
+
+[GlobalConfig/ShareInputState]
+# Share Input State
+ShareInputState=No
+
+[GlobalConfig/ShowInputMethodInformation]
+# Show Input Method Information when switch input method
+ShowInputMethodInformation=True
+
+[GlobalConfig/ShowInputMethodInformationWhenFocusIn]
+# Show Input Method Information when changing focus
+ShowInputMethodInformationWhenFocusIn=False
+
+[GlobalConfig/CompactInputMethodInformation]
+# Show compact input method information
+CompactInputMethodInformation=True
+
+[GlobalConfig/ShowFirstInputMethodInformation]
+# Show first input method information
+ShowFirstInputMethodInformation=True
+
+[GlobalConfig/DefaultPageSize]
+# Default page size
+DefaultPageSize=5
+
+[GlobalConfig/OverrideXkbOption]
+# Override Xkb Option
+OverrideXkbOption=False
+
+[GlobalConfig/CustomXkbOption]
+# Custom Xkb Option
+CustomXkbOption=
+
+[GlobalConfig/EnabledAddons]
+# Force Enabled Addons
+EnabledAddons=
+
+[GlobalConfig/DisabledAddons]
+# Force Disabled Addons
+DisabledAddons=
+
+[GlobalConfig/PreloadInputMethod]
+# Preload input method to be used by default
+PreloadInputMethod=True
+
+[GlobalConfig/AllowInputMethodForPassword]
+# Allow input method in the password field
+AllowInputMethodForPassword=False
+
+[GlobalConfig/ShowPreeditForPassword]
+# Show preedit text when typing password
+ShowPreeditForPassword=False
+
+[GlobalConfig/AutoSavePeriod]
+# Interval of saving user data in minutes
+AutoSavePeriod=30

@@ -33,6 +33,9 @@ declare -A SHELL_FILES=(
     ["$DOTFILES_DIR/.Xresources"]="$HOME/.Xresources"
 )
 
+# CLAUDE.md 文件（不需要链接，保留在 dotfiles 目录）
+CLAUDE_FILE="$DOTFILES_DIR/CLAUDE.md"
+
 # 确保 .config 目录存在
 mkdir -p "$HOME/.config"
 
@@ -63,6 +66,52 @@ for src in "${!SHELL_FILES[@]}"; do
     echo "链接: $src -> $dst"
     ln -sf "$src" "$dst"
 done
+
+# 处理 scripts 目录
+echo "处理 scripts 目录..."
+if [[ -d "$DOTFILES_DIR/scripts" ]]; then
+    mkdir -p "$HOME/.local/bin"
+    for script in "$DOTFILES_DIR/scripts"/*; do
+        if [[ -f "$script" ]]; then
+            basename_file=$(basename "$script")
+            dst="$HOME/.local/bin/$basename_file"
+            
+            if [[ -e "$dst" && ! -L "$dst" ]]; then
+                echo "备份脚本: $dst -> $BACKUP_DIR/"
+                mv "$dst" "$BACKUP_DIR/"
+            fi
+            
+            echo "链接脚本: $script -> $dst"
+            ln -sf "$script" "$dst"
+            chmod +x "$script"
+        fi
+    done
+fi
+
+# 处理 desktop 应用程序文件
+echo "处理 desktop 应用程序文件..."
+mkdir -p "$HOME/.local/share/applications"
+
+if [[ -d "$DOTFILES_DIR/config/applications" ]]; then
+    for src in "$DOTFILES_DIR/config/applications"/*.desktop; do
+        if [[ -f "$src" ]]; then
+            basename_file=$(basename "$src")
+            dst="$HOME/.local/share/applications/$basename_file"
+            
+            if [[ -e "$dst" && ! -L "$dst" ]]; then
+                echo "备份desktop文件: $dst -> $BACKUP_DIR/"
+                mv "$dst" "$BACKUP_DIR/"
+            fi
+            
+            echo "链接desktop文件: $src -> $dst"
+            ln -sf "$src" "$dst"
+        fi
+    done
+    
+    # 更新desktop数据库
+    echo "更新desktop数据库..."
+    update-desktop-database "$HOME/.local/share/applications/" 2>/dev/null || true
+fi
 
 echo "✅ Dotfiles 安装完成!"
 echo "备份文件保存在: $BACKUP_DIR"

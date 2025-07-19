@@ -5,47 +5,25 @@
     "exclusive": true,
     "passthrough": false,
     "gtk-layer-shell": true,
-    "height": 40,
+    "height": 36,
+    "margin-top": 8,
+    "margin-left": 3,
+    "margin-right": 8,
     "modules-left": [
-        "custom/launcher",
-        "hyprland/workspaces",
-        "hyprland/window"
+        "tray"
     ],
     "modules-center": [
         "clock"
     ],
     "modules-right": [
-        "tray",
         "idle_inhibitor",
         "cpu",
         "memory",
+        "custom/weather",
         "pulseaudio",
         "battery",
         "custom/power"
     ],
-    "hyprland/workspaces": {
-        "disable-scroll": true,
-        "all-outputs": true,
-        "on-click": "activate",
-        "persistent_workspaces": {
-            "1": [],
-            "2": [],
-            "3": [],
-            "4": [],
-            "5": []
-        }
-    },
-    "hyprland/window": {
-        "format": "{}",
-        "max-length": 50,
-        "separate-outputs": true
-    },
-    "custom/launcher": {
-        "format": "󰣇",
-        "on-click": "wofi --show drun",
-        "on-click-right": "killall wofi",
-        "tooltip": false
-    },
     "custom/power": {
         "format": "󰐥",
         "on-click": "~/.config/hypr/power-menu.sh",
@@ -141,5 +119,12 @@
         "format": "󰔏 {temperatureC}°C",
         "critical-threshold": 80,
         "format-critical": "󰸁 {temperatureC}°C"
+    },
+    "custom/weather": {
+        "format": "{}",
+        "exec": "~/.config/waybar/weather.sh",
+        "interval": 1800,
+        "tooltip": true,
+        "on-click": "kitty --title='天气详情' -e bash -c '~/.config/waybar/weather.sh --detailed; read -p \"按回车键关闭...\"'"
     }
 }

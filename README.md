@@ -12,7 +12,7 @@ cd ~/dotfiles
 
 ### 2. 安装依赖软件
 ```bash
-sudo pacman -S hyprland waybar kitty fcitx5 fcitx5-chinese-addons fcitx5-gtk fcitx5-qt swww mako network-manager-applet blueman wofi brightnessctl playerctl wget grim slurp wl-clipboard swappy
+sudo pacman -S hyprland waybar kitty fcitx5 fcitx5-chinese-addons fcitx5-gtk fcitx5-qt swww mako network-manager-applet blueman wofi brightnessctl playerctl wget grim slurp wl-clipboard swappy satty
 
 yay -S lunar-calendar-bin
 ```
@@ -42,6 +42,7 @@ sudo systemctl enable --now NetworkManager
 - **swww**: 壁纸切换工具（高质量配置）
 - **mako**: 通知管理器（半透明、自动消失）
 - **swappy**: 截图编辑工具（类似微信截图）
+- **satty**: 现代化截图标注工具
 
 ### ⌨️ 输入法
 - **fcitx5**: 中文输入法配置
