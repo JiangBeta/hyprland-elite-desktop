@@ -53,8 +53,6 @@ sudo systemctl enable --now NetworkManager
 - **swww-cycle.sh**: 定时切换壁纸
 - **download-wallpapers.sh**: 下载示例壁纸
 - **auto-download-wallpapers.sh**: 自动下载新壁纸
-- **youtube-music.sh**: YouTube Music 媒体控制和歌词显示
-- **youtube-music-control.sh**: YouTube Music 交互控制
 
 ## 🎯 快捷键
 
@@ -86,11 +84,6 @@ sudo systemctl enable --now NetworkManager
 - `亮度键`: 调节屏幕亮度
 - `媒体键`: 播放/暂停/切换
 
-### YouTube Music 控制（Waybar 组件）
-- `左键点击`: 切换喜欢/不喜欢状态
-- `右键点击`: 播放/暂停
-- `中键点击`: 查看歌词帮助
-- `滚轮上/下`: 切换上一首/下一首
 
 ## 🔧 高级功能
 
@@ -110,24 +103,6 @@ crontab -e
 ~/.config/swww/swww-cycle.sh 1800 &
 ```
 
-### YouTube Music 集成功能
-#### 功能特点
-- **歌词优先显示**: 当检测到歌词时，waybar 会优先显示当前播放歌曲的歌词
-- **智能图标**: 根据歌曲的 like 状态显示不同图标
-  - `󰋑` 实心心形 - 已点赞
-  - `󰋟` 空心心形 - 未点赞或未知状态
-- **一键 like**: 点击图标即可切换歌曲的喜欢状态
-
-#### 依赖要求
-- YouTube Music 应用 (`yay -S youtube-music-bin`)
-- xdotool 工具 (`sudo pacman -S xdotool`)
-- Synced Lyrics 浏览器扩展（可选，用于歌词显示）
-
-#### 使用说明
-1. 启动 YouTube Music 应用
-2. waybar 会自动检测并显示当前播放状态
-3. 有歌词时显示歌词，无歌词时显示艺术家和歌曲名
-4. 通过点击和滚轮进行各种控制操作
 
 ### 托盘图标
 - **WiFi**: nm-applet（右键可搜索连接网络）
@@ -188,9 +163,8 @@ pkill fcitx5 && fcitx5 -d
 
 ### Waybar 配置特点
 - 精简的模块配置
-- 移除了冗余的网络、蓝牙、温度、麦克风模块
-- 保留核心功能：CPU、内存、音量、电池
-- YouTube Music 集成：歌词优先显示、like 状态控制
+- 核心功能：CPU、内存、音量、电池、温度
+- 扩展功能：TOTP验证、天气、网速监控、系统更新提醒
 
 ### swww 配置特点
 - 高质量壁纸（95% 压缩质量）
@@ -241,11 +215,8 @@ cd ~/dotfiles
 - **weather.sh**: 天气信息
 - **notification.sh**: 智能通知管理
 
-### 歌词增强功能
-- **youtube-music-lyrics-fetch.sh**: 智能歌词获取
-- **lyrics-from-dom.sh**: DOM 歌词提取
-- **debug-lyrics.sh**: 歌词调试工具
-- **test-lyrics.sh**: 歌词功能测试
+### 媒体和娱乐
+- **YouTube Music**: 支持桌面应用和图标
 
 ## 📋 完整目录结构
 
