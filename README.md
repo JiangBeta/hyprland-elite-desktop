@@ -12,9 +12,9 @@ cd ~/dotfiles
 
 ### 2. 安装依赖软件
 ```bash
-sudo pacman -S hyprland waybar kitty fcitx5 fcitx5-chinese-addons fcitx5-gtk fcitx5-qt swww mako network-manager-applet blueman wofi brightnessctl playerctl wget grim slurp wl-clipboard swappy satty gnome-keyring
+sudo pacman -S hyprland waybar kitty fcitx5 fcitx5-chinese-addons fcitx5-gtk fcitx5-qt swww mako network-manager-applet blueman wofi brightnessctl playerctl wget grim slurp wl-clipboard swappy satty gnome-keyring xdotool jq websocat
 
-yay -S lunar-calendar-bin
+yay -S lunar-calendar-bin youtube-music-bin
 ```
 
 ### 3. 启用系统服务
@@ -53,6 +53,8 @@ sudo systemctl enable --now NetworkManager
 - **swww-cycle.sh**: 定时切换壁纸
 - **download-wallpapers.sh**: 下载示例壁纸
 - **auto-download-wallpapers.sh**: 自动下载新壁纸
+- **youtube-music.sh**: YouTube Music 媒体控制和歌词显示
+- **youtube-music-control.sh**: YouTube Music 交互控制
 
 ## 🎯 快捷键
 
@@ -84,6 +86,12 @@ sudo systemctl enable --now NetworkManager
 - `亮度键`: 调节屏幕亮度
 - `媒体键`: 播放/暂停/切换
 
+### YouTube Music 控制（Waybar 组件）
+- `左键点击`: 切换喜欢/不喜欢状态
+- `右键点击`: 播放/暂停
+- `中键点击`: 查看歌词帮助
+- `滚轮上/下`: 切换上一首/下一首
+
 ## 🔧 高级功能
 
 ### 自动下载壁纸
@@ -101,6 +109,25 @@ crontab -e
 # 每30分钟切换一次壁纸
 ~/.config/swww/swww-cycle.sh 1800 &
 ```
+
+### YouTube Music 集成功能
+#### 功能特点
+- **歌词优先显示**: 当检测到歌词时，waybar 会优先显示当前播放歌曲的歌词
+- **智能图标**: 根据歌曲的 like 状态显示不同图标
+  - `󰋑` 实心心形 - 已点赞
+  - `󰋟` 空心心形 - 未点赞或未知状态
+- **一键 like**: 点击图标即可切换歌曲的喜欢状态
+
+#### 依赖要求
+- YouTube Music 应用 (`yay -S youtube-music-bin`)
+- xdotool 工具 (`sudo pacman -S xdotool`)
+- Synced Lyrics 浏览器扩展（可选，用于歌词显示）
+
+#### 使用说明
+1. 启动 YouTube Music 应用
+2. waybar 会自动检测并显示当前播放状态
+3. 有歌词时显示歌词，无歌词时显示艺术家和歌曲名
+4. 通过点击和滚轮进行各种控制操作
 
 ### 托盘图标
 - **WiFi**: nm-applet（右键可搜索连接网络）
@@ -163,6 +190,7 @@ pkill fcitx5 && fcitx5 -d
 - 精简的模块配置
 - 移除了冗余的网络、蓝牙、温度、麦克风模块
 - 保留核心功能：CPU、内存、音量、电池
+- YouTube Music 集成：歌词优先显示、like 状态控制
 
 ### swww 配置特点
 - 高质量壁纸（95% 压缩质量）
@@ -198,75 +226,47 @@ cd ~/dotfiles
 
 **享受你的新桌面环境！** 🎉
 
-个人配置文件管理仓库
+## 🆕 最新功能
 
-## 目录结构
+### TOTP 二步验证功能
+- **totp.sh**: 显示当前 TOTP 验证码和倒计时
+- **totp-switch.sh**: 在多个 TOTP 账户间切换
+- **totp-selector.sh**: 图形化选择 TOTP 账户
+- **totp-copy.sh**: 一键复制 TOTP 验证码
+
+### 实时信息显示
+- **netspeed.sh**: 网络速度监控
+- **updates.sh**: 系统更新提醒
+- **lunar-calendar.sh**: 农历日期显示
+- **weather.sh**: 天气信息
+- **notification.sh**: 智能通知管理
+
+### 歌词增强功能
+- **youtube-music-lyrics-fetch.sh**: 智能歌词获取
+- **lyrics-from-dom.sh**: DOM 歌词提取
+- **debug-lyrics.sh**: 歌词调试工具
+- **test-lyrics.sh**: 歌词功能测试
+
+## 📋 完整目录结构
 
 ```
 dotfiles/
-├── config/          # ~/.config 下的配置文件
-│   ├── hypr/        # Hyprland 配置
-│   ├── waybar/      # Waybar 配置
-│   ├── fcitx5/      # 输入法配置
-│   └── kitty/       # 终端配置
-├── shell/           # Shell 配置文件
-│   ├── bashrc       # Bash 配置
-│   ├── zshrc        # Zsh 配置
-│   └── screenrc     # Screen 配置
-├── scripts/         # 脚本文件
-├── install.sh       # 安装脚本
-├── sync.sh          # 同步脚本
-└── README.md        # 说明文档
+├── config/                 # ~/.config 下的配置文件
+│   ├── hypr/              # Hyprland 配置
+│   ├── waybar/            # Waybar 配置及扩展脚本
+│   │   ├── *.sh          # 各种功能脚本
+│   │   ├── config.jsonc  # Waybar 配置
+│   │   └── style.css     # Waybar 样式
+│   ├── fcitx5/           # 输入法配置
+│   ├── kitty/            # 终端配置
+│   ├── swww/             # 壁纸管理脚本
+│   ├── mako/             # 通知配置
+│   └── applications/     # 应用程序配置
+├── claude/               # Claude AI 配置
+├── shell/               # Shell 配置文件
+├── scripts/             # 脚本文件
+├── install.sh           # 安装脚本
+├── sync.sh             # 同步脚本
+├── CLAUDE.md           # Claude AI 使用指南
+└── README.md           # 说明文档
 ```
-
-## 使用方法
-
-### 首次设置
-
-1. 克隆仓库到家目录：
-   ```bash
-   git clone <your-repo-url> ~/dotfiles
-   ```
-
-2. 运行安装脚本：
-   ```bash
-   chmod +x ~/dotfiles/install.sh
-   ~/dotfiles/install.sh
-   ```
-
-### 同步更改
-
-当你修改了配置文件后，运行同步脚本：
-```bash
-chmod +x ~/dotfiles/sync.sh
-~/dotfiles/sync.sh
-```
-
-然后提交更改：
-```bash
-cd ~/dotfiles
-git add .
-git commit -m "Update configurations"
-git push
-```
-
-### 在新机器上使用
-
-1. 克隆仓库
-2. 运行 `install.sh`
-3. 重新登录或重新加载配置
-
-## 包含的配置
-
-- **Hyprland**: 窗口管理器配置
-- **Waybar**: 状态栏配置
-- **Fcitx5**: 输入法配置
-- **Kitty**: 终端模拟器配置
-- **Bash/Zsh**: Shell 配置
-- **Screen**: 终端复用器配置
-
-## 注意事项
-
-- 安装脚本会自动备份现有配置
-- 所有配置文件都使用软链接，修改会直接反映到 dotfiles 目录
-- 定期运行 `sync.sh` 来保持同步

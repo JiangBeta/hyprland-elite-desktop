@@ -16,6 +16,9 @@ get_youtube_player() {
             fi
         fi
     done
+    
+    # Fallback: if no specific YouTube Music process found, use first chromium player
+    playerctl -l 2>/dev/null | grep -E "chromium\.|chrome\." | head -n 1
 }
 
 PLAYER=$(get_youtube_player)

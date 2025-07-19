@@ -1,32 +1,44 @@
 [
   {
-    "content": "执行AI Guardian验证",
+    "content": "重新分析问题本质",
     "status": "completed",
     "priority": "high",
     "id": "1"
   },
   {
-    "content": "修复缺失的createSupabaseUserService导入错误",
-    "status": "in_progress",
+    "content": "检查已有的auth用户实现",
+    "status": "completed",
     "priority": "high",
     "id": "2"
   },
   {
-    "content": "修复Supabase环境变量错误",
-    "status": "pending",
+    "content": "修复导入错误",
+    "status": "completed",
     "priority": "high",
     "id": "3"
   },
   {
-    "content": "清理Next.js编译缓存",
-    "status": "pending",
-    "priority": "medium",
+    "content": "移除不必要的Supabase集成代码",
+    "status": "completed",
+    "priority": "high",
     "id": "4"
   },
   {
-    "content": "测试修复后的认证系统",
-    "status": "pending",
-    "priority": "high",
+    "content": "清理Next.js编译缓存",
+    "status": "completed",
+    "priority": "medium",
     "id": "5"
+  },
+  {
+    "content": "测试修复后的认证系统",
+    "status": "completed",
+    "priority": "high",
+    "id": "6"
+  },
+  {
+    "content": "修复JWT_SECRET环境变量问题",
+    "status": "in_progress",
+    "priority": "high",
+    "id": "7"
   }
 ]

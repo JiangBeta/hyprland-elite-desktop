@@ -9,7 +9,7 @@
 
 window#waybar {
     background: rgba(0, 0, 0, 0.0);
-    color: #cdd6f4;
+    color: #abb2bf;
     transition-property: background-color;
     transition-duration: .5s;
     border-radius: 0px;
@@ -26,8 +26,8 @@ window#waybar.hidden {
 
 #workspaces button {
     padding: 0 10px;
-    background-color: rgba(255, 255, 255, 0.6);
-    color: #5e81ac;
+    background-color: rgba(62, 68, 82, 0.8);
+    color: #abb2bf;
     border: none;
     border-radius: 20px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -35,15 +35,15 @@ window#waybar.hidden {
 }
 
 #workspaces button.active {
-    background: rgba(94, 129, 172, 0.8);
+    background: rgba(97, 175, 239, 0.8);
     color: #ffffff;
-    box-shadow: 0 4px 16px rgba(94, 129, 172, 0.3);
+    box-shadow: 0 4px 16px rgba(97, 175, 239, 0.3);
 }
 
 #workspaces button:hover {
-    background: rgba(94, 129, 172, 0.6);
+    background: rgba(97, 175, 239, 0.6);
     color: #ffffff;
-    box-shadow: 0 3px 12px rgba(94, 129, 172, 0.2);
+    box-shadow: 0 3px 12px rgba(97, 175, 239, 0.2);
 }
 
 #workspaces button.urgent {
@@ -77,18 +77,19 @@ window#waybar.hidden {
 
 #clock {
     color: #ffffff;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(40, 44, 52, 0.7);
     border-radius: 20px;
     padding: 0 20px;
     margin: 0 8px;
     transition: all 0.3s ease-in-out;
-    border: 2px solid rgba(255, 255, 255, 0.2);
+    border: none;
     font-weight: 600;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
 }
 
 #clock:hover {
-    background: rgba(0, 0, 0, 0.7);
-    border-color: rgba(255, 255, 255, 0.4);
+    background: rgba(40, 44, 52, 0.9);
+    color: #61afef;
 }
 
 #network {
@@ -119,18 +120,19 @@ window#waybar.hidden {
 
 #pulseaudio {
     color: #ffffff;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(40, 44, 52, 0.6);
     border-radius: 20px;
     padding: 0 16px;
     margin: 0 4px;
     transition: all 0.3s ease-in-out;
-    border: 2px solid rgba(255, 255, 255, 0.2);
+    border: none;
     font-weight: 600;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
 }
 
 #pulseaudio:hover {
-    background: rgba(0, 0, 0, 0.7);
-    border-color: rgba(255, 255, 255, 0.4);
+    background: rgba(40, 44, 52, 0.8);
+    color: #61afef;
 }
 
 #pulseaudio.microphone {
@@ -148,18 +150,19 @@ window#waybar.hidden {
 
 #battery {
     color: #ffffff;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(40, 44, 52, 0.6);
     border-radius: 20px;
     padding: 0 16px;
     margin: 0 4px;
     transition: all 0.3s ease-in-out;
-    border: 2px solid rgba(255, 255, 255, 0.2);
+    border: none;
     font-weight: 600;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
 }
 
 #battery:hover {
-    background: rgba(0, 0, 0, 0.7);
-    border-color: rgba(255, 255, 255, 0.4);
+    background: rgba(40, 44, 52, 0.8);
+    color: #61afef;
 }
 
 #battery.charging {
@@ -198,62 +201,63 @@ window#waybar.hidden {
 
 #custom-weather {
     color: #ffffff;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(40, 44, 52, 0.6);
     border-radius: 20px;
     padding: 0 16px;
     margin: 0 4px;
     transition: all 0.3s ease-in-out;
-    border: 2px solid rgba(255, 255, 255, 0.2);
+    border: none;
     font-weight: 600;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
 }
 
 #custom-weather:hover {
-    background: rgba(0, 0, 0, 0.7);
-    border-color: rgba(255, 255, 255, 0.4);
+    background: rgba(40, 44, 52, 0.8);
+    color: #61afef;
 }
 
 #custom-power {
     color: #ffffff;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(40, 44, 52, 0.6);
     border-radius: 20px;
     padding: 0 16px;
     margin: 0 4px;
     transition: all 0.3s ease-in-out;
-    border: 2px solid rgba(255, 255, 255, 0.2);
+    border: none;
     font-weight: 600;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
 }
 
 #custom-power:hover {
-    background: rgba(0, 0, 0, 0.7);
-    border-color: rgba(255, 255, 255, 0.4);
+    background: rgba(40, 44, 52, 0.8);
+    color: #e06c75;
 }
 
 tooltip {
-    background: rgba(24, 24, 37, 0.95);
+    background: rgba(40, 44, 52, 0.95);
     border-radius: 12px;
     border-width: 1px;
     border-style: solid;
-    border-color: rgba(137, 180, 250, 0.3);
+    border-color: rgba(97, 175, 239, 0.3);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
 }
 
 tooltip label {
-    color: #cdd6f4;
+    color: #abb2bf;
     font-weight: 500;
 }
 
 #tray {
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(40, 44, 52, 0.6);
     border-radius: 20px;
     padding: 0 16px;
     margin: 0 8px;
     transition: all 0.3s ease-in-out;
-    border: 2px solid rgba(255, 255, 255, 0.2);
+    border: none;
 }
 
 #tray:hover {
-    background: rgba(0, 0, 0, 0.7);
-    border-color: rgba(255, 255, 255, 0.4);
+    background: rgba(40, 44, 52, 0.8);
 }
 
 #tray > .passive {
@@ -267,119 +271,104 @@ tooltip label {
 
 #idle_inhibitor {
     color: #ffffff;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(40, 44, 52, 0.6);
     border-radius: 20px;
     padding: 0 16px;
     margin: 0 4px;
     transition: all 0.3s ease-in-out;
-    border: 2px solid rgba(255, 255, 255, 0.2);
+    border: none;
     font-weight: 600;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
 }
 
 #idle_inhibitor:hover {
-    background: rgba(0, 0, 0, 0.7);
-    border-color: rgba(255, 255, 255, 0.4);
+    background: rgba(40, 44, 52, 0.8);
+    color: #61afef;
 }
 
 #idle_inhibitor.activated {
-    color: #ffffff;
-    background: rgba(0, 0, 0, 0.7);
-    border-color: rgba(255, 255, 255, 0.4);
+    color: #e5c07b;
+    background: rgba(40, 44, 52, 1.0);
+    border-color: rgba(229, 192, 123, 0.5);
 }
 
 #cpu {
     color: #ffffff;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(40, 44, 52, 0.6);
     border-radius: 20px;
     padding: 0 16px;
     margin: 0 4px;
     transition: all 0.3s ease-in-out;
-    border: 2px solid rgba(255, 255, 255, 0.2);
+    border: none;
     font-weight: 600;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
 }
 
 #cpu:hover {
-    background: rgba(0, 0, 0, 0.7);
-    border-color: rgba(255, 255, 255, 0.4);
+    background: rgba(40, 44, 52, 0.8);
+    color: #61afef;
 }
 
 #memory {
     color: #ffffff;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(40, 44, 52, 0.6);
     border-radius: 20px;
     padding: 0 16px;
     margin: 0 4px;
     transition: all 0.3s ease-in-out;
-    border: 2px solid rgba(255, 255, 255, 0.2);
+    border: none;
     font-weight: 600;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
 }
 
 #memory:hover {
-    background: rgba(0, 0, 0, 0.7);
-    border-color: rgba(255, 255, 255, 0.4);
+    background: rgba(40, 44, 52, 0.8);
+    color: #61afef;
 }
 
 #temperature {
     color: #ffffff;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(40, 44, 52, 0.6);
     border-radius: 20px;
     padding: 0 16px;
     margin: 0 4px;
     transition: all 0.3s ease-in-out;
-    border: 2px solid rgba(255, 255, 255, 0.2);
+    border: none;
     font-weight: 600;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
 }
 
 #temperature:hover {
-    background: rgba(0, 0, 0, 0.7);
-    border-color: rgba(255, 255, 255, 0.4);
+    background: rgba(40, 44, 52, 0.8);
+    color: #61afef;
 }
 
 #temperature.critical {
-    color: #bf616a;
-    background: rgba(191, 97, 106, 0.3);
-    border-color: rgba(191, 97, 106, 0.5);
+    color: #e06c75;
+    background: rgba(224, 108, 117, 0.3);
+    border-color: rgba(224, 108, 117, 0.5);
 }
 
 /* 自定义模块胶囊样式 */
 #custom-updates,
 #custom-netspeed,
 #custom-notification,
-#custom-totp,
-#custom-youtube-music {
+#custom-totp {
     color: #ffffff;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(40, 44, 52, 0.6);
     border-radius: 20px;
     padding: 0 16px;
     margin: 0 4px;
     transition: all 0.3s ease-in-out;
-    border: 2px solid rgba(255, 255, 255, 0.2);
+    border: none;
     font-weight: 600;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
 }
 
 #custom-updates:hover,
 #custom-netspeed:hover,
 #custom-notification:hover,
-#custom-totp:hover,
-#custom-youtube-music:hover {
-    background: rgba(0, 0, 0, 0.7);
-    border-color: rgba(255, 255, 255, 0.4);
-}
-
-/* YouTube Music 特定样式 */
-#custom-youtube-music.playing {
-    background: rgba(255, 61, 0, 0.5);
-    border-color: rgba(255, 61, 0, 0.4);
-}
-
-#custom-youtube-music.paused {
-    background: rgba(255, 193, 7, 0.5);
-    border-color: rgba(255, 193, 7, 0.4);
-}
-
-#custom-youtube-music.stopped,
-#custom-youtube-music.inactive {
-    background: rgba(0, 0, 0, 0.5);
-    border-color: rgba(255, 255, 255, 0.2);
-    opacity: 0.6;
+#custom-totp:hover {
+    background: rgba(40, 44, 52, 0.8);
+    color: #61afef;
 }
