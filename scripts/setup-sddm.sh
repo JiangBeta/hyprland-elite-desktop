@@ -37,6 +37,8 @@ Current=sugar-candy
 HaltCommand=/usr/bin/systemctl poweroff
 RebootCommand=/usr/bin/systemctl reboot
 InputMethod=fcitx5
+# 默认使用标准 Hyprland 会话
+DefaultSession=hyprland.desktop
 
 [Users]
 MaximumUid=60000
