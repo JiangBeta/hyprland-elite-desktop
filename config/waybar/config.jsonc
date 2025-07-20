@@ -149,8 +149,8 @@
         "exec": "~/.config/waybar/notification.sh",
         "interval": 1,
         "return-type": "json",
-        "on-click": "makoctl dismiss --all",
-        "on-click-right": "makoctl restore"
+        "on-click": "makoctl dismiss --all && pkill -RTMIN+8 waybar",
+        "on-click-right": "makoctl restore && pkill -RTMIN+8 waybar"
     },
     "custom/totp": {
         "format": "{}",

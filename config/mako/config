@@ -15,13 +15,29 @@ margin=10
 padding=18
 width=400
 height=120
+max-visible=3
 
-# Transparency settings - 邮件通知延长显示时间
+# Transparency settings
 default-timeout=8000
 ignore-timeout=0
 
-# 特殊应用通知设置
+# Icon settings
+icon-path=/usr/share/icons/Papirus-Dark
+icons=1
+max-icon-size=48
 
+# Interaction settings
+on-button-left=dismiss
+on-button-right=dismiss-all
+on-touch=dismiss
+
+# ntfy推送集成（排除飞书微信）
+on-notify=exec ~/.config/mako/ntfy-hook.sh "$app_name" "$summary" "$body" "$urgency"
+
+# Progress bar
+progress-color=#89b4fa
+
+# Special app configurations
 [app-name=Feishu]
 default-timeout=10000
 background-color=#1976d288
@@ -36,31 +52,6 @@ border-color=#1976d2
 default-timeout=10000
 background-color=#7c2d1288
 border-color=#dc2626
-
-[app-name=Calendar]
-default-timeout=10000
-background-color=#7c2d1288
-border-color=#dc2626
-
-# Icon settings
-icon-path=/usr/share/icons/Papirus-Dark
-icons=1
-max-icon-size=48
-
-# Grouping settings
-group-by=app-name
-max-visible=3
-
-# Interaction settings
-on-button-left=dismiss
-on-button-right=dismiss-all
-on-touch=dismiss
-
-# Progress bar
-progress-color=#89b4fa
-
-# Multi-monitor support
-output=HDMI-A-1
 
 # Formatting
 format=<b>%s</b>\n%b

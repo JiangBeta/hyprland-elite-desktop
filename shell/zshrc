@@ -117,6 +117,10 @@ export QT_SCALE_FACTOR=1.25
 export QT_FONT_DPI=120
 export XCURSOR_SIZE=32
 
+# ===== Wayland Compositor Settings =====
+# Fix cursor tracking issues for Wayland applications (swappy, etc.)
+export WLR_NO_HARDWARE_CURSORS=1
+
 # Force dark theme
 export GTK_THEME="Adwaita:dark"
 export QT_STYLE_OVERRIDE="Adwaita-Dark"
@@ -131,16 +135,30 @@ if [ -z "$(pgrep fcitx5)" ]; then
 fi
 
 
-# Personal proxy settings (uncomment and modify as needed)
-# export http_proxy="http://127.0.0.1:7890"
-# export https_proxy="http://127.0.0.1:7890" 
-# export no_proxy="localhost,127.0.0.1"
+# Personal configurations - 个人配置 (可根据需要启用/禁用)
+# Proxy settings - 代理设置 (如果不需要可以注释掉)
+if [[ "$ENABLE_PROXY" != "false" ]]; then
+    export http_proxy="http://127.0.0.1:7897"
+    export https_proxy="http://127.0.0.1:7897" 
+    export no_proxy="localhost,127.0.0.1"
+fi
+
+# Additional PATH - 额外的PATH设置 (如果不需要可以注释掉)
+if [[ "$ENABLE_EXTRA_PATH" != "false" ]]; then
+    export PATH="$HOME/bin:$HOME/.local/bin:$PATH"
+fi
+
+# Load machine-specific local configuration if it exists
+# 加载机器特定的本地配置（如果存在）
+if [[ -f "$HOME/.zshrc.local" ]]; then
+    source "$HOME/.zshrc.local"
+fi
 
 # Additional development tools (uncomment if needed)
 # bun completions
-# [ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
-# export BUN_INSTALL="$HOME/.bun"
-# export PATH="$BUN_INSTALL/bin:$PATH"
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
 
 export PATH="$HOME/.local/bin:$PATH"
 

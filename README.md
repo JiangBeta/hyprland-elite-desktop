@@ -17,12 +17,14 @@
 - **TOTP 验证器** - 支持 Google Authenticator 导入
 - **智能壁纸** - 自动下载和切换
 - **截图工具** - Grim + Slurp + Swappy/Satty
+- **通知推送** - 集成 ntfy.sh 手机推送
 
 ### 🎨 系统美化
-- **SDDM** - Sugar Candy 登录主题
-- **fcitx5** - 现代化中文输入法
+- **SDDM** - Sugar Candy 登录主题，统一配色
+- **fcitx5** - 现代化中文输入法，云拼音支持
 - **GTK/Qt** - 统一的暗色主题
 - **动态效果** - 流畅的窗口动画
+- **高DPI支持** - 完美的缩放和字体渲染
 
 ## 📦 支持的发行版
 

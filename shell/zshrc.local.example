@@ -1,0 +1,23 @@
+# 个人本地配置示例文件
+# 复制为 ~/.zshrc.local 并根据需要修改
+
+# =================== 代理设置 ===================
+# 如果需要代理，取消注释并修改端口
+# export http_proxy="http://127.0.0.1:7897"
+# export https_proxy="http://127.0.0.1:7897" 
+# export no_proxy="localhost,127.0.0.1"
+
+# =================== PATH设置 ===================
+# 添加个人bin目录到PATH
+# export PATH="$HOME/bin:$HOME/.local/bin:$PATH"
+
+# =================== 其他个人设置 ===================
+# 在这里添加你的个人配置
+# export EDITOR="nvim"
+# export BROWSER="firefox"
+
+# =================== 别名设置 ===================
+# 个人常用别名
+# alias ll="ls -alF"
+# alias la="ls -A"
+# alias l="ls -CF"

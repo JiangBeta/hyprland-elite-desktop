@@ -14,11 +14,10 @@ if ! pgrep -x mako > /dev/null; then
     exit 0
 fi
 
-# 获取通知历史（已关闭的通知数量）
-HISTORY_COUNT=$(makoctl history 2>/dev/null | jq -r '.data[0] | length' 2>/dev/null || echo "0")
+# 获取通知历史数量（简单有效的方法）
+HISTORY_COUNT=$(makoctl history 2>/dev/null | grep "Notification" | wc -l)
 
-# 检查是否有活动通知（显示中的通知）
-# mako 会在有通知时创建临时窗口，我们通过检查 mako 进程状态来判断
+# 检查是否有活动通知
 if [[ "$HISTORY_COUNT" -gt 0 ]]; then
     echo "{\"text\": \"󰂚 $HISTORY_COUNT\", \"tooltip\": \"有 $HISTORY_COUNT 条历史通知\\n左键：清除所有\\n右键：恢复最近\"}"
 else

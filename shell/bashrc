@@ -16,6 +16,10 @@ export QT_SCALE_FACTOR=1.25
 export QT_FONT_DPI=120
 export XCURSOR_SIZE=32
 
+# Wayland Compositor Settings
+# Fix cursor tracking issues for Wayland applications (swappy, etc.)
+export WLR_NO_HARDWARE_CURSORS=1
+
 # Force dark theme
 export GTK_THEME="Adwaita:dark"
 export QT_STYLE_OVERRIDE="Adwaita-Dark"
