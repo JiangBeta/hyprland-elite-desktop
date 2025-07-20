@@ -104,22 +104,24 @@ check_time_up() {
     local remaining=$(get_remaining_time)
     local state=$(read_state)
     local phase=$(echo "$state" | jq -r '.phase')
+    local is_running=$(echo "$state" | jq -r '.is_running')
+    local notified=$(echo "$state" | jq -r '.notified // false')
     
-    if [[ $remaining -le 0 && "$phase" != "idle" ]]; then
-        # 时间到了，暂停计时并发送通知
-        state=$(echo "$state" | jq '.is_running = false')
-        write_state "$state"
-        
+    if [[ $remaining -le 0 && "$phase" != "idle" && "$is_running" == "true" && "$notified" != "true" ]]; then
+        # 时间到了，暂停计时并发送通知（仅一次）
         case "$phase" in
             "work")
                 local completed=$(echo "$state" | jq -r '.completed_pomodoros')
                 completed=$((completed + 1))
-                state=$(echo "$state" | jq ".completed_pomodoros = $completed")
+                state=$(echo "$state" | jq ".completed_pomodoros = $completed | .is_running = false | .notified = true")
                 write_state "$state"
                 
                 notify-send "🍅 番茄完成" "恭喜！完成第${completed}个番茄\\n\\n左键: 开始休息\\n右键: 继续工作" -u normal -t 10000
                 ;;
             "short_break"|"long_break")
+                state=$(echo "$state" | jq '.is_running = false | .notified = true')
+                write_state "$state"
+                
                 notify-send "😴 休息结束" "休息时间结束\\n\\n左键: 开始工作\\n右键: 继续休息" -u normal -t 10000
                 ;;
         esac

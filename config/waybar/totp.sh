@@ -79,7 +79,7 @@ if command -v oathtool >/dev/null 2>&1; then
         # 生成服务列表用于tooltip
         services_list=""
         i=1
-        echo "$all_services" | while read -r line; do
+        while IFS= read -r line; do
             svc_name=$(echo "$line" | cut -d':' -f1)
             if [ $i -eq $current_index ]; then
                 services_list="${services_list}▶ $svc_name (当前)\\n"
@@ -87,11 +87,11 @@ if command -v oathtool >/dev/null 2>&1; then
                 services_list="${services_list}  $svc_name\\n"
             fi
             i=$((i + 1))
-        done
+        done <<< "$all_services"
         
-        # 简化显示：只显示服务名，点击时复制验证码
-        printf '{"text": "🔐 %s", "tooltip": "%s TOTP\\n剩余时间: %d秒\\n点击复制验证码到剪贴板", "class": "%s"}\n' \
-            "$service_name" "$service_name" "$remaining" "$color_class"
+        # 显示当前服务和验证码，以及所有可用服务
+        printf '{"text": "🔐 %s", "tooltip": "%s TOTP: %s\\n剩余时间: %d秒\\n\\n可用服务 (%d/%d):\\n%s\\n左键: 复制验证码\\n右键: 切换服务", "class": "%s"}\n' \
+            "$service_name" "$service_name" "$totp_code" "$remaining" "$current_index" "$total_services" "$services_list" "$color_class"
     else
         echo '{"text": "🔐 错误", "tooltip": "TOTP生成失败，请检查密钥配置"}'
     fi

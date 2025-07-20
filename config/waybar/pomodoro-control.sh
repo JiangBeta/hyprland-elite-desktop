@@ -80,7 +80,8 @@ start_phase() {
         .total_time = $duration |
         .is_running = true |
         .last_update = $(current_time) |
-        .cycle = $cycle
+        .cycle = $cycle |
+        .notified = false
     ")
     write_state "$state"
 }

@@ -81,6 +81,164 @@ check_dependencies() {
     fi
 }
 
+# 检测发行版和包管理器
+detect_distro() {
+    if command -v pacman >/dev/null 2>&1; then
+        DISTRO="arch"
+        PKG_INSTALL="sudo pacman -S --needed"
+        AUR_HELPER="yay -S"
+    elif command -v apt >/dev/null 2>&1; then
+        DISTRO="debian"
+        PKG_INSTALL="sudo apt install -y"
+        AUR_HELPER="echo '需要手动安装:'"
+    elif command -v dnf >/dev/null 2>&1; then
+        DISTRO="fedora"
+        PKG_INSTALL="sudo dnf install -y"
+        AUR_HELPER="echo '需要手动安装:'"
+    else
+        DISTRO="unknown"
+        PKG_INSTALL="echo '请手动安装:'"
+        AUR_HELPER="echo '请手动安装:'"
+    fi
+    
+    log_info "检测到发行版: $DISTRO"
+}
+
+# 定义软件包组
+declare -A PACKAGES=(
+    [core]="hyprland waybar kitty mako wofi"
+    [productivity]="oath-toolkit websocat jq"
+    [development]="git curl wget xdotool"
+    [media]="grim slurp swappy satty swww"
+    [input]="fcitx5 fcitx5-chinese-addons fcitx5-gtk fcitx5-qt"
+    [system]="network-manager-applet blueman brightnessctl playerctl gnome-keyring"
+)
+
+declare -A AUR_PACKAGES=(
+    [productivity]="lunar-calendar-bin"
+    [media]="youtube-music-bin"
+)
+
+# 安装软件包组
+install_package_group() {
+    local group="$1"
+    local packages="${PACKAGES[$group]}"
+    local aur_packages="${AUR_PACKAGES[$group]}"
+    
+    if [[ -n "$packages" ]]; then
+        log_info "安装 $group 组件..."
+        
+        case "$DISTRO" in
+            "arch")
+                $PKG_INSTALL $packages
+                ;;
+            "debian")
+                case "$group" in
+                    "core")
+                        $PKG_INSTALL hyprland waybar kitty mako-notifier wofi
+                        ;;
+                    "input")
+                        $PKG_INSTALL fcitx5 fcitx5-chinese-addons
+                        ;;
+                    "system")
+                        $PKG_INSTALL network-manager-gnome blueman brightnessctl playerctl gnome-keyring
+                        ;;
+                    *)
+                        $PKG_INSTALL $packages
+                        ;;
+                esac
+                ;;
+            *)
+                log_warning "未知发行版，请手动安装: $packages"
+                ;;
+        esac
+        
+        if [[ -n "$aur_packages" && "$DISTRO" == "arch" ]]; then
+            log_info "安装 AUR 包: $aur_packages"
+            $AUR_HELPER $aur_packages
+        fi
+        
+        log_success "$group 组件安装完成"
+    fi
+}
+
+# 配置链接
+link_configs() {
+    local groups=("$@")
+    
+    log_info "链接配置文件..."
+    
+    # 基础配置（始终链接）
+    local base_configs=(
+        "$DOTFILES_DIR/config/hypr:$HOME/.config/hypr"
+        "$DOTFILES_DIR/config/waybar:$HOME/.config/waybar"
+        "$DOTFILES_DIR/config/kitty:$HOME/.config/kitty"
+        "$DOTFILES_DIR/config/mako:$HOME/.config/mako"
+        "$DOTFILES_DIR/config/wofi:$HOME/.config/wofi"
+        "$DOTFILES_DIR/shell/bashrc:$HOME/.bashrc"
+        "$DOTFILES_DIR/shell/zshrc:$HOME/.zshrc"
+        "$DOTFILES_DIR/.Xresources:$HOME/.Xresources"
+    )
+    
+    # 根据组件添加配置
+    for group in "${groups[@]}"; do
+        case "$group" in
+            "input")
+                base_configs+=("$DOTFILES_DIR/config/fcitx5:$HOME/.config/fcitx5")
+                ;;
+            "media")
+                base_configs+=("$DOTFILES_DIR/config/swww:$HOME/.config/swww")
+                base_configs+=("$DOTFILES_DIR/config/satty:$HOME/.config/satty")
+                base_configs+=("$DOTFILES_DIR/config/swappy:$HOME/.config/swappy")
+                ;;
+            "productivity")
+                base_configs+=("$DOTFILES_DIR/config/totp:$HOME/.config/totp")
+                ;;
+            "development")
+                base_configs+=("$DOTFILES_DIR/config/Code:$HOME/.config/Code")
+                ;;
+        esac
+    done
+    
+    # 创建备份并链接
+    mkdir -p "$BACKUP_DIR"
+    
+    for config in "${base_configs[@]}"; do
+        IFS=':' read -r src dst <<< "$config"
+        
+        if [[ -e "$dst" && ! -L "$dst" ]]; then
+            log_info "备份: $dst"
+            mv "$dst" "$BACKUP_DIR/"
+        fi
+        
+        log_info "链接: $(basename "$src") -> $dst"
+        mkdir -p "$(dirname "$dst")"
+        ln -sf "$src" "$dst"
+    done
+    
+    # 链接脚本
+    mkdir -p "$HOME/.local/bin"
+    find "$DOTFILES_DIR/scripts" -name "*.sh" -executable | while read -r script; do
+        basename_script=$(basename "$script")
+        ln -sf "$script" "$HOME/.local/bin/$basename_script"
+    done
+    
+    # 处理desktop文件
+    mkdir -p "$HOME/.local/share/applications"
+    if [[ -d "$DOTFILES_DIR/config/applications" ]]; then
+        for src in "$DOTFILES_DIR/config/applications"/*.desktop; do
+            if [[ -f "$src" ]]; then
+                basename_file=$(basename "$src")
+                dst="$HOME/.local/share/applications/$basename_file"
+                ln -sf "$src" "$dst"
+            fi
+        done
+        update-desktop-database "$HOME/.local/share/applications/" 2>/dev/null || true
+    fi
+    
+    log_success "配置链接完成，备份保存在: $BACKUP_DIR"
+}
+
 # 安装功能
 install_dotfiles() {
     local modules=("$@")
@@ -93,15 +251,32 @@ install_dotfiles() {
     log_info "开始安装 dotfiles..."
     log_info "备份目录: $BACKUP_DIR"
     
-    # 创建备份目录
-    mkdir -p "$BACKUP_DIR"
+    detect_distro
     
-    # 调用原始安装脚本
+    # 处理模块安装
+    local install_groups=()
     if [[ " ${modules[*]} " =~ " --all " ]] || [ ${#modules[@]} -eq 0 ]; then
-        "$DOTFILES_DIR/install.sh"
+        install_groups=("core" "productivity" "development" "media" "input" "system")
     else
-        "$DOTFILES_DIR/scripts/modular-install.sh" "${modules[@]}"
+        for module in "${modules[@]}"; do
+            case "$module" in
+                --core) install_groups+=("core" "system") ;;
+                --productivity) install_groups+=("productivity") ;;
+                --development) install_groups+=("development") ;;
+                --media) install_groups+=("media") ;;
+                --input) install_groups+=("input") ;;
+                --themes) log_info "主题通过配置文件自动应用" ;;
+            esac
+        done
     fi
+    
+    # 安装软件包
+    for group in "${install_groups[@]}"; do
+        install_package_group "$group"
+    done
+    
+    # 链接配置
+    link_configs "${install_groups[@]}"
     
     log_success "安装完成！"
 }
@@ -110,11 +285,43 @@ install_dotfiles() {
 sync_dotfiles() {
     log_info "开始同步配置到仓库..."
     
-    if [ -f "$DOTFILES_DIR/sync.sh" ]; then
-        "$DOTFILES_DIR/sync.sh"
+    cd "$DOTFILES_DIR"
+    
+    # 检查是否有变更
+    if ! git status --porcelain | grep -q .; then
+        log_info "没有需要同步的变更"
+        return 0
+    fi
+    
+    # 显示变更
+    log_info "检测到以下变更:"
+    git status --short
+    
+    # 确认同步
+    log_warning "是否提交这些变更? (y/N)"
+    read -r response
+    
+    if [[ "$response" =~ ^[Yy]$ ]]; then
+        log_info "请输入提交信息:"
+        read -r commit_message
+        
+        if [[ -z "$commit_message" ]]; then
+            commit_message="update: 配置更新 $(date '+%Y-%m-%d %H:%M')"
+        fi
+        
+        git add .
+        git commit -m "$commit_message"
+        
+        log_info "是否推送到远程仓库? (y/N)"
+        read -r push_response
+        
+        if [[ "$push_response" =~ ^[Yy]$ ]]; then
+            git push
+            log_success "推送完成！"
+        fi
     else
-        log_error "sync.sh 脚本不存在"
-        exit 1
+        log_info "已取消同步操作"
+        return 0
     fi
     
     log_success "同步完成！"
@@ -124,14 +331,90 @@ sync_dotfiles() {
 cleanup_dotfiles() {
     log_info "开始清理系统和备份..."
     
-    if [ -f "$DOTFILES_DIR/cleanup.sh" ]; then
-        "$DOTFILES_DIR/cleanup.sh"
-    else
-        log_error "cleanup.sh 脚本不存在"
-        exit 1
+    local cleaned_items=0
+    
+    # 清理旧备份
+    log_info "清理旧备份文件..."
+    local backup_dirs=($(ls -dt "$HOME"/dotfiles_backup_* 2>/dev/null | tail -n +6))
+    if [ ${#backup_dirs[@]} -gt 0 ]; then
+        for backup_dir in "${backup_dirs[@]}"; do
+            log_info "删除旧备份: $(basename "$backup_dir")"
+            rm -rf "$backup_dir"
+            ((cleaned_items++))
+        done
     fi
     
-    log_success "清理完成！"
+    # 清理临时文件
+    log_info "清理临时文件..."
+    local temp_dirs=(
+        "/tmp/screenshots"
+        "/tmp/screenshot_*"
+        "$HOME/.cache/thumbnails"
+        "$HOME/.cache/hypr"
+    )
+    
+    for temp_pattern in "${temp_dirs[@]}"; do
+        for temp_path in $temp_pattern; do
+            if [[ -e "$temp_path" ]]; then
+                log_info "删除临时文件: $temp_path"
+                rm -rf "$temp_path"
+                ((cleaned_items++))
+            fi
+        done
+    done
+    
+    # 清理无效的符号链接
+    log_info "检查无效的符号链接..."
+    local config_dirs=(
+        "$HOME/.config"
+        "$HOME/.local/bin"
+        "$HOME/.local/share/applications"
+    )
+    
+    for config_dir in "${config_dirs[@]}"; do
+        if [[ -d "$config_dir" ]]; then
+            find "$config_dir" -type l ! -exec test -e {} \; -print 2>/dev/null | while read -r broken_link; do
+                log_info "删除无效链接: $broken_link"
+                rm -f "$broken_link"
+                ((cleaned_items++))
+            done
+        fi
+    done
+    
+    # 重启服务（可选）
+    log_warning "是否重启桌面服务？(y/N)"
+    read -r restart_response
+    
+    if [[ "$restart_response" =~ ^[Yy]$ ]]; then
+        log_info "重启桌面服务..."
+        
+        # 重启 waybar
+        if pgrep waybar > /dev/null; then
+            pkill waybar
+            waybar &
+            log_info "重启 waybar"
+        fi
+        
+        # 重启 mako
+        if pgrep mako > /dev/null; then
+            pkill mako
+            mako &
+            log_info "重启 mako"
+        fi
+        
+        # 重启 fcitx5
+        if pgrep fcitx5 > /dev/null; then
+            pkill fcitx5
+            fcitx5 -d
+            log_info "重启 fcitx5"
+        fi
+    fi
+    
+    if [ $cleaned_items -eq 0 ]; then
+        log_info "系统已经很干净，没有需要清理的内容"
+    else
+        log_success "清理完成！共处理 $cleaned_items 个项目"
+    fi
 }
 
 # 备份功能

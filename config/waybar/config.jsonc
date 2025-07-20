@@ -147,10 +147,13 @@
     "custom/notification": {
         "format": "{}",
         "exec": "~/.config/waybar/notification.sh",
-        "interval": 1,
+        "interval": 2,
         "return-type": "json",
-        "on-click": "makoctl dismiss --all && pkill -RTMIN+8 waybar",
-        "on-click-right": "makoctl restore && pkill -RTMIN+8 waybar"
+        "on-click": "~/.config/waybar/notification-control.sh left",
+        "on-click-middle": "~/.config/waybar/notification-control.sh middle",
+        "on-click-right": "~/.config/waybar/notification-control.sh right",
+        "signal": 7,
+        "tooltip": true
     },
     "custom/totp": {
         "format": "{}",
