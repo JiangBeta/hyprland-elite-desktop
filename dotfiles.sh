@@ -1,7 +1,9 @@
 #!/bin/bash
 
+# ===========================================
 # Dotfiles 统一管理脚本
-# 整合install.sh、sync.sh、cleanup.sh的功能
+# ===========================================
+# 一个脚本搞定所有操作：安装、同步、备份、维护
 
 set -e
 
@@ -35,31 +37,38 @@ log_error() {
 # 显示帮助信息
 show_help() {
     cat << EOF
-Dotfiles 管理脚本
+🚀 Dotfiles 统一管理脚本
 
 用法: $0 <命令> [选项]
 
-命令:
-    install [模块...]    安装配置文件 (默认安装全部)
+📋 主要命令:
+    setup                🆕 快速设置 (推荐新用户)
+    install [模块...]    安装配置文件 (高级用户)
     sync                 同步配置到仓库
-    cleanup              清理系统和备份
+    status               显示配置状态
     backup               创建当前配置备份
     restore <备份名>     恢复指定备份
-    status               显示配置状态
+    cleanup              清理系统和备份
     help                 显示此帮助信息
 
-模块 (用于install命令):
+🔧 模块 (用于install命令):
     --core              核心配置 (hypr, waybar, etc.)
     --productivity      生产力工具 (pomodoro, totp)
-    --development       开发环境 (vscode, shell)
+    --development       开发环境 (shell, git)
     --themes            主题和美化
     --all               所有模块 (默认)
 
-示例:
-    $0 install --core --productivity
-    $0 sync
-    $0 backup
-    $0 restore dotfiles_backup_20240120_143022
+💡 快速开始:
+    1. cp .env.example .env.local
+    2. 编辑 .env.local 配置文件
+    3. $0 setup
+
+📚 示例:
+    $0 setup                              # 快速部署 (推荐)
+    $0 install --core --productivity      # 安装指定模块
+    $0 sync                               # 同步配置
+    $0 status                             # 查看状态
+    $0 backup                             # 创建备份
 
 EOF
 }
@@ -511,6 +520,121 @@ show_status() {
     fi
 }
 
+# 快速设置函数（一键部署）
+quick_setup() {
+    echo -e "${BLUE}🚀 快速设置 dotfiles...${NC}"
+    echo
+    
+    # 检查 .env.local
+    if [[ ! -f "$DOTFILES_DIR/.env.local" ]]; then
+        if [[ -f "$DOTFILES_DIR/.env.example" ]]; then
+            log_warning "未找到 .env.local 配置文件"
+            echo "请先运行："
+            echo "  cp .env.example .env.local"
+            echo "  编辑 .env.local 文件"
+            echo "  然后重新运行 ./dotfiles.sh setup"
+            exit 1
+        else
+            log_error "未找到 .env.example 模板文件"
+            exit 1
+        fi
+    fi
+    
+    # 加载配置
+    source "$DOTFILES_DIR/.env.local"
+    log_success "配置文件加载完成"
+    
+    # 创建必要目录
+    log_info "创建目录结构..."
+    mkdir -p "$HOME/.config" "$HOME/.local/bin" "$HOME/.local/var/log/dotfiles"
+    mkdir -p "$HOME/.config/totp" && chmod 700 "$HOME/.config/totp"
+    
+    # 备份现有配置
+    backup_dotfiles
+    
+    # 链接配置文件
+    log_info "链接配置文件..."
+    ln -sf "$DOTFILES_DIR/shell/zshrc" "$HOME/.zshrc"
+    ln -sf "$DOTFILES_DIR/config/git" "$HOME/.config/"
+    
+    # 桌面环境配置（如果支持）
+    if command -v hyprctl >/dev/null 2>&1; then
+        log_info "检测到 Hyprland，链接桌面配置..."
+        ln -sf "$DOTFILES_DIR/config/hypr" "$HOME/.config/"
+        ln -sf "$DOTFILES_DIR/config/waybar" "$HOME/.config/"
+        ln -sf "$DOTFILES_DIR/config/mako" "$HOME/.config/"
+        log_success "桌面环境配置完成"
+    else
+        log_warning "未检测到 Hyprland，跳过桌面环境配置"
+    fi
+    
+    # 设置脚本权限
+    log_info "设置脚本权限..."
+    find "$DOTFILES_DIR/scripts" -name "*.sh" -exec chmod +x {} \; 2>/dev/null || true
+    
+    # 添加到PATH
+    if ! grep -q "dotfiles/scripts" "$HOME/.zshrc" 2>/dev/null; then
+        echo '' >> "$HOME/.zshrc"
+        echo '# dotfiles scripts' >> "$HOME/.zshrc"
+        echo 'export PATH="$HOME/dotfiles/scripts:$PATH"' >> "$HOME/.zshrc"
+        log_success "已添加脚本目录到 PATH"
+    fi
+    
+    # 测试配置
+    log_info "测试配置..."
+    if [[ -x "$DOTFILES_DIR/scripts/load-env.sh" ]]; then
+        if "$DOTFILES_DIR/scripts/load-env.sh" >/dev/null 2>&1; then
+            log_success "环境配置测试通过"
+        else
+            log_warning "环境配置测试失败，但继续安装"
+        fi
+    fi
+    
+    # 可选服务设置
+    echo
+    log_info "🔧 可选服务设置："
+    
+    # 健康提醒
+    read -p "启用健康提醒服务？(Y/n): " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]] || [[ -z $REPLY ]]; then
+        if [[ -x "$DOTFILES_DIR/scripts/periodic-reminders.sh" ]]; then
+            "$DOTFILES_DIR/scripts/periodic-reminders.sh" test >/dev/null 2>&1 && log_success "健康提醒测试成功"
+            echo "管理健康提醒："
+            echo "  启动: periodic-reminders.sh start"
+            echo "  状态: periodic-reminders.sh status"
+            echo "  停止: periodic-reminders.sh stop"
+        fi
+    fi
+    
+    # 系统监控
+    read -p "启用系统监控定时任务？(y/N): " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        cron_line="*/30 * * * * $DOTFILES_DIR/scripts/system-monitor-notify.sh"
+        if ! crontab -l 2>/dev/null | grep -q "system-monitor-notify.sh"; then
+            (crontab -l 2>/dev/null; echo "$cron_line") | crontab -
+            log_success "系统监控已启用（每30分钟检查一次）"
+        else
+            log_info "系统监控已存在"
+        fi
+    fi
+    
+    echo
+    log_success "🎉 快速设置完成！"
+    echo
+    echo -e "${BLUE}📋 接下来的步骤：${NC}"
+    echo "  1. 重新打开终端或运行: source ~/.zshrc"
+    echo "  2. 根据需要调整 .env.local 配置"
+    echo "  3. 享受你的新桌面环境！"
+    echo
+    echo -e "${BLUE}🔧 常用命令：${NC}"
+    echo "  ./dotfiles.sh status           # 查看配置状态"
+    echo "  ./dotfiles.sh sync             # 同步配置"
+    echo "  ./dotfiles.sh backup           # 备份配置"
+    echo "  periodic-reminders.sh start    # 启动健康提醒"
+}
+
 # 主函数
 main() {
     if [ $# -eq 0 ]; then
@@ -524,6 +648,9 @@ main() {
     shift
     
     case "$command" in
+        setup)
+            quick_setup
+            ;;
         install)
             install_dotfiles "$@"
             ;;

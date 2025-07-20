@@ -36,13 +36,28 @@
 
 ## 🚀 快速安装
 
-### 1. 克隆仓库
+### 💫 超简单三步部署
+
 ```bash
-git clone https://github.com/laofahai/hyprland-elite-desktop.git ~/dotfiles
+# 1. 克隆项目
+git clone <your-repo-url> ~/dotfiles
 cd ~/dotfiles
+
+# 2. 复制并编辑配置
+cp .env.example .env.local
+vim .env.local  # 修改 NTFY_TOPIC 等个人配置
+
+# 3. 一键部署
+./dotfiles.sh setup
 ```
 
-### 2. 安装依赖（Arch Linux）
+**就这么简单！🎉 剩下的都是自动处理！**
+
+### 🔧 依赖安装（可选）
+
+如果要使用完整的桌面环境功能：
+
+#### Arch Linux
 ```bash
 # 核心软件包
 sudo pacman -S hyprland waybar kitty fcitx5 fcitx5-chinese-addons \
@@ -53,30 +68,64 @@ sudo pacman -S hyprland waybar kitty fcitx5 fcitx5-chinese-addons \
 yay -S youtube-music-bin lunar-calendar-bin
 ```
 
-### 3. 使用统一管理脚本
-🆕 **新一代**: 使用全新的 `manage.sh` 脚本进行所有操作！
+### 3. 统一管理脚本
 
 ```bash
-# 完整安装（推荐）
-./manage.sh install
+# 查看所有可用命令
+./dotfiles.sh help
 
-# 模块化安装
-./manage.sh install --core --productivity
+# 快速设置（推荐新用户）
+./dotfiles.sh setup
 
-# 同步配置到仓库
-./manage.sh sync
+# 高级功能
+./dotfiles.sh status    # 查看配置状态
+./dotfiles.sh sync      # 同步配置到仓库
+./dotfiles.sh backup    # 创建配置备份
+```
 
-# 创建配置备份
-./manage.sh backup
+## 🔄 多设备同步
 
-# 清理系统文件
-./manage.sh cleanup
+### 在另一台电脑上同步：
+```bash
+git clone <your-repo> ~/dotfiles
+cd ~/dotfiles
+cp .env.example .env.local
+vim .env.local              # 修改 NTFY_TOPIC 为唯一值
+./dotfiles.sh setup        # 一键同步
+```
 
-# 查看状态
-./manage.sh status
+### 日常更新：
+```bash
+cd ~/dotfiles
+git pull
+./dotfiles.sh setup        # 重新应用最新配置
+```
 
-# 查看所有命令
-./manage.sh help
+## 🔧 常用命令
+
+```bash
+# 健康提醒管理
+periodic-reminders.sh start    # 启动健康提醒
+periodic-reminders.sh status   # 查看服务状态
+periodic-reminders.sh stop     # 停止健康提醒
+
+# 配置管理
+./dotfiles.sh status           # 查看配置状态
+./dotfiles.sh backup           # 创建备份
+```
+
+## ⚙️ 重要配置
+
+在 `.env.local` 中修改这些配置：
+
+```bash
+# 通知主题（必须唯一）
+NTFY_TOPIC="yourname_laptop_$(date +%s)"
+
+# 健康提醒频率（分钟）
+BREAK_INTERVAL=120    # 休息提醒
+WATER_INTERVAL=180    # 喝水提醒
+EYE_INTERVAL=60       # 护眼提醒
 ```
 
 ## 🎛️ 快捷键
@@ -149,7 +198,7 @@ cat NOTIFICATION_SYSTEM.md
 
 ```
 dotfiles/
-├── manage.sh            # 🆕 统一管理脚本
+├── dotfiles.sh            # 🆕 统一管理脚本
 ├── config/              # 应用配置文件
 │   ├── hypr/           # Hyprland 配置
 │   ├── waybar/         # 状态栏配置和脚本
@@ -171,16 +220,16 @@ dotfiles/
 ### 🆕 统一管理脚本
 ```bash
 # 查看所有可用命令
-./manage.sh help
+./dotfiles.sh help
 
 # 检查配置状态
-./manage.sh status
+./dotfiles.sh status
 
 # 备份当前配置
-./manage.sh backup
+./dotfiles.sh backup
 
 # 恢复备份
-./manage.sh restore backup_name
+./dotfiles.sh restore backup_name
 ```
 
 ### 🔒 隐私保护

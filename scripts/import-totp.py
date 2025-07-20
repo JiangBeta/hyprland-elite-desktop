@@ -70,7 +70,13 @@ def parse_google_auth_migration(uri):
     return accounts
 
 # 您的migration URI
-migration_uri = "otpauth-migration://offline?data=Cm8KKLG%2BogvG%2FV6t2zViVQni%2BI3AtAPOIerNVTbeqRrpKBWMMRPbIWhFBx0SIEFsaXl1bjpsYW9mYWhhaUAxNDMwODczOTY0OTIxNDg4GgZBbGl5dW4gASgBMAJCEzU4MTI2YjE3Mjc1Mzg2MTkyMDcKQQoUZXgWsUjtxSKGH3g6Vt39r2kX9tkSCGxhb2ZhaGFpGgRQeVBJIAEoATACQhMwYmNmN2MxNzQ5NTY3MTg0NDg3CkAKFBTtn%2Fux0Iz0y0rvvPpLOTZSVxyUEghsYW9mYWhhaRoDbnBtIAEoATACQhNmYmNjMWYxNzUwMTczNDg3MTE1CjgKCiWZDxIql4mKHHwSD3Ntcy1hY3RpdmF0ZS5pbyABKAEwAkITZGM3YzNjMTc1MDY0MjcyODk5NQpNChR%2B7nRNfjQhOM64VNTc71gOcd44ehISbGFvZmFoYWlAZ21haWwuY29tGgZHb29nbGUgASgBMAJCEzM2NzVmODE3NTA5MDg1NzUxMzEKbwooW%2FhwG9qCPBiBfEVl5IlYDJEyBbufqc76KwJFg0GGMKztpjEdQs%2F38BITdHVyYm80QDU2OTA5MDYzMDAwNhoTQW1hem9uIFdlYiBTZXJ2aWNlcyABKAEwAkITY2I0N2FlMTc1MDk0MDE2NDkzMQo5Cgo3NUn4xJ%2FAFlpnEghsYW9mYWhhaRoGR2l0SHViIAEoATACQhNkMWUzMTMxNzUxMDM2MDc2OTU1EAIYASAA"
+# 从命令行参数获取migration_uri，移除硬编码的敏感数据
+if len(sys.argv) > 1:
+    migration_uri = sys.argv[1]
+else:
+    print("错误: 请提供 otpauth-migration URI 作为参数")
+    print("用法: python3 import-totp.py 'otpauth-migration://...'")
+    sys.exit(1)
 
 try:
     # 解析账户

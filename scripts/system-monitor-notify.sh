@@ -108,7 +108,8 @@ check_temperature() {
 
 # 检查网络连接
 check_network() {
-    if ! ping -c 1 8.8.8.8 &> /dev/null; then
+    # 设置超时时间为5秒
+    if ! timeout 5 ping -c 1 -W 3 8.8.8.8 &> /dev/null; then
         $HOME/dotfiles/scripts/enhanced-notify.sh -c System -l critical -t "网络连接异常" -m "无法连接到互联网"
         return 1
     fi
