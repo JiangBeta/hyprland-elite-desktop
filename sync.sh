@@ -81,6 +81,9 @@ declare -A CONFIG_FILES=(
     ["$HOME/.config/wofi"]="$DOTFILES_DIR/config/wofi"
     ["$HOME/.config/Code"]="$DOTFILES_DIR/config/Code"
     ["$HOME/.config/totp"]="$DOTFILES_DIR/config/totp"
+    ["$HOME/.config/gtk-3.0"]="$DOTFILES_DIR/config/gtk-3.0"
+    ["$HOME/.config/gtk-4.0"]="$DOTFILES_DIR/config/gtk-4.0"
+    ["$HOME/.config/qt5ct"]="$DOTFILES_DIR/config/qt5ct"
 )
 
 declare -A CLAUDE_FILES=(

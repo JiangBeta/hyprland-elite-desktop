@@ -1,27 +1,34 @@
-# 忽略备份文件
+# 备份文件
 *.bak
+*.backup
+*.backup.*
+*_backup_*
 *~
 
-# 忽略临时文件
+# 临时文件
 *.tmp
+*.temp
 *.swp
 *.swo
 
-# 忽略日志文件
+# 日志文件
 *.log
 
-# 忽略敏感信息
+# 敏感信息
 *_history
 *.secret
 *.key
-.pem
+*.pem
+secrets.conf
+.credentials.json
+credentials.json
 
-# 忽略缓存文件
+# 缓存文件
 .cache/
 __pycache__/
 *.pyc
 
-# Claude specific ignores
+# Claude 相关
 claude/.credentials.json
 claude/.anthropic/
 claude/downloads/
@@ -30,6 +37,23 @@ claude/projects/
 claude/shell-snapshots/
 claude/statsig/
 claude/todos/
+claude/.git/
 
-# VSCode config cache
+# VS Code 缓存和个人数据
 config/Code/
+.vscode/
+
+# TOTP 个人密钥
+config/totp/secrets.conf
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# 个人数据
+config/totp/secrets.conf
+config/fcitx5/pinyin/user.dict
+config/fcitx5/pinyin/user.history
+
+# 壁纸（文件太大）
+wallpapers/

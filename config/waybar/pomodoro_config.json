@@ -1,0 +1,6 @@
+{
+  "work_time": 1500,
+  "short_break": 300,
+  "long_break": 900,
+  "pomodoros_until_long_break": 4
+}

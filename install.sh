@@ -1,9 +1,15 @@
 #!/bin/bash
 
 # Dotfiles 安装脚本
-# 在新机器上运行此脚本来设置所有配置文件
+# 支持多发行版的配置文件安装脚本
 
 set -e
+
+# 检查是否有模块化安装参数
+if [[ $# -gt 0 ]]; then
+    # 如果有参数，使用模块化安装脚本
+    exec "$(dirname "$0")/scripts/modular-install.sh" "$@"
+fi
 
 DOTFILES_DIR="$HOME/dotfiles"
 BACKUP_DIR="$HOME/dotfiles_backup_$(date +%Y%m%d_%H%M%S)"
@@ -59,6 +65,9 @@ declare -A CONFIG_FILES=(
     ["$DOTFILES_DIR/config/wofi"]="$HOME/.config/wofi"
     ["$DOTFILES_DIR/config/Code"]="$HOME/.config/Code"
     ["$DOTFILES_DIR/config/totp"]="$HOME/.config/totp"
+    ["$DOTFILES_DIR/config/gtk-3.0"]="$HOME/.config/gtk-3.0"
+    ["$DOTFILES_DIR/config/gtk-4.0"]="$HOME/.config/gtk-4.0"
+    ["$DOTFILES_DIR/config/qt5ct"]="$HOME/.config/qt5ct"
 )
 
 declare -A CLAUDE_FILES=(
@@ -226,16 +235,34 @@ echo ""
 echo "✅ Dotfiles 安装完成!"
 echo "备份文件保存在: $BACKUP_DIR"
 echo ""
+# 检测发行版和包管理器
+if command -v pacman >/dev/null 2>&1; then
+    DISTRO="arch"
+    PKG_INSTALL="sudo pacman -S"
+    AUR_INSTALL="yay -S"
+elif command -v apt >/dev/null 2>&1; then
+    DISTRO="debian"
+    PKG_INSTALL="sudo apt install"
+    AUR_INSTALL="echo '需要手动编译安装:'"
+elif command -v dnf >/dev/null 2>&1; then
+    DISTRO="fedora"
+    PKG_INSTALL="sudo dnf install"
+    AUR_INSTALL="echo '需要手动编译安装:'"
+else
+    DISTRO="unknown"
+    PKG_INSTALL="echo '请手动安装:'"
+    AUR_INSTALL="echo '请手动安装:'"
+fi
+
+echo ""
 echo "📋 后续步骤:"
 echo "1. 编辑 ~/.config/totp/secrets.conf 添加TOTP密钥"
-echo "2. 安装TOTP依赖: sudo pacman -S oath-toolkit"
+echo "2. 安装TOTP依赖: $PKG_INSTALL oath-toolkit"
 echo "3. 重新登录或运行 'source ~/.bashrc' 来应用更改"
 echo "4. 使用 Super+W 切换壁纸，Super+T 查看TOTP验证码"
 echo ""
-echo "🎨 桌面美化和协作:"
-echo "5. 安装登录管理器: sudo pacman -S sddm"
-echo "6. 安装Sugar Candy主题: yay -S sddm-sugar-candy-git"
-echo "7. 安装邮件客户端: sudo pacman -S thunderbird"
-echo "8. 安装日历管理: sudo pacman -S kontact korganizer"
-echo "9. 安装手机协作: sudo pacman -S scrcpy"
-echo "10. 配置小米智能解锁（信任位置、设备、WiFi）"
+echo "🎨 可选功能:"
+echo "5. 登录管理器: $PKG_INSTALL sddm"
+echo "6. Sugar Candy主题: $AUR_INSTALL sddm-sugar-candy-git"
+echo "8. 日历管理: $PKG_INSTALL kontact korganizer"  
+echo "9. 手机协作: $PKG_INSTALL scrcpy"

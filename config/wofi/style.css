@@ -5,12 +5,10 @@
 }
 
 window {
-    background-color: rgba(0, 0, 0, 0.85);
+    background-color: rgba(40, 44, 52, 0.95);
     border: 2px solid rgba(94, 129, 172, 0.6);
     border-radius: 16px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(16px);
-    animation: slideIn 0.25s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 @keyframes slideIn {

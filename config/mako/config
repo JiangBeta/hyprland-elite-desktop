@@ -1,4 +1,4 @@
-# Mako notification configuration
+# Mako notification configuration - 统一通知系统
 # High-quality translucent notifications with auto-dismiss
 
 # Appearance settings
@@ -7,18 +7,40 @@ text-color=#ffffff
 border-color=#ffffff33
 border-size=2
 border-radius=12
-font=Sans 12
+font=Sans 14
 
 # Position and size
 anchor=top-right
 margin=10
-padding=15
-width=350
-height=100
+padding=18
+width=400
+height=120
 
-# Transparency settings
-default-timeout=5000
+# Transparency settings - 邮件通知延长显示时间
+default-timeout=8000
 ignore-timeout=0
+
+# 特殊应用通知设置
+
+[app-name=Feishu]
+default-timeout=10000
+background-color=#1976d288
+border-color=#1976d2
+
+[app-name=feishu]
+default-timeout=10000
+background-color=#1976d288
+border-color=#1976d2
+
+[app-name=KOrganizer]
+default-timeout=10000
+background-color=#7c2d1288
+border-color=#dc2626
+
+[app-name=Calendar]
+default-timeout=10000
+background-color=#7c2d1288
+border-color=#dc2626
 
 # Icon settings
 icon-path=/usr/share/icons/Papirus-Dark

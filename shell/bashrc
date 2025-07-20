@@ -8,3 +8,18 @@
 alias ls='ls --color=auto'
 alias grep='grep --color=auto'
 PS1='[\u@\h \W]\$ '
+
+# UI Scaling and Theme Settings
+export GDK_SCALE=1.25
+export GDK_DPI_SCALE=1.0
+export QT_SCALE_FACTOR=1.25
+export QT_FONT_DPI=120
+export XCURSOR_SIZE=32
+
+# Force dark theme
+export GTK_THEME="Adwaita:dark"
+export QT_STYLE_OVERRIDE="Adwaita-Dark"
+
+# VSCode specific scaling
+export ELECTRON_FORCE_IS_PACKAGED=true
+export ELECTRON_TRASH=gio

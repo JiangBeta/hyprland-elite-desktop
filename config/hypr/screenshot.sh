@@ -2,6 +2,13 @@
 
 # Screenshot script for Hyprland with swappy
 # Similar to WeChat screenshot experience
+# Prevents multiple instances
+
+# Check if screenshot tools are already running
+if pgrep -x "swappy\|slurp\|grim" > /dev/null 2>&1; then
+    # 如果正在运行截图相关进程，直接退出
+    exit 0
+fi
 
 TEMP_FILE="/tmp/screenshot_$(date +%Y%m%d_%H%M%S).png"
 

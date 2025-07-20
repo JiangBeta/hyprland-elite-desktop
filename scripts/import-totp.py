@@ -77,7 +77,7 @@ try:
     accounts = parse_google_auth_migration(migration_uri)
     
     # 创建配置目录
-    config_dir = "/home/laofahai/.config/totp"
+    config_dir = os.path.expanduser("~/.config/totp")
     os.makedirs(config_dir, exist_ok=True)
     
     # 写入配置文件

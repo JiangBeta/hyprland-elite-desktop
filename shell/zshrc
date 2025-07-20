@@ -110,24 +110,39 @@ export XMODIFIERS=@im=fcitx
 export SDL_IM_MODULE=fcitx
 export GLFW_IM_MODULE=ibus  # Critical for Wayland games
 
+# ===== UI Scaling and Theme Settings =====
+export GDK_SCALE=1.25
+export GDK_DPI_SCALE=1.0
+export QT_SCALE_FACTOR=1.25
+export QT_FONT_DPI=120
+export XCURSOR_SIZE=32
+
+# Force dark theme
+export GTK_THEME="Adwaita:dark"
+export QT_STYLE_OVERRIDE="Adwaita-Dark"
+
+# VSCode specific scaling
+export ELECTRON_FORCE_IS_PACKAGED=true
+export ELECTRON_TRASH=gio
+
 # Auto-start (silent, no duplicates)
 if [ -z "$(pgrep fcitx5)" ]; then
   fcitx5 -d --replace >/dev/null 2>&1 &!
 fi
 
 
-export http_proxy="http://127.0.0.1:7897"
-export https_proxy="http://127.0.0.1:7897"
-export no_proxy="localhost,127.0.0.1"
+# Personal proxy settings (uncomment and modify as needed)
+# export http_proxy="http://127.0.0.1:7890"
+# export https_proxy="http://127.0.0.1:7890" 
+# export no_proxy="localhost,127.0.0.1"
 
+# Additional development tools (uncomment if needed)
 # bun completions
-[ -s "/home/laofahai/.bun/_bun" ] && source "/home/laofahai/.bun/_bun"
+# [ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
+# export BUN_INSTALL="$HOME/.bun"
+# export PATH="$BUN_INSTALL/bin:$PATH"
 
-# bun
-export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
-
-export PATH="/home/laofahai/.local/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm

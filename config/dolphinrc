@@ -1,0 +1,60 @@
+[General]
+# Dolphin 文件管理器配置
+Version=202
+ViewPropsTimestamp=2024,1,1,0,0,0
+
+[MainWindow]
+# 窗口设置
+MenuBar=Disabled
+ToolBarsMovable=Disabled
+State=AAAA/wAAAAD9AAAAAQAAAAEAAANCAAAAwgAAAAEAAAACAAAAAQAAAAL/////AAAAAQAAAAEAAAABAAAAAgAAAAE=
+
+[PreviewSettings]
+# 预览设置
+Plugins=appimagethumbnail,audiothumbnail,blenderthumbnail,comicbookthumbnail,directorythumbnail,djvuthumbnail,ebookthumbnail,exrthumbnail,fontthumbnail,imagethumbnail,jpegthumbnail,kraorathumbnail,mltpreview,opendocumentthumbnail,qmlviewthumbnail,rawthumbnail,svgthumbnail,textthumbnail,windowsexethumbnail,windowsimagethumbnail
+
+[KFileDialog Settings]
+# 文件对话框设置
+Places Icons Auto-resize=false
+Places Icons Static Size=22
+
+[PlacesPanel]
+# 侧边栏设置
+IconSize=22
+
+[DetailsMode]
+# 详细信息模式
+ColumnWidths=480,130,130,130
+HeaderColumnWidths=480,130,130,130
+# 显示隐藏文件
+HiddenFilesShown=false
+
+[IconsMode]
+# 图标模式
+IconSize=64
+PreviewSize=256
+
+[CompactMode]
+# 紧凑模式
+IconSize=22
+
+[Search]
+# 搜索设置
+FromCurrentDir=false
+Location=Everywhere
+
+[ExtractDialog]
+# 解压对话框
+DirHistory[$e]=$HOME/Downloads,$HOME/Documents
+
+[ContentDisplay]
+# 内容显示
+UsePermissionsFormat=CombinedFormat
+
+[ContextMenu]
+# 右键菜单
+ShowCopyMoveMenu=true
+
+[VersionControl]
+# 版本控制
+enabledPlugins=Git

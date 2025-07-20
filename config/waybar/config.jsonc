@@ -172,11 +172,9 @@
         "exec": "~/.config/waybar/pomodoro.sh",
         "interval": 5,
         "return-type": "json",
-        "on-click": "~/.config/waybar/pomodoro-control.sh toggle",
-        "on-click-right": "~/.config/waybar/pomodoro-control.sh stop",
-        "on-click-middle": "~/.config/waybar/pomodoro-control.sh skip",
-        "on-scroll-up": "~/.config/waybar/pomodoro-config.sh up",
-        "on-scroll-down": "~/.config/waybar/pomodoro-config.sh down",
+        "on-click": "~/.config/waybar/pomodoro-control.sh left",
+        "on-click-right": "~/.config/waybar/pomodoro-control.sh right",
+        "on-click-middle": "~/.config/waybar/pomodoro-control.sh middle",
         "signal": 8,
         "tooltip": true
     }
