@@ -53,13 +53,36 @@ sudo pacman -S hyprland waybar kitty fcitx5 fcitx5-chinese-addons \
 yay -S youtube-music-bin lunar-calendar-bin
 ```
 
-### 3. 执行安装
+### 3. 使用统一管理脚本
+🆕 **新增**: 现在可以使用统一的 `manage.sh` 脚本进行所有操作！
+
+```bash
+# 完整安装
+./manage.sh install
+
+# 模块化安装
+./manage.sh install --core --productivity
+
+# 同步配置
+./manage.sh sync
+
+# 创建备份
+./manage.sh backup
+
+# 查看状态
+./manage.sh status
+
+# 查看帮助
+./manage.sh help
+```
+
+### 传统方式（仍支持）
 ```bash
 # 完整安装
 ./install.sh
 
 # 模块化安装
-./install.sh --core --productivity --development
+./scripts/modular-install.sh --core --productivity --development
 ```
 
 ## 🎛️ 快捷键
@@ -129,7 +152,29 @@ dotfiles/
 └── sync.sh            # 配置同步脚本
 ```
 
-## 🔧 自定义配置
+## 🔧 配置管理
+
+### 🆕 统一管理脚本
+```bash
+# 查看所有可用命令
+./manage.sh help
+
+# 检查配置状态
+./manage.sh status
+
+# 备份当前配置
+./manage.sh backup
+
+# 恢复备份
+./manage.sh restore backup_name
+```
+
+### 🔒 隐私保护
+项目已配置完善的 `.gitignore`，以下个人数据不会被提交：
+- 🔐 **TOTP 密钥** - 二步验证私钥
+- 📝 **输入法数据** - 个人词典和历史
+- ⚙️ **应用状态** - 番茄钟、Claude 设置等
+- 📊 **缓存数据** - 临时文件和系统缓存
 
 ### 修改主题颜色
 ```bash
@@ -145,6 +190,12 @@ vim ~/.config/hypr/hyprland.conf
 ```ini
 bind = $mainMod, KEY, exec, command
 ```
+
+### 个人配置文件
+创建以下文件进行个人化配置：
+- `.env.local` - 个人环境变量
+- `shell/zshrc.local` - 个人 shell 配置
+- `config/totp/secrets.conf` - TOTP 密钥
 
 ## 🐛 故障排除
 

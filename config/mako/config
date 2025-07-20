@@ -31,8 +31,7 @@ on-button-left=dismiss
 on-button-right=dismiss-all
 on-touch=dismiss
 
-# ntfy推送集成（排除飞书微信）
-on-notify=exec ~/.config/mako/ntfy-hook.sh "$app_name" "$summary" "$body" "$urgency"
+# ntfy推送通过独立监听器处理 (scripts/ntfy-monitor.sh)
 
 # Progress bar
 progress-color=#89b4fa

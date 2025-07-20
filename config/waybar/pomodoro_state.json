@@ -1,9 +1,9 @@
 {
-  "phase": "idle",
+  "phase": "work",
   "cycle": 1,
-  "elapsed_time": 0,
+  "elapsed_time": 1317,
   "total_time": 1500,
-  "is_running": false,
-  "last_update": 0,
+  "is_running": true,
+  "last_update": 1753005140,
   "completed_pomodoros": 0
 }

@@ -2,7 +2,7 @@
 
 # Weather script - Using weather API
 # Manually set city, auto-detect if not set
-MANUAL_CITY="Zhucheng"  # Set your city, leave empty for auto-detect
+MANUAL_CITY=""  # Set your city, leave empty for auto-detect
 
 # Get city name
 get_city() {

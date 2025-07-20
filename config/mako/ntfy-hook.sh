@@ -8,6 +8,9 @@ SUMMARY="$2"
 BODY="$3"
 URGENCY="$4"
 
+# 调试日志
+echo "$(date): APP_NAME=$APP_NAME, SUMMARY=$SUMMARY, BODY=$BODY, URGENCY=$URGENCY" >> /tmp/ntfy-debug.log
+
 # 不推送的应用列表（飞书、微信等不需要推送）
 EXCLUDED_APPS=(
     "feishu"
@@ -32,9 +35,9 @@ if [[ "$URGENCY" == "low" ]]; then
     exit 0
 fi
 
-# 推送到ntfy
-NTFY_TOPIC="arch_notify"
-NTFY_URL="https://ntfy.sh/$NTFY_TOPIC"
+# 推送到ntfy - 从环境变量或配置文件加载
+NTFY_TOPIC="${NTFY_TOPIC:-your_notify_topic}"
+NTFY_URL="${NTFY_SERVER:-https://ntfy.sh}/$NTFY_TOPIC"
 
 # 构造消息
 MESSAGE="$SUMMARY"

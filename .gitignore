@@ -28,7 +28,7 @@ credentials.json
 __pycache__/
 *.pyc
 
-# Claude 相关
+# Claude 相关 - 个人数据和缓存
 claude/.credentials.json
 claude/.anthropic/
 claude/downloads/
@@ -38,6 +38,7 @@ claude/shell-snapshots/
 claude/statsig/
 claude/todos/
 claude/.git/
+claude/settings.local.json
 
 # VS Code 缓存和个人数据
 config/Code/
@@ -50,10 +51,23 @@ config/totp/secrets.conf
 .DS_Store
 Thumbs.db
 
-# 个人数据
+# 个人数据和状态文件
 config/totp/secrets.conf
+config/totp/current_index
 config/fcitx5/pinyin/user.dict
 config/fcitx5/pinyin/user.history
+config/fcitx5/conf/cached_layouts
+config/waybar/pomodoro_state.json
+
+# 应用个人配置
+config/Code/User/settings.json
+config/Code/User/keybindings.json
+config/Code/logs/
+config/Code/CachedExtensions/
 
 # 壁纸（文件太大）
 wallpapers/
+
+# 用户配置文件（包含个人隐私）
+.env.local
+shell/zshrc.local
