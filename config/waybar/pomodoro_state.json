@@ -1,9 +1,9 @@
 {
   "phase": "work",
-  "cycle": 3,
-  "elapsed_time": 1501,
+  "cycle": 4,
+  "elapsed_time": 1493,
   "total_time": 1500,
-  "is_running": false,
-  "last_update": 1752979728,
-  "completed_pomodoros": 499
+  "is_running": true,
+  "last_update": 1752984015,
+  "completed_pomodoros": 522
 }

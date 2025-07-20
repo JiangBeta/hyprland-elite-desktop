@@ -13,22 +13,21 @@
         "custom/power",
         "tray",
         "custom/totp",
-        "custom/weather",
-        "custom/pomodoro"
+        "custom/pomodoro",
+        "custom/updates"
     ],
     "modules-center": [
-        "clock"
+        "custom/datetime-weather"
     ],
     "modules-right": [
-        "custom/netspeed",
-        "custom/updates",
         "custom/notification",
         "idle_inhibitor",
+        "pulseaudio",
         "cpu",
         "memory",
         "temperature",
-        "pulseaudio",
-        "battery"
+        "battery",
+        "custom/netspeed"
     ],
     "custom/power": {
         "format": "󰐥",
@@ -36,11 +35,15 @@
         "on-click-right": "systemctl suspend",
         "tooltip": "左键: 电源菜单 | 右键: 休眠"
     },
-    "clock": {
-        "format": "{:%H:%M  %A, %B %d}",
-        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
-        "on-click": "gnome-calendar",
-        "on-click-right": "~/.config/waybar/lunar-calendar.sh"
+    "custom/datetime-weather": {
+        "format": "{}",
+        "exec": "~/.config/waybar/datetime-weather.sh",
+        "interval": 60,
+        "return-type": "json",
+        "on-click": "~/.config/waybar/datetime-weather.sh --calendar",
+        "on-click-right": "kitty --title='Weather Details' -e bash -c '~/.config/waybar/datetime-weather.sh --weather-details; read -p \"Press Enter to close...\"'",
+        "on-click-middle": "~/.config/waybar/datetime-weather.sh --lunar",
+        "tooltip": true
     },
     "network": {
         "tooltip": true,
@@ -127,14 +130,6 @@
         "critical-threshold": 80,
         "format-critical": "󰸁 {temperatureC}°C",
         "tooltip": false
-    },
-    "custom/weather": {
-        "format": "{}",
-        "exec": "~/.config/waybar/weather.sh",
-        "interval": 1800,
-        "tooltip": true,
-        "on-click": "pkill -RTMIN+10 waybar; kitty --title='天气详情' -e bash -c '~/.config/waybar/weather.sh --detailed; read -p \"按回车键关闭...\"'",
-        "signal": 10
     },
     "custom/updates": {
         "format": "{}",
