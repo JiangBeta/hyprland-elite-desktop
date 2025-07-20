@@ -37,8 +37,8 @@ Column {
     Item {
         id: usernameField
 
-        height: root.font.pointSize * 4.5
-        width: parent.width / 2
+        height: root.font.pointSize * 3.5
+        width: Math.min(300, parent.width * 0.8)
         anchors.horizontalCenter: parent.horizontalCenter
 
         ComboBox {

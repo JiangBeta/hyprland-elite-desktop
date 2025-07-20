@@ -22,34 +22,37 @@ window#waybar.hidden {
 
 #workspaces {
     margin: 0 4px;
+    background: rgba(40, 44, 52, 0.8);
+    border-radius: 20px;
+    padding: 2px 6px;
 }
 
 #workspaces button {
-    padding: 0 10px;
-    background-color: rgba(62, 68, 82, 0.8);
+    padding: 4px 8px;
+    background-color: transparent;
     color: #abb2bf;
     border: none;
-    border-radius: 20px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 16px;
     transition: all 0.3s ease-in-out;
+    margin: 0 2px;
+    font-size: 16px;
+    min-width: 32px;
 }
 
 #workspaces button.active {
-    background: rgba(97, 175, 239, 0.8);
-    color: #ffffff;
-    box-shadow: 0 4px 16px rgba(97, 175, 239, 0.3);
+    background: rgba(97, 175, 239, 0.3);
+    color: #61afef;
+    box-shadow: inset 0 0 0 2px rgba(97, 175, 239, 0.6);
 }
 
 #workspaces button:hover {
-    background: rgba(97, 175, 239, 0.6);
-    color: #ffffff;
-    box-shadow: 0 3px 12px rgba(97, 175, 239, 0.2);
+    background: rgba(97, 175, 239, 0.2);
+    color: #61afef;
 }
 
 #workspaces button.urgent {
-    background: rgba(235, 86, 87, 0.8);
-    color: #ffffff;
-    box-shadow: 0 4px 16px rgba(235, 86, 87, 0.4);
+    background: rgba(235, 86, 87, 0.3);
+    color: #eb5687;
     animation: pulse 1s infinite;
 }
 
@@ -68,11 +71,18 @@ window#waybar.hidden {
 
 #window {
     margin: 0 4px;
-    padding: 0 10px;
-    border-radius: 16px;
-    background: rgba(136, 192, 208, 0.1);
-    color: #88c0d0;
+    padding: 0 12px;
+    border-radius: 20px;
+    background: rgba(40, 44, 52, 0.6);
+    color: #ffffff;
     transition: all 0.3s ease-in-out;
+    font-weight: 500;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+#window:hover {
+    background: rgba(40, 44, 52, 0.8);
+    color: #61afef;
 }
 
 #custom-datetime-weather {

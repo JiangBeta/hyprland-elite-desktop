@@ -31,7 +31,7 @@ on-button-left=dismiss
 on-button-right=dismiss-all
 on-touch=dismiss
 
-# ntfy推送通过独立监听器处理 (scripts/ntfy-monitor.sh)
+# ntfy推送通过mako hook处理 (config/mako/ntfy-hook.sh)
 
 # Progress bar
 progress-color=#89b4fa

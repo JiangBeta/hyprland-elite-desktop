@@ -633,11 +633,11 @@ quick_setup() {
                 log_warning "Sugar Candy 主题未安装"
                 echo "请先安装："
                 echo "  yay -S sddm-sugar-candy-git"
-                echo "然后运行: sudo $DOTFILES_DIR/scripts/setup-sddm.sh"
+                echo "然后运行: sudo $DOTFILES_DIR/scripts/fix-sddm-config.sh"
             else
                 log_info "发现 Sugar Candy 主题，配置中..."
                 echo "需要 sudo 权限配置 SDDM..."
-                echo "请运行: sudo $DOTFILES_DIR/scripts/setup-sddm.sh"
+                echo "请运行: sudo $DOTFILES_DIR/scripts/fix-sddm-config.sh"
                 echo "然后重启登录管理器: sudo systemctl restart sddm"
             fi
         fi

@@ -12,22 +12,22 @@
     "modules-left": [
         "custom/power",
         "tray",
+        "custom/updates",
         "custom/totp",
-        "custom/pomodoro",
-        "custom/updates"
+        "custom/pomodoro"
     ],
     "modules-center": [
         "custom/datetime-weather"
     ],
     "modules-right": [
         "custom/notification",
+        "custom/netspeed",
         "idle_inhibitor",
         "pulseaudio",
         "cpu",
         "memory",
         "temperature",
-        "battery",
-        "custom/netspeed"
+        "battery"
     ],
     "custom/power": {
         "format": "󰐥",
@@ -126,22 +126,18 @@
     },
     "temperature": {
         "format": "󰔏 {temperatureC}°C",
-        "hwmon-path": "/sys/class/hwmon/hwmon3/temp1_input",
+        "hwmon-path-abs": "/sys/devices/platform/coretemp.0/hwmon/hwmon*/temp1_input",
+        "input-filename": "temp1_input",
         "critical-threshold": 80,
         "format-critical": "󰸁 {temperatureC}°C",
-        "tooltip": false
+        "tooltip-format": "CPU Temperature: {temperatureC}°C",
+        "interval": 2
     },
     "custom/updates": {
         "format": "{}",
         "exec": "~/.config/waybar/updates.sh",
         "interval": 3600,
         "on-click": "kitty -e sudo pacman -Syu",
-        "return-type": "json"
-    },
-    "custom/netspeed": {
-        "format": "{}",
-        "exec": "~/.config/waybar/netspeed.sh",
-        "interval": 3,
         "return-type": "json"
     },
     "custom/notification": {
@@ -155,13 +151,19 @@
         "signal": 7,
         "tooltip": true
     },
+    "custom/netspeed": {
+        "format": "{}",
+        "exec": "~/.config/waybar/netspeed.sh",
+        "interval": 3,
+        "return-type": "json"
+    },
     "custom/totp": {
         "format": "{}",
         "exec": "~/.config/waybar/totp.sh",
         "interval": 1,
         "return-type": "json",
-        "on-click": "~/.config/waybar/totp-copy.sh",
-        "on-click-right": "~/.config/waybar/totp-switch.sh",
+        "on-click": "~/.config/waybar/totp-selector.sh",
+        "on-click-right": "~/.config/waybar/totp-selector.sh",
         "signal": 8,
         "tooltip": true
     },
