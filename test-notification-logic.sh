@@ -18,7 +18,7 @@ echo "📊 当前状态:"
 echo ""
 echo "🧪 测试场景:"
 echo "1. 发送测试通知"
-notify-send "测试" "这是一条测试通知" -t 5000
+notify-send "测试" "这是一条测试通知 - 应该被计入" -t 5000
 
 sleep 1
 echo "   状态:" 

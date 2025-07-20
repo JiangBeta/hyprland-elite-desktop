@@ -28,7 +28,8 @@ case "$1" in
             notify-send "通知" "已关闭 $VISIBLE_COUNT 条通知" -t 2000
         else
             # 没有可见通知时，尝试恢复历史通知
-            HISTORY_COUNT=$(makoctl history 2>/dev/null | grep "^Notification" | wc -l)
+            # 获取历史通知数量，过滤系统控制通知
+            HISTORY_COUNT=$(makoctl history 2>/dev/null | grep -A2 "^Notification" | grep -v "已清空" | grep -v "没有可恢复" | grep -v "已关闭" | grep -v "没有通知" | grep -v "通知模式" | grep -v "正在清空" | grep "^Notification" | wc -l)
             STATE_FILE="$HOME/.cache/mako_restore_state"
             
             if [[ "$HISTORY_COUNT" -gt 0 ]]; then
@@ -39,7 +40,7 @@ case "$1" in
                 fi
                 
                 if [[ "$HISTORY_COUNT" != "$LAST_RESTORED_COUNT" ]]; then
-                    makoctl restore
+                makoctl restore
                     echo "$HISTORY_COUNT" > "$STATE_FILE"
                     notify-send "通知" "已恢复最近的通知" -t 2000
                 else
@@ -72,7 +73,8 @@ case "$1" in
         if [[ -z "$VISIBLE_COUNT" ]] || [[ "$VISIBLE_COUNT" == "null" ]]; then
             VISIBLE_COUNT=0
         fi
-        HISTORY_COUNT=$(makoctl history 2>/dev/null | grep "^Notification" | wc -l)
+        # 获取历史通知数量，过滤系统控制通知
+        HISTORY_COUNT=$(makoctl history 2>/dev/null | grep -A2 "^Notification" | grep -v "已清空" | grep -v "没有可恢复" | grep -v "已关闭" | grep -v "没有通知" | grep -v "通知模式" | grep -v "正在清空" | grep "^Notification" | wc -l)
         
         TOTAL_COUNT=$((VISIBLE_COUNT + HISTORY_COUNT))
         if [[ "$TOTAL_COUNT" -gt 0 ]]; then

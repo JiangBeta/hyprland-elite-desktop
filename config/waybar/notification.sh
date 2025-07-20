@@ -20,8 +20,8 @@ if [[ -z "$VISIBLE_COUNT" ]] || [[ "$VISIBLE_COUNT" == "null" ]]; then
     VISIBLE_COUNT=0
 fi
 
-# 获取历史通知数量（简单有效的方法）
-HISTORY_COUNT=$(makoctl history 2>/dev/null | grep "^Notification" | wc -l)
+# 获取历史通知数量，过滤系统控制通知
+HISTORY_COUNT=$(makoctl history 2>/dev/null | grep -A2 "^Notification" | grep -v "已清空" | grep -v "没有可恢复" | grep -v "已关闭" | grep -v "没有通知" | grep -v "通知模式" | grep -v "正在清空" | grep "^Notification" | wc -l)
 if [[ -z "$HISTORY_COUNT" ]]; then
     HISTORY_COUNT=0
 fi
