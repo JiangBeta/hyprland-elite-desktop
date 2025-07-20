@@ -15,40 +15,103 @@ if ! pgrep -x mako > /dev/null; then
 fi
 
 case "$1" in
-    "left"|"dismiss")
-        # 左键：关闭所有当前通知
+    "left"|"restore")
+        # 左键：恢复最近的通知（仅在有历史且无可见通知时）
         VISIBLE_COUNT=$(makoctl list 2>/dev/null | jq '.data[][] | length' 2>/dev/null | head -1)
+        if [[ -z "$VISIBLE_COUNT" ]] || [[ "$VISIBLE_COUNT" == "null" ]]; then
+            VISIBLE_COUNT=0
+        fi
+        
+        if [[ "$VISIBLE_COUNT" -gt 0 ]]; then
+            # 如果有可见通知，先关闭它们
+            makoctl dismiss --all
+            notify-send "通知" "已关闭 $VISIBLE_COUNT 条通知" -t 2000
+        else
+            # 没有可见通知时，尝试恢复历史通知
+            HISTORY_COUNT=$(makoctl history 2>/dev/null | grep "^Notification" | wc -l)
+            STATE_FILE="$HOME/.cache/mako_restore_state"
+            
+            if [[ "$HISTORY_COUNT" -gt 0 ]]; then
+                # 检查是否已经恢复过相同数量的通知
+                LAST_RESTORED_COUNT=0
+                if [[ -f "$STATE_FILE" ]]; then
+                    LAST_RESTORED_COUNT=$(cat "$STATE_FILE" 2>/dev/null || echo "0")
+                fi
+                
+                if [[ "$HISTORY_COUNT" != "$LAST_RESTORED_COUNT" ]]; then
+                    makoctl restore
+                    echo "$HISTORY_COUNT" > "$STATE_FILE"
+                    notify-send "通知" "已恢复最近的通知" -t 2000
+                else
+                    notify-send "通知" "没有新的通知可恢复" -t 2000
+                fi
+            else
+                # 清理状态文件
+                [[ -f "$STATE_FILE" ]] && rm "$STATE_FILE"
+                notify-send "通知" "没有可恢复的通知" -t 2000
+            fi
+        fi
+        ;;
+    "middle"|"dismiss")
+        # 中键：关闭所有当前通知（不影响历史）
+        VISIBLE_COUNT=$(makoctl list 2>/dev/null | jq '.data[][] | length' 2>/dev/null | head -1)
+        if [[ -z "$VISIBLE_COUNT" ]] || [[ "$VISIBLE_COUNT" == "null" ]]; then
+            VISIBLE_COUNT=0
+        fi
+        
         if [[ "$VISIBLE_COUNT" -gt 0 ]]; then
             makoctl dismiss --all
             notify-send "通知" "已关闭 $VISIBLE_COUNT 条通知" -t 2000
         else
-            # 如果没有可见通知，清除历史
-            HISTORY_COUNT=$(makoctl history 2>/dev/null | jq '.data[]?.[] | length' 2>/dev/null | awk '{sum += $1} END {print sum+0}')
+            notify-send "通知" "没有可见通知需要关闭" -t 2000
+        fi
+        ;;
+    "right"|"clear")
+        # 右键：清空所有（当前+历史）
+        VISIBLE_COUNT=$(makoctl list 2>/dev/null | jq '.data[][] | length' 2>/dev/null | head -1)
+        if [[ -z "$VISIBLE_COUNT" ]] || [[ "$VISIBLE_COUNT" == "null" ]]; then
+            VISIBLE_COUNT=0
+        fi
+        HISTORY_COUNT=$(makoctl history 2>/dev/null | grep "^Notification" | wc -l)
+        
+        TOTAL_COUNT=$((VISIBLE_COUNT + HISTORY_COUNT))
+        if [[ "$TOTAL_COUNT" -gt 0 ]]; then
+            makoctl dismiss --all
+            
+            # 清空历史的方法：使用临时配置禁用历史
             if [[ "$HISTORY_COUNT" -gt 0 ]]; then
-                makoctl dismiss --all
-                makoctl reload  # 清除历史的更好方法
-                notify-send "通知" "已清除历史通知" -t 2000
+                # 创建临时配置文件禁用历史
+                TEMP_CONFIG="/tmp/mako_no_history_$$.conf"
+                # 在配置文件开头添加全局配置
+                echo "max-history=0" > "$TEMP_CONFIG"
+                cat "$HOME/.config/mako/config" >> "$TEMP_CONFIG"
+                
+                # 重新加载配置
+                pkill mako
+                sleep 0.3
+                mako -c "$TEMP_CONFIG" &
+                sleep 0.5
+                
+                # 恢复原配置
+                pkill mako
+                sleep 0.3
+                mako &
+                sleep 0.3
+                
+                # 清理临时文件
+                rm -f "$TEMP_CONFIG"
+                
+                # 不再显示通知，避免死循环
+                echo "已清空所有通知 ($TOTAL_COUNT 条)" >&2
+            else
+                notify-send "通知" "已关闭所有通知 ($VISIBLE_COUNT 条)" -t 2000
             fi
-        fi
-        ;;
-    "middle"|"clear_history")
-        # 中键：清除历史通知
-        HISTORY_COUNT=$(makoctl history 2>/dev/null | jq '.data[]?.[] | length' 2>/dev/null | awk '{sum += $1} END {print sum+0}')
-        if [[ "$HISTORY_COUNT" -gt 0 ]]; then
-            makoctl reload  # 这会清除历史
-            notify-send "通知" "已清除历史通知" -t 2000
+            
+            # 清理状态文件
+            STATE_FILE="$HOME/.cache/mako_restore_state"
+            [[ -f "$STATE_FILE" ]] && rm "$STATE_FILE"
         else
-            notify-send "通知" "没有历史通知需要清除" -t 2000
-        fi
-        ;;
-    "right"|"restore")
-        # 右键：恢复最近的通知
-        LATEST_NOTIFICATION=$(makoctl history 2>/dev/null | jq -r '.data[0][0]?.summary?.data // "无历史通知"')
-        if [[ "$LATEST_NOTIFICATION" != "无历史通知" ]] && [[ -n "$LATEST_NOTIFICATION" ]]; then
-            makoctl restore
-            notify-send "通知" "已恢复最近的通知" -t 2000
-        else
-            notify-send "通知" "没有可恢复的通知" -t 2000
+            notify-send "通知" "没有通知需要清空" -t 2000
         fi
         ;;
     "toggle_mode")
@@ -65,9 +128,9 @@ case "$1" in
         ;;
     *)
         echo "用法: $0 {left|middle|right|toggle_mode}"
-        echo "  left   - 关闭所有通知/清除历史"
-        echo "  middle - 清除历史通知"
-        echo "  right  - 恢复最近通知"
+        echo "  left   - 智能操作：有通知时关闭，无通知时恢复"
+        echo "  middle - 关闭当前可见通知"
+        echo "  right  - 清空所有通知（当前+历史）"
         echo "  toggle_mode - 切换勿扰模式"
         exit 1
         ;;

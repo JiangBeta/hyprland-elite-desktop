@@ -55,3 +55,44 @@ border-color=#dc2626
 # Formatting
 format=<b>%s</b>\n%b
 markup=1
+# GitHub 通知
+[app-name=GitHub]
+default-timeout=12000
+background-color=#24292e88
+border-color=#f85149
+
+# Gmail 通知
+[app-name=Gmail]
+default-timeout=10000
+background-color=#ea433588
+border-color=#ea4335
+
+# Discord 通知
+[app-name=Discord]
+default-timeout=8000
+background-color=#5865f288
+border-color=#5865f2
+
+# Slack 通知
+[app-name=Slack]
+default-timeout=10000
+background-color=#4a154b88
+border-color=#4a154b
+
+# VS Code 通知
+[app-name=Code]
+default-timeout=6000
+background-color=#007acc88
+border-color=#007acc
+
+# 系统监控通知
+[app-name=system-monitor]
+default-timeout=15000
+background-color=#ff6b3588
+border-color=#ff6b35
+
+# 健康提醒通知
+[summary~="提醒"]
+default-timeout=12000
+background-color=#10b98188
+border-color=#10b981

@@ -2,6 +2,7 @@
 
 # ntfy推送钩子脚本
 # 过滤不需要推送的应用
+# 添加类别标签
 
 APP_NAME="$1"
 SUMMARY="$2"
@@ -58,11 +59,61 @@ case "$URGENCY" in
         ;;
 esac
 
-# 发送到ntfy
+# 设置类别标签
+CATEGORY="General"
+
+# 根据 APP_NAME 设置类别
+case "$APP_NAME" in
+    *"mail"*|*"Mail"*|*"thunderbird"*|*"outlook"*)
+        CATEGORY="Email"
+        ;;
+    *"social"*|*"chat"*|*"slack"*|*"discord"*)
+        CATEGORY="Social"
+        ;;
+    *"monitor"*|*"alert"*|*"system"*)
+        CATEGORY="System"
+        ;;
+    *"update"*|*"upgrade"*|*"package"*)
+        CATEGORY="Updates"
+        ;;
+    *"health"*|*"reminder"*)
+        CATEGORY="Health"
+        ;;
+    *"work"*|*"project"*)
+        CATEGORY="Work"
+        ;;
+    *"meeting"*|*"calendar"*|*"event"*)
+        CATEGORY="Calendar"
+        ;;
+    *"news"*|*"feed"*|*"headline"*)
+        CATEGORY="News"
+        ;;
+    *"twitter"*|*"facebook"*)
+        CATEGORY="SocialMedia"
+        ;;
+    *"warning"*|*"error"*|*"failure"*)
+        CATEGORY="Errors"
+        ;;
+    *"success"*|*"complete"*)
+        CATEGORY="Success"
+        ;;
+    *"finance"*|*"stock"*|*"money"*)
+        CATEGORY="Finance"
+        ;;
+    *"weather"*|*"forecast"*)
+        CATEGORY="Weather"
+        ;;
+    *)
+        CATEGORY="General"
+        ;;
+esac
+
+# 发送到 ntfy
 curl -s \
     -H "Title: 🖥️ Arch Linux" \
     -H "Priority: $PRIORITY" \
-    -H "Tags: desktop,notification" \
+    -H "Tags: desktop,notification,$CATEGORY" \
+    -H "Category: $CATEGORY" \
     -d "$MESSAGE" \
     "$NTFY_URL" &
 

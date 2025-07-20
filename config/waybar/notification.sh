@@ -20,22 +20,20 @@ if [[ -z "$VISIBLE_COUNT" ]] || [[ "$VISIBLE_COUNT" == "null" ]]; then
     VISIBLE_COUNT=0
 fi
 
-# 获取历史通知数量
-HISTORY_JSON=$(makoctl history 2>/dev/null)
-if [[ $? -eq 0 ]] && [[ -n "$HISTORY_JSON" ]]; then
-    HISTORY_COUNT=$(echo "$HISTORY_JSON" | jq '.data[]?.[] | length' 2>/dev/null | awk '{sum += $1} END {print sum+0}')
-else
+# 获取历史通知数量（简单有效的方法）
+HISTORY_COUNT=$(makoctl history 2>/dev/null | grep "^Notification" | wc -l)
+if [[ -z "$HISTORY_COUNT" ]]; then
     HISTORY_COUNT=0
 fi
 
 # 生成显示内容
 if [[ "$VISIBLE_COUNT" -gt 0 ]]; then
     # 有可见通知
-    echo "{\"text\": \"󰂚 $VISIBLE_COUNT\", \"tooltip\": \"$VISIBLE_COUNT 条当前通知\\n$HISTORY_COUNT 条历史通知\\n\\n左键：关闭所有\\n中键：清除历史\\n右键：恢复最近\", \"class\": \"notification-active\"}"
+    echo "{\"text\": \"󰂚 $VISIBLE_COUNT\", \"tooltip\": \"$VISIBLE_COUNT 条当前通知\\n$HISTORY_COUNT 条历史通知\\n\\n左键：关闭当前通知\\n中键：仅关闭当前通知\\n右键：清空所有通知\", \"class\": \"notification-active\"}"
 elif [[ "$HISTORY_COUNT" -gt 0 ]]; then
     # 没有可见通知，但有历史
-    echo "{\"text\": \"󰂛\", \"tooltip\": \"$HISTORY_COUNT 条历史通知\\n\\n左键：清除历史\\n右键：恢复最近\", \"class\": \"notification-history\"}"
+    echo "{\"text\": \"󰌐 $HISTORY_COUNT\", \"tooltip\": \"$HISTORY_COUNT 条历史通知\\n\\n左键：恢复最近通知\\n中键：无操作\\n右键：清空历史通知\", \"class\": \"notification-history\"}"
 else
-    # 无通知
-    echo "{\"text\": \"󰂜\", \"tooltip\": \"无通知\", \"class\": \"notification-empty\"}"
+    # 无通知 - 使用静静的铃铛图标
+    echo "{\"text\": \"󰄝\", \"tooltip\": \"无通知\", \"class\": \"notification-empty\"}"
 fi
