@@ -620,6 +620,31 @@ quick_setup() {
         fi
     fi
     
+    # SDDM 主题配置
+    if command -v sddm >/dev/null 2>&1; then
+        echo
+        read -p "配置 SDDM 登录主题？(Y/n): " -n 1 -r
+        echo
+        if [[ $REPLY =~ ^[Yy]$ ]] || [[ -z $REPLY ]]; then
+            log_info "检查 SDDM 主题依赖..."
+            
+            # 检查 Sugar Candy 主题是否安装
+            if [[ ! -d "/usr/share/sddm/themes/sugar-candy" ]]; then
+                log_warning "Sugar Candy 主题未安装"
+                echo "请先安装："
+                echo "  yay -S sddm-sugar-candy-git"
+                echo "然后运行: sudo $DOTFILES_DIR/scripts/setup-sddm.sh"
+            else
+                log_info "发现 Sugar Candy 主题，配置中..."
+                echo "需要 sudo 权限配置 SDDM..."
+                echo "请运行: sudo $DOTFILES_DIR/scripts/setup-sddm.sh"
+                echo "然后重启登录管理器: sudo systemctl restart sddm"
+            fi
+        fi
+    else
+        log_info "未检测到 SDDM，跳过登录主题配置"
+    fi
+    
     echo
     log_success "🎉 快速设置完成！"
     echo
