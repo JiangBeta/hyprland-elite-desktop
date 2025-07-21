@@ -40,7 +40,7 @@
 
 ```bash
 # 1. 克隆项目
-git clone <your-repo-url> ~/dotfiles
+git clone https://github.com/laofahai/hyprland-elite-desktop ~/dotfiles
 cd ~/dotfiles
 
 # 2. 复制并编辑配置
@@ -87,7 +87,7 @@ yay -S youtube-music-bin lunar-calendar-bin
 
 ### 在另一台电脑上同步：
 ```bash
-git clone <your-repo> ~/dotfiles
+git clone https://github.com/laofahai/hyprland-elite-desktop ~/dotfiles
 cd ~/dotfiles
 cp .env.example .env.local
 vim .env.local              # 修改 NTFY_TOPIC 为唯一值

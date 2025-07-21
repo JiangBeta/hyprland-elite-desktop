@@ -6,6 +6,6 @@ line_size=3
 text_size=16
 text_font=Sans
 paint_mode=brush
-early_exit=false
+early_exit=true
 fill_shape=false
 blur_tool=false

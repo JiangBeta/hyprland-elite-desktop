@@ -6,6 +6,7 @@ TOTP导入工具 - 解析Google Authenticator导出数据
 import base64
 import urllib.parse
 import os
+import sys
 
 def parse_google_auth_migration(uri):
     """解析Google Authenticator migration URI"""
