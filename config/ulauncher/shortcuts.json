@@ -1,0 +1,38 @@
+{
+    "note": {
+        "id": "note",
+        "name": "Quick Note",
+        "keyword": "note",
+        "cmd": "/home/laofahai/dotfiles/scripts/obsidian-quick-capture.sh \"%s\"",
+        "icon": "/usr/share/icons/hicolor/48x48/apps/text-editor.png",
+        "is_default_search": false,
+        "run_without_argument": false
+    },
+    "task": {
+        "id": "task",
+        "name": "Quick Task",
+        "keyword": "task",
+        "cmd": "/home/laofahai/dotfiles/scripts/obsidian-quick-capture.sh --task \"%s\"",
+        "icon": "/usr/share/icons/hicolor/48x48/apps/utilities-system-monitor.png",
+        "is_default_search": false,
+        "run_without_argument": false
+    },
+    "idea": {
+        "id": "idea",
+        "name": "Quick Idea",
+        "keyword": "idea",
+        "cmd": "/home/laofahai/dotfiles/scripts/obsidian-quick-capture.sh \"%s\"",
+        "icon": "/usr/share/icons/hicolor/48x48/apps/accessories-text-editor.png",
+        "is_default_search": false,
+        "run_without_argument": false
+    },
+    "link": {
+        "id": "link",
+        "name": "Quick Link",
+        "keyword": "link",
+        "cmd": "/home/laofahai/dotfiles/scripts/obsidian-quick-capture.sh --link \"%s\"",
+        "icon": "/usr/share/icons/hicolor/48x48/apps/internet-web-browser.png",
+        "is_default_search": false,
+        "run_without_argument": false
+    }
+}

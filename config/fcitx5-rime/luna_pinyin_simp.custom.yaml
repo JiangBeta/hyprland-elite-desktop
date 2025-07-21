@@ -1,0 +1,38 @@
+# 朙月拼音简化字 自定义配置
+# encoding: utf-8
+
+patch:
+  # 载入朙月拼音扩充词库
+  "translator/dictionary": luna_pinyin.extended
+  
+  # 加载符号库
+  "punctuator/import_preset": symbols
+  
+  # 模糊拼音设置（保持现有习惯）
+  "speller/algebra":
+    - erase/^xx$/                      # 第一行保留
+
+    # 模糊音定义
+    - derive/^([zcs])h/$1/             # zh, ch, sh => z, c, s
+    - derive/^([zcs])([^h])/$1h$2/     # z, c, s => zh, ch, sh
+    
+    - derive/^n/l/                     # n => l
+    - derive/^l/n/                     # l => n
+    
+    # 常见模糊音
+    - derive/ing$/in/                  # ing => in
+    - derive/in$/ing/                  # in => ing
+    - derive/eng$/en/                  # eng => en  
+    - derive/en$/eng/                  # en => eng
+    
+    # 简拼支持
+    - abbrev/^([a-z]).+$/$1/           # 首字母简拼
+    - abbrev/^([zcs]h).+$/$1/          # zh, ch, sh 简拼
+    
+  # 候选词数量
+  "translator/initial_quality": 1.2
+  
+  # 词典设置
+  "translator/enable_user_dict": true
+  "translator/enable_sentence": true
+  "translator/enable_completion": true

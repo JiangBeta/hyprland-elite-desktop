@@ -1,23 +1,23 @@
 #!/bin/bash
 
 # ===========================================
-# Dotfiles 统一管理脚本
+# Dotfiles Management Script
 # ===========================================
-# 一个脚本搞定所有操作：安装、同步、备份、维护
+# One script for all operations: install, sync, backup, maintain
 
 set -e
 
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BACKUP_DIR="$HOME/dotfiles_backup_$(date +%Y%m%d_%H%M%S)"
 
-# 颜色定义
+# Color definitions
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-# 日志函数
+# Logging functions
 log_info() {
     echo -e "${BLUE}[INFO]${NC} $1"
 }
@@ -34,46 +34,47 @@ log_error() {
     echo -e "${RED}[ERROR]${NC} $1"
 }
 
-# 显示帮助信息
+# Display help message
 show_help() {
     cat << EOF
-🚀 Dotfiles 统一管理脚本
+🚀 Dotfiles Management Script
 
-用法: $0 <命令> [选项]
+Usage: $0 <command> [options]
 
-📋 主要命令:
-    setup                🆕 快速设置 (推荐新用户)
-    install [模块...]    安装配置文件 (高级用户)
-    sync                 同步配置到仓库
-    status               显示配置状态
-    backup               创建当前配置备份
-    restore <备份名>     恢复指定备份
-    cleanup              清理系统和备份
-    help                 显示此帮助信息
+📋 Main Commands:
+    setup                🆕 Quick setup (recommended for new users)
+    install [modules...] Install config files (advanced users)
+    sync                 Sync configs to repository
+    status               Show configuration status
+    backup               Create backup of current configs
+    restore <name>       Restore specified backup
+    cleanup              Clean system and backups
+    help                 Show this help message
+    input-method         Setup input method (fcitx5/rime)
 
-🔧 模块 (用于install命令):
-    --core              核心配置 (hypr, waybar, etc.)
-    --productivity      生产力工具 (pomodoro, totp)
-    --development       开发环境 (shell, git)
-    --themes            主题和美化
-    --all               所有模块 (默认)
+🔧 Modules (for install command):
+    --core              Core configs (hypr, waybar, etc.)
+    --productivity      Productivity tools (pomodoro, totp)
+    --development       Dev environment (shell, git)
+    --themes            Themes and aesthetics
+    --all               All modules (default)
 
-💡 快速开始:
+💡 Quick Start:
     1. cp .env.example .env.local
-    2. 编辑 .env.local 配置文件
+    2. Edit .env.local config file
     3. $0 setup
 
-📚 示例:
-    $0 setup                              # 快速部署 (推荐)
-    $0 install --core --productivity      # 安装指定模块
-    $0 sync                               # 同步配置
-    $0 status                             # 查看状态
-    $0 backup                             # 创建备份
+📚 Examples:
+    $0 setup                              # Quick deploy (recommended)
+    $0 install --core --productivity      # Install specific modules
+    $0 sync                               # Sync configs
+    $0 status                             # Check status
+    $0 backup                             # Create backup
 
 EOF
 }
 
-# 检查依赖
+# Check dependencies
 check_dependencies() {
     local missing_deps=()
     
@@ -84,13 +85,13 @@ check_dependencies() {
     done
     
     if [ ${#missing_deps[@]} -ne 0 ]; then
-        log_error "缺少依赖: ${missing_deps[*]}"
-        log_info "请安装缺少的依赖后重试"
+        log_error "Missing dependencies: ${missing_deps[*]}"
+        log_info "Please install missing dependencies and try again"
         exit 1
     fi
 }
 
-# 检测发行版和包管理器
+# Detect distribution and package manager
 detect_distro() {
     if command -v pacman >/dev/null 2>&1; then
         DISTRO="arch"
@@ -99,27 +100,27 @@ detect_distro() {
     elif command -v apt >/dev/null 2>&1; then
         DISTRO="debian"
         PKG_INSTALL="sudo apt install -y"
-        AUR_HELPER="echo '需要手动安装:'"
+        AUR_HELPER="echo 'Manual installation required:'"
     elif command -v dnf >/dev/null 2>&1; then
         DISTRO="fedora"
         PKG_INSTALL="sudo dnf install -y"
-        AUR_HELPER="echo '需要手动安装:'"
+        AUR_HELPER="echo 'Manual installation required:'"
     else
         DISTRO="unknown"
-        PKG_INSTALL="echo '请手动安装:'"
-        AUR_HELPER="echo '请手动安装:'"
+        PKG_INSTALL="echo 'Manual installation required:'"
+        AUR_HELPER="echo 'Manual installation required:'"
     fi
     
-    log_info "检测到发行版: $DISTRO"
+    log_info "Detected distribution: $DISTRO"
 }
 
-# 定义软件包组
+# Define package groups
 declare -A PACKAGES=(
-    [core]="hyprland waybar kitty mako wofi"
+    [core]="hyprland waybar kitty mako ulauncher"
     [productivity]="oath-toolkit websocat jq"
     [development]="git curl wget xdotool"
     [media]="grim slurp swappy satty swww"
-    [input]="fcitx5 fcitx5-chinese-addons fcitx5-gtk fcitx5-qt"
+    [input]="fcitx5 fcitx5-rime rime-pinyin-simp fcitx5-chinese-addons fcitx5-gtk fcitx5-qt"
     [system]="network-manager-applet blueman brightnessctl playerctl gnome-keyring"
 )
 
@@ -128,14 +129,14 @@ declare -A AUR_PACKAGES=(
     [media]="youtube-music-bin"
 )
 
-# 安装软件包组
+# Install package group
 install_package_group() {
     local group="$1"
     local packages="${PACKAGES[$group]}"
     local aur_packages="${AUR_PACKAGES[$group]}"
     
     if [[ -n "$packages" ]]; then
-        log_info "安装 $group 组件..."
+        log_info "Installing $group components..."
         
         case "$DISTRO" in
             "arch")
@@ -144,7 +145,7 @@ install_package_group() {
             "debian")
                 case "$group" in
                     "core")
-                        $PKG_INSTALL hyprland waybar kitty mako-notifier wofi
+                        $PKG_INSTALL hyprland waybar kitty mako ulauncher
                         ;;
                     "input")
                         $PKG_INSTALL fcitx5 fcitx5-chinese-addons
@@ -158,26 +159,27 @@ install_package_group() {
                 esac
                 ;;
             *)
-                log_warning "未知发行版，请手动安装: $packages"
+                log_warning "Unknown distribution, please install manually: $packages"
                 ;;
         esac
         
         if [[ -n "$aur_packages" && "$DISTRO" == "arch" ]]; then
-            log_info "安装 AUR 包: $aur_packages"
+            log_info "Installing AUR packages: $aur_packages"
             $AUR_HELPER $aur_packages
         fi
         
-        log_success "$group 组件安装完成"
+        log_success "$group component installation completed"
     fi
 }
 
-# 配置链接
+
+# Link configurations
 link_configs() {
     local groups=("$@")
     
-    log_info "链接配置文件..."
+    log_info "Linking configuration files..."
     
-    # 基础配置（始终链接）
+    # Base configurations (always linked)
     local base_configs=(
         "$DOTFILES_DIR/config/hypr:$HOME/.config/hypr"
         "$DOTFILES_DIR/config/waybar:$HOME/.config/waybar"
@@ -189,7 +191,7 @@ link_configs() {
         "$DOTFILES_DIR/.Xresources:$HOME/.Xresources"
     )
     
-    # 根据组件添加配置
+    # Add configurations based on components
     for group in "${groups[@]}"; do
         case "$group" in
             "input")
@@ -209,60 +211,66 @@ link_configs() {
         esac
     done
     
-    # 创建备份并链接
+    # Create backup and link
     mkdir -p "$BACKUP_DIR"
     
     for config in "${base_configs[@]}"; do
         IFS=':' read -r src dst <<< "$config"
         
         if [[ -e "$dst" && ! -L "$dst" ]]; then
-            log_info "备份: $dst"
+            log_info "Backing up: $dst"
             mv "$dst" "$BACKUP_DIR/"
         fi
         
-        log_info "链接: $(basename "$src") -> $dst"
+        log_info "Linking: $(basename "$src") -> $dst"
         mkdir -p "$(dirname "$dst")"
         ln -sf "$src" "$dst"
     done
     
-    # 链接脚本
+    # Link scripts
     mkdir -p "$HOME/.local/bin"
     find "$DOTFILES_DIR/scripts" -name "*.sh" -executable | while read -r script; do
         basename_script=$(basename "$script")
         ln -sf "$script" "$HOME/.local/bin/$basename_script"
     done
     
-    # 处理desktop文件
+    # Handle desktop files
     mkdir -p "$HOME/.local/share/applications"
     if [[ -d "$DOTFILES_DIR/config/applications" ]]; then
+        log_info "Linking application launchers..."
         for src in "$DOTFILES_DIR/config/applications"/*.desktop; do
             if [[ -f "$src" ]]; then
                 basename_file=$(basename "$src")
                 dst="$HOME/.local/share/applications/$basename_file"
                 ln -sf "$src" "$dst"
+                log_success "  ✓ $basename_file"
             fi
         done
-        update-desktop-database "$HOME/.local/share/applications/" 2>/dev/null || true
+        # Update desktop database cache
+        if command -v update-desktop-database >/dev/null 2>&1; then
+            update-desktop-database "$HOME/.local/share/applications/" 2>/dev/null || true
+            log_success "Desktop application cache updated"
+        fi
     fi
     
-    log_success "配置链接完成，备份保存在: $BACKUP_DIR"
+    log_success "Configuration linking completed, backup saved at: $BACKUP_DIR"
 }
 
-# 安装功能
+# Install function
 install_dotfiles() {
     local modules=("$@")
     
-    # 如果没有指定模块，默认安装全部
+    # If no modules specified, install all by default
     if [ ${#modules[@]} -eq 0 ]; then
         modules=("--all")
     fi
     
-    log_info "开始安装 dotfiles..."
-    log_info "备份目录: $BACKUP_DIR"
+    log_info "Starting dotfiles installation..."
+    log_info "Backup directory: $BACKUP_DIR"
     
     detect_distro
     
-    # 处理模块安装
+    # Process module installation
     local install_groups=()
     if [[ " ${modules[*]} " =~ " --all " ]] || [ ${#modules[@]} -eq 0 ]; then
         install_groups=("core" "productivity" "development" "media" "input" "system")
@@ -274,87 +282,87 @@ install_dotfiles() {
                 --development) install_groups+=("development") ;;
                 --media) install_groups+=("media") ;;
                 --input) install_groups+=("input") ;;
-                --themes) log_info "主题通过配置文件自动应用" ;;
+                --themes) log_info "Themes are applied automatically through configuration files" ;;
             esac
         done
     fi
     
-    # 安装软件包
+    # Install packages
     for group in "${install_groups[@]}"; do
         install_package_group "$group"
     done
     
-    # 链接配置
+    # Link configurations
     link_configs "${install_groups[@]}"
     
-    log_success "安装完成！"
+    log_success "Installation completed!"
 }
 
-# 同步功能
+# Sync function
 sync_dotfiles() {
-    log_info "开始同步配置到仓库..."
+    log_info "Starting configuration sync to repository..."
     
     cd "$DOTFILES_DIR"
     
-    # 检查是否有变更
+    # Check for changes
     if ! git status --porcelain | grep -q .; then
-        log_info "没有需要同步的变更"
+        log_info "No changes to sync"
         return 0
     fi
     
-    # 显示变更
-    log_info "检测到以下变更:"
+    # Show changes
+    log_info "Detected the following changes:"
     git status --short
     
-    # 确认同步
-    log_warning "是否提交这些变更? (y/N)"
+    # Confirm sync
+    log_warning "Commit these changes? (y/N)"
     read -r response
     
     if [[ "$response" =~ ^[Yy]$ ]]; then
-        log_info "请输入提交信息:"
+        log_info "Please enter commit message:"
         read -r commit_message
         
         if [[ -z "$commit_message" ]]; then
-            commit_message="update: 配置更新 $(date '+%Y-%m-%d %H:%M')"
+            commit_message="update: configuration update $(date '+%Y-%m-%d %H:%M')"
         fi
         
         git add .
         git commit -m "$commit_message"
         
-        log_info "是否推送到远程仓库? (y/N)"
+        log_info "Push to remote repository? (y/N)"
         read -r push_response
         
         if [[ "$push_response" =~ ^[Yy]$ ]]; then
             git push
-            log_success "推送完成！"
+            log_success "Push completed!"
         fi
     else
-        log_info "已取消同步操作"
+        log_info "Sync operation cancelled"
         return 0
     fi
     
-    log_success "同步完成！"
+    log_success "Sync completed!"
 }
 
-# 清理功能
+# Cleanup function
 cleanup_dotfiles() {
-    log_info "开始清理系统和备份..."
+    log_info "Starting system and backup cleanup..."
     
     local cleaned_items=0
     
-    # 清理旧备份
-    log_info "清理旧备份文件..."
-    local backup_dirs=($(ls -dt "$HOME"/dotfiles_backup_* 2>/dev/null | tail -n +6))
+    # Clean old backups (keep only the last one)
+    log_info "Cleaning old backup files..."
+    local backup_dirs=($(ls -dt "$HOME"/dotfiles_backup_* 2>/dev/null | tail -n +2))
     if [ ${#backup_dirs[@]} -gt 0 ]; then
         for backup_dir in "${backup_dirs[@]}"; do
-            log_info "删除旧备份: $(basename "$backup_dir")"
+            log_info "Deleting old backup: $(basename "$backup_dir")"
             rm -rf "$backup_dir"
             ((cleaned_items++))
         done
     fi
     
-    # 清理临时文件
-    log_info "清理临时文件..."
+    # Clean temporary files
+    log_info "Cleaning temporary files..."
     local temp_dirs=(
         "/tmp/screenshots"
         "/tmp/screenshot_*"
@@ -365,15 +373,15 @@ cleanup_dotfiles() {
     for temp_pattern in "${temp_dirs[@]}"; do
         for temp_path in $temp_pattern; do
             if [[ -e "$temp_path" ]]; then
-                log_info "删除临时文件: $temp_path"
+                log_info "Removing temporary file: $temp_path"
                 rm -rf "$temp_path"
                 ((cleaned_items++))
             fi
         done
     done
     
-    # 清理无效的符号链接
-    log_info "检查无效的符号链接..."
+    # Clean invalid symbolic links
+    log_info "Checking for invalid symbolic links..."
     local config_dirs=(
         "$HOME/.config"
         "$HOME/.local/bin"
@@ -383,54 +391,54 @@ cleanup_dotfiles() {
     for config_dir in "${config_dirs[@]}"; do
         if [[ -d "$config_dir" ]]; then
             find "$config_dir" -type l ! -exec test -e {} \; -print 2>/dev/null | while read -r broken_link; do
-                log_info "删除无效链接: $broken_link"
+                log_info "Removing invalid link: $broken_link"
                 rm -f "$broken_link"
                 ((cleaned_items++))
             done
         fi
     done
     
-    # 重启服务（可选）
-    log_warning "是否重启桌面服务？(y/N)"
+    # Restart services (optional)
+    log_warning "Restart desktop services? (y/N)"
     read -r restart_response
     
     if [[ "$restart_response" =~ ^[Yy]$ ]]; then
-        log_info "重启桌面服务..."
+        log_info "Restarting desktop services..."
         
-        # 重启 waybar
+        # Restart waybar
         if pgrep waybar > /dev/null; then
             pkill waybar
             waybar &
-            log_info "重启 waybar"
+            log_info "Restarted waybar"
         fi
         
-        # 重启 mako
+        # Restart mako
         if pgrep mako > /dev/null; then
             pkill mako
             mako &
-            log_info "重启 mako"
+            log_info "Restarted mako"
         fi
         
-        # 重启 fcitx5
+        # Restart fcitx5
         if pgrep fcitx5 > /dev/null; then
             pkill fcitx5
             fcitx5 -d
-            log_info "重启 fcitx5"
+            log_info "Restarted fcitx5"
         fi
     fi
     
     if [ $cleaned_items -eq 0 ]; then
-        log_info "系统已经很干净，没有需要清理的内容"
+        log_info "System is already clean, nothing to clean up"
     else
-        log_success "清理完成！共处理 $cleaned_items 个项目"
+        log_success "Cleanup completed! Processed $cleaned_items items"
     fi
 }
 
-# 备份功能
+# Backup function
 backup_dotfiles() {
-    log_info "创建配置备份..."
+    log_info "Creating configuration backup..."
     
-    # 备份关键配置目录
+    # Backup critical configuration directories
     local backup_dirs=(
         "$HOME/.config/hypr"
         "$HOME/.config/waybar"
@@ -444,51 +452,51 @@ backup_dotfiles() {
     
     for dir in "${backup_dirs[@]}"; do
         if [ -e "$dir" ]; then
-            log_info "备份: $dir"
+            log_info "Backing up: $dir"
             cp -r "$dir" "$BACKUP_DIR/" 2>/dev/null || true
         fi
     done
     
-    log_success "备份创建完成: $BACKUP_DIR"
+    log_success "Backup creation completed: $BACKUP_DIR"
 }
 
-# 恢复功能
+# Restore function
 restore_dotfiles() {
     local backup_name="$1"
     
     if [ -z "$backup_name" ]; then
-        log_error "请指定备份名称"
-        log_info "可用备份:"
-        ls -1 "$HOME"/dotfiles_backup_* 2>/dev/null | xargs -I {} basename {} || log_info "  无可用备份"
+        log_error "Please specify backup name"
+        log_info "Available backups:"
+        ls -1 "$HOME"/dotfiles_backup_* 2>/dev/null | xargs -I {} basename {} || log_info "  No available backups"
         exit 1
     fi
     
     local backup_path="$HOME/$backup_name"
     
     if [ ! -d "$backup_path" ]; then
-        log_error "备份不存在: $backup_path"
+        log_error "Backup does not exist: $backup_path"
         exit 1
     fi
     
-    log_info "恢复备份: $backup_name"
-    log_warning "这将覆盖当前配置，是否继续? (y/N)"
+    log_info "Restoring backup: $backup_name"
+    log_warning "This will overwrite current configurations, continue? (y/N)"
     read -r response
     
     if [[ "$response" =~ ^[Yy]$ ]]; then
-        # 恢复备份
+        # Restore backup
         rsync -av "$backup_path/" "$HOME/" --exclude=".*"
-        log_success "备份恢复完成！"
+        log_success "Backup restoration completed!"
     else
-        log_info "已取消恢复操作"
+        log_info "Restoration operation cancelled"
     fi
 }
 
-# 状态检查
+# Status check
 show_status() {
-    log_info "配置文件状态检查..."
+    log_info "Configuration file status check..."
     
     echo
-    echo "=== 配置文件链接状态 ==="
+    echo "=== Configuration File Link Status ==="
     
     local config_dirs=(
         ".config/hypr"
@@ -503,164 +511,415 @@ show_status() {
             local link_target=$(readlink "$target")
             echo "✅ $dir -> $link_target"
         elif [ -d "$target" ]; then
-            echo "⚠️  $dir (非链接目录)"
+            echo "⚠️  $dir (non-linked directory)"
         else
-            echo "❌ $dir (不存在)"
+            echo "❌ $dir (does not exist)"
         fi
     done
     
     echo
-    echo "=== Git 状态 ==="
+    echo "=== Git Status ==="
     cd "$DOTFILES_DIR"
     if git status --porcelain | grep -q .; then
-        echo "⚠️  有未提交的修改"
+        echo "⚠️  Uncommitted changes"
         git status --short
     else
-        echo "✅ 工作目录干净"
+        echo "✅ Working directory clean"
     fi
 }
 
-# 快速设置函数（一键部署）
+# Quick setup function (one-click deployment)
 quick_setup() {
-    echo -e "${BLUE}🚀 快速设置 dotfiles...${NC}"
+    echo -e "${BLUE}🚀 Quick setup dotfiles...${NC}"
     echo
     
-    # 检查 .env.local
+    # Check .env.local
     if [[ ! -f "$DOTFILES_DIR/.env.local" ]]; then
         if [[ -f "$DOTFILES_DIR/.env.example" ]]; then
-            log_warning "未找到 .env.local 配置文件"
-            echo "请先运行："
+            log_warning ".env.local configuration file not found"
+            echo "Please run first:"
             echo "  cp .env.example .env.local"
-            echo "  编辑 .env.local 文件"
-            echo "  然后重新运行 ./dotfiles.sh setup"
+            echo "  Edit .env.local file"
+            echo "  Then re-run ./dotfiles.sh setup"
             exit 1
         else
-            log_error "未找到 .env.example 模板文件"
+            log_error "Template file .env.example not found"
             exit 1
         fi
     fi
     
-    # 加载配置
+    # Load configuration
     source "$DOTFILES_DIR/.env.local"
-    log_success "配置文件加载完成"
+    log_success "Configuration file loaded successfully"
     
-    # 创建必要目录
-    log_info "创建目录结构..."
+    # Create necessary directories
+    log_info "Creating directory structure..."
     mkdir -p "$HOME/.config" "$HOME/.local/bin" "$HOME/.local/var/log/dotfiles"
     mkdir -p "$HOME/.config/totp" && chmod 700 "$HOME/.config/totp"
     
-    # 备份现有配置
+    # Backup existing configurations
     backup_dotfiles
     
-    # 链接配置文件
-    log_info "链接配置文件..."
+    # Link configuration files
+    log_info "Linking configuration files..."
     ln -sf "$DOTFILES_DIR/shell/zshrc" "$HOME/.zshrc"
+    
+    # Handle git config directory carefully
+    if [[ -d "$HOME/.config/git" && ! -L "$HOME/.config/git" ]]; then
+        log_warning "Backing up existing git directory"
+        mv "$HOME/.config/git" "$HOME/.config/git.backup.$(date +%s)"
+    fi
     ln -sf "$DOTFILES_DIR/config/git" "$HOME/.config/"
     
-    # 桌面环境配置（如果支持）
+    # Desktop environment configuration (if supported)
     if command -v hyprctl >/dev/null 2>&1; then
-        log_info "检测到 Hyprland，链接桌面配置..."
+        log_info "Hyprland detected, linking desktop configuration..."
         ln -sf "$DOTFILES_DIR/config/hypr" "$HOME/.config/"
         ln -sf "$DOTFILES_DIR/config/waybar" "$HOME/.config/"
         ln -sf "$DOTFILES_DIR/config/mako" "$HOME/.config/"
-        log_success "桌面环境配置完成"
+        log_success "Desktop environment configuration completed"
     else
-        log_warning "未检测到 Hyprland，跳过桌面环境配置"
+        log_warning "Hyprland not detected, skipping desktop environment configuration"
     fi
     
-    # 设置脚本权限
-    log_info "设置脚本权限..."
+    log_success "Desktop environment configuration completed"
+    
+    # Patch system desktop files for better functionality
+    echo
+    log_info "🔧 System Desktop Files Patching"
+    echo "Some applications need system-level patches for better functionality:"
+    echo "  • WPS Office: Font rendering fixes"
+    echo "  • VSCode: Wayland support improvements"
+    echo
+    read -p "Apply system desktop file patches? (Y/n): " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Nn]$ ]]; then
+        log_info "Skipping desktop file patches"
+    else
+        log_info "Applying desktop file patches..."
+        if [[ -x "$DOTFILES_DIR/scripts/patch-desktop-files.sh" ]]; then
+            sudo "$DOTFILES_DIR/scripts/patch-desktop-files.sh"
+            if [[ $? -eq 0 ]]; then
+                log_success "Desktop file patches applied successfully"
+            else
+                log_warning "Desktop file patching failed, but continuing"
+            fi
+        else
+            log_warning "Desktop file patcher script not found"
+        fi
+    fi
+    
+    # Check and install additional fonts for better WPS rendering
+    echo
+    log_info "🔤 Font Package Check"
+    echo "Better font rendering requires additional font packages."
+    echo "Checking for missing font packages..."
+    
+    missing_fonts=()
+    
+    # Check for Windows fonts (ttf-ms-fonts)
+    if ! fc-list | grep -i "times new roman" >/dev/null 2>&1; then
+        missing_fonts+=("ttf-ms-fonts (Windows fonts)")
+    fi
+    
+    # Check for liberation fonts
+    if ! fc-list | grep -i "liberation" >/dev/null 2>&1; then
+        missing_fonts+=("ttf-liberation (Liberation fonts)")
+    fi
+    
+    if [ ${#missing_fonts[@]} -gt 0 ]; then
+        echo "Missing font packages:"
+        for font in "${missing_fonts[@]}"; do
+            echo "  • $font"
+        done
+        echo
+        read -p "Install missing font packages? (Y/n): " -n 1 -r
+        echo
+        if [[ ! $REPLY =~ ^[Nn]$ ]]; then
+            log_info "Installing font packages..."
+            
+            # Try to install missing fonts
+            if command -v yay >/dev/null 2>&1; then
+                if [[ " ${missing_fonts[@]} " =~ "ttf-ms-fonts" ]]; then
+                    yay -S ttf-ms-fonts --noconfirm || log_warning "Failed to install ttf-ms-fonts"
+                fi
+                if [[ " ${missing_fonts[@]} " =~ "ttf-liberation" ]]; then
+                    sudo pacman -S ttf-liberation --noconfirm || log_warning "Failed to install ttf-liberation"
+                fi
+            elif command -v pacman >/dev/null 2>&1; then
+                if [[ " ${missing_fonts[@]} " =~ "ttf-liberation" ]]; then
+                    sudo pacman -S ttf-liberation --noconfirm || log_warning "Failed to install ttf-liberation"
+                fi
+                log_info "For ttf-ms-fonts, install an AUR helper like yay first"
+            fi
+            
+            log_success "Font installation completed"
+        else
+            log_info "Skipping font installation"
+        fi
+    else
+        log_success "All recommended fonts are already installed"
+    fi
+    
+    # Set script permissions
+    log_info "Setting script permissions..."
     find "$DOTFILES_DIR/scripts" -name "*.sh" -exec chmod +x {} \; 2>/dev/null || true
     
-    # 添加到PATH
+    # Add to PATH
     if ! grep -q "dotfiles/scripts" "$HOME/.zshrc" 2>/dev/null; then
         echo '' >> "$HOME/.zshrc"
         echo '# dotfiles scripts' >> "$HOME/.zshrc"
         echo 'export PATH="$HOME/dotfiles/scripts:$PATH"' >> "$HOME/.zshrc"
-        log_success "已添加脚本目录到 PATH"
+        log_success "Script directory added to PATH"
     fi
     
-    # 测试配置
-    log_info "测试配置..."
+    # Test configuration
+    log_info "Testing configuration..."
     if [[ -x "$DOTFILES_DIR/scripts/load-env.sh" ]]; then
         if "$DOTFILES_DIR/scripts/load-env.sh" >/dev/null 2>&1; then
-            log_success "环境配置测试通过"
+            log_success "Environment configuration test passed"
         else
-            log_warning "环境配置测试失败，但继续安装"
+            log_warning "Environment configuration test failed, but continuing installation"
         fi
     fi
     
-    # 可选服务设置
+    # Initialize proxy configuration
     echo
-    log_info "🔧 可选服务设置："
+    log_info "🌐 Initializing proxy configuration..."
+    if [[ -x "$DOTFILES_DIR/scripts/generate-proxy-env.sh" ]]; then
+        "$DOTFILES_DIR/scripts/generate-proxy-env.sh"
+        log_success "Proxy configuration initialized"
+        echo "  Proxy settings can be modified in: .env.local"
+        echo "  Use ENABLE_PROXY=true/false to toggle proxy"
+    else
+        log_warning "Proxy configuration script not found"
+    fi
+
+    # Optional service setup
+    echo
+    log_info "🔧 Optional Service Setup:"
     
-    # 健康提醒
-    read -p "启用健康提醒服务？(Y/n): " -n 1 -r
+    # Health reminders
+    read -p "Enable health reminder service? (Y/n): " -n 1 -r
     echo
     if [[ $REPLY =~ ^[Yy]$ ]] || [[ -z $REPLY ]]; then
         if [[ -x "$DOTFILES_DIR/scripts/periodic-reminders.sh" ]]; then
-            "$DOTFILES_DIR/scripts/periodic-reminders.sh" test >/dev/null 2>&1 && log_success "健康提醒测试成功"
-            echo "管理健康提醒："
-            echo "  启动: periodic-reminders.sh start"
-            echo "  状态: periodic-reminders.sh status"
-            echo "  停止: periodic-reminders.sh stop"
+            "$DOTFILES_DIR/scripts/periodic-reminders.sh" test >/dev/null 2>&1 && log_success "Health reminder test successful"
+            echo "Manage health reminders:"
+            echo "  Start: periodic-reminders.sh start"
+            echo "  Status: periodic-reminders.sh status"
+            echo "  Stop: periodic-reminders.sh stop"
         fi
     fi
     
-    # 系统监控
-    read -p "启用系统监控定时任务？(y/N): " -n 1 -r
+    # System monitoring
+    read -p "Enable system monitoring cron job? (y/N): " -n 1 -r
     echo
     if [[ $REPLY =~ ^[Yy]$ ]]; then
         cron_line="*/30 * * * * $DOTFILES_DIR/scripts/system-monitor-notify.sh"
         if ! crontab -l 2>/dev/null | grep -q "system-monitor-notify.sh"; then
             (crontab -l 2>/dev/null; echo "$cron_line") | crontab -
-            log_success "系统监控已启用（每30分钟检查一次）"
+            log_success "System monitoring enabled (checks every 30 minutes)"
         else
-            log_info "系统监控已存在"
+            log_info "System monitoring already exists"
         fi
     fi
     
-    # SDDM 主题配置
+    # SDDM theme configuration
     if command -v sddm >/dev/null 2>&1; then
         echo
-        read -p "配置 SDDM 登录主题？(Y/n): " -n 1 -r
+        read -p "Configure SDDM login theme? (Y/n): " -n 1 -r
         echo
         if [[ $REPLY =~ ^[Yy]$ ]] || [[ -z $REPLY ]]; then
-            log_info "检查 SDDM 主题依赖..."
+            log_info "Checking SDDM theme dependencies..."
             
-            # 检查 Sugar Candy 主题是否安装
-            if [[ ! -d "/usr/share/sddm/themes/sugar-candy" ]]; then
-                log_warning "Sugar Candy 主题未安装"
-                echo "请先安装："
-                echo "  yay -S sddm-sugar-candy-git"
-                echo "然后运行: sudo $DOTFILES_DIR/scripts/fix-sddm-config.sh"
+            # Check if astronaut theme is installed
+            if [[ ! -d "/usr/share/sddm/themes/sddm-astronaut-theme" ]]; then
+                log_warning "sddm-astronaut-theme not installed"
+                echo "Please install first:"
+                echo "  yay -S sddm-astronaut-theme"
+                echo "Then configure: sudo cp $DOTFILES_DIR/config/sddm/sddm.conf /etc/sddm.conf"
             else
-                log_info "发现 Sugar Candy 主题，配置中..."
-                echo "需要 sudo 权限配置 SDDM..."
-                echo "请运行: sudo $DOTFILES_DIR/scripts/fix-sddm-config.sh"
-                echo "然后重启登录管理器: sudo systemctl restart sddm"
+                log_info "Found sddm-astronaut-theme, configuring..."
+                echo "Copying SDDM configuration..."
+                sudo cp "$DOTFILES_DIR/config/sddm/sddm.conf" /etc/sddm.conf
+                log_success "SDDM theme configured successfully"
+                echo "Restart SDDM to apply: sudo systemctl restart sddm"
             fi
         fi
     else
-        log_info "未检测到 SDDM，跳过登录主题配置"
+        log_info "SDDM not detected, skipping login theme configuration"
     fi
     
     echo
-    log_success "🎉 快速设置完成！"
+    log_success "🎉 Quick setup completed!"
     echo
-    echo -e "${BLUE}📋 接下来的步骤：${NC}"
-    echo "  1. 重新打开终端或运行: source ~/.zshrc"
-    echo "  2. 根据需要调整 .env.local 配置"
-    echo "  3. 享受你的新桌面环境！"
+    echo -e "${BLUE}📋 Next steps:${NC}"
+    echo "  1. Reopen terminal or run: source ~/.zshrc"
+    echo "  2. Adjust .env.local configuration as needed" 
+    echo "  3. Setup input method: ./dotfiles.sh input-method"
+    echo "  4. Enjoy your new desktop environment!"
     echo
-    echo -e "${BLUE}🔧 常用命令：${NC}"
-    echo "  ./dotfiles.sh status           # 查看配置状态"
-    echo "  ./dotfiles.sh sync             # 同步配置"
-    echo "  ./dotfiles.sh backup           # 备份配置"
-    echo "  periodic-reminders.sh start    # 启动健康提醒"
+    echo -e "${BLUE}🔧 Common commands:${NC}"
+    echo "  ./dotfiles.sh status           # Check configuration status"
+    echo "  ./dotfiles.sh sync             # Sync configurations"
+    echo "  ./dotfiles.sh backup           # Backup configurations"
+    echo "  ./dotfiles.sh input-method     # Setup input method (fcitx5/rime)"
+    echo "  periodic-reminders.sh start    # Start health reminders"
 }
 
-# 主函数
+# 输入法智能配置
+setup_input_method() {
+    echo -e "${BLUE}🔤 Input Method Configuration${NC}"
+    echo
+    
+    # 检测环境
+    local has_fcitx5=false
+    local has_rime=false
+    local has_wanxiang=false
+    
+    if command -v fcitx5 >/dev/null 2>&1; then
+        has_fcitx5=true
+    fi
+    
+    if command -v rime_deployer >/dev/null 2>&1; then
+        has_rime=true
+    fi
+    
+    if [[ -d "$HOME/.local/share/fcitx5/rime" ]] && [[ -n "$(find "$HOME/.local/share/fcitx5/rime" -name "*.dict.yaml" 2>/dev/null | head -1)" ]]; then
+        has_wanxiang=true
+    fi
+    
+    echo "Current input method status:"
+    echo "  • fcitx5: $($has_fcitx5 && echo "✅ installed" || echo "❌ not found")"
+    echo "  • fcitx5-rime: $($has_rime && echo "✅ installed" || echo "❌ not found")" 
+    echo "  • 万象词库: $($has_wanxiang && echo "✅ available" || echo "❌ not found")"
+    
+    if [[ -L "$HOME/.config/fcitx5" ]]; then
+        local link_target=$(readlink "$HOME/.config/fcitx5")
+        echo "  • Current config: $(basename "$link_target")"
+    elif [[ -d "$HOME/.config/fcitx5" ]]; then
+        echo "  • Current config: local directory (not linked)"
+    else
+        echo "  • Current config: not exists"
+    fi
+    
+    echo
+    
+    if ! $has_fcitx5; then
+        log_error "fcitx5 not installed. Please install first:"
+        echo "sudo pacman -S fcitx5 fcitx5-chinese-addons fcitx5-gtk fcitx5-qt"
+        return 1
+    fi
+    
+    echo "Available input method options:"
+    echo "  1. Enhanced rime + 万象词库 (rich vocabulary, smart prediction)"
+    echo "  2. Standard fcitx5 pinyin (simple, stable)"
+    echo "  3. Just restart fcitx5"
+    echo "  4. Cancel"
+    echo
+    
+    read -p "Please choose (1-4): " -n 1 -r choice
+    echo
+    echo
+    
+    case "$choice" in
+        1)
+            if ! $has_rime; then
+                log_error "fcitx5-rime not installed. Please install first:"
+                echo "sudo pacman -S fcitx5-rime"
+                return 1
+            fi
+            
+            log_info "Setting up rime + 万象词库..."
+            
+            # 备份现有配置
+            if [[ -d "$HOME/.config/fcitx5" && ! -L "$HOME/.config/fcitx5" ]]; then
+                local backup_name="fcitx5.backup.$(date +%s)"
+                mv "$HOME/.config/fcitx5" "$HOME/$backup_name"
+                log_info "Backed up existing config to: ~/$backup_name"
+            fi
+            
+            # 链接rime专用fcitx5配置
+            rm -f "$HOME/.config/fcitx5"
+            ln -sf "$DOTFILES_DIR/config/fcitx5-rime" "$HOME/.config/fcitx5"
+            
+            # 安装万象词库
+            log_info "Installing 万象词库..."
+            if [[ -x "$DOTFILES_DIR/scripts/setup-rime-wanxiang.sh" ]]; then
+                "$DOTFILES_DIR/scripts/setup-rime-wanxiang.sh" install
+            else
+                log_warning "万象词库安装脚本不存在"
+                log_info "你可以手动从以下地址下载词库："
+                echo "https://github.com/amzxyz/rime_wanxiang"
+                echo "解压到: $HOME/.local/share/fcitx5/rime/"
+            fi
+            
+            restart_input_method
+            log_success "rime + 万象词库 configured successfully!"
+            ;;
+            
+        2)
+            log_info "Setting up standard fcitx5 pinyin..."
+            
+            # 使用标准配置
+            rm -f "$HOME/.config/fcitx5"
+            if [[ -d "$DOTFILES_DIR/config/fcitx5-fallback" ]]; then
+                ln -sf "$DOTFILES_DIR/config/fcitx5-fallback" "$HOME/.config/fcitx5"
+                log_info "Using fallback configuration"
+            else
+                ln -sf "$DOTFILES_DIR/config/fcitx5" "$HOME/.config/fcitx5"
+                log_info "Using standard configuration"
+            fi
+            
+            restart_input_method
+            log_success "Standard fcitx5 pinyin configured successfully!"
+            ;;
+            
+        3)
+            restart_input_method
+            ;;
+            
+        4)
+            log_info "Operation cancelled"
+            return 0
+            ;;
+            
+        *)
+            log_error "Invalid choice"
+            return 1
+            ;;
+    esac
+    
+    echo
+    echo -e "${GREEN}✅ Input method configuration completed!${NC}"
+    echo
+    echo "Usage:"
+    echo "  • Switch input: Ctrl+Space" 
+    echo "  • Configure: fcitx5-configtool"
+    echo "  • Test typing in any application"
+    
+    if $has_rime; then
+        echo "  • Rime settings: Ctrl+\` (backtick)"
+        echo "  • Deploy config: rime_deployer"
+    fi
+}
+
+# 重启输入法服务
+restart_input_method() {
+    log_info "Restarting input method services..."
+    
+    # 重启fcitx5
+    if pgrep fcitx5 >/dev/null; then
+        pkill fcitx5
+        sleep 1
+    fi
+    
+    fcitx5 -d
+    log_success "Input method services restarted"
+}
+
+# Main function
 main() {
     if [ $# -eq 0 ]; then
         show_help
@@ -694,11 +953,14 @@ main() {
         status)
             show_status
             ;;
+        input-method)
+            setup_input_method
+            ;;
         help|--help|-h)
             show_help
             ;;
         *)
-            log_error "未知命令: $command"
+            log_error "Unknown command: $command"
             show_help
             exit 1
             ;;

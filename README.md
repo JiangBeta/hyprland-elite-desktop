@@ -10,7 +10,7 @@
 - **Hyprland** - 高性能 Wayland 合成器
 - **Waybar** - 功能丰富的状态栏
 - **Mako** - 🆕 智能通知系统（支持恢复、过滤）
-- **Wofi** - 应用启动器
+- **Ulauncher** - 现代化应用启动器
 
 ### 🛠️ 生产力工具
 - **番茄工作法** - 集成状态栏的时间管理
@@ -21,7 +21,7 @@
 
 ### 🎨 系统美化
 - **SDDM** - Sugar Candy 登录主题，统一配色
-- **fcitx5** - 现代化中文输入法，云拼音支持
+- **fcitx5 + Rime** - 现代化中文输入法，支持万象拼音和明月拼音
 - **GTK/Qt** - 统一的暗色主题
 - **动态效果** - 流畅的窗口动画
 - **高DPI支持** - 完美的缩放和字体渲染
@@ -61,7 +61,7 @@ vim .env.local  # 修改 NTFY_TOPIC 等个人配置
 ```bash
 # 核心软件包
 sudo pacman -S hyprland waybar kitty fcitx5 fcitx5-chinese-addons \
-               mako wofi grim slurp swww wl-clipboard brightnessctl \
+               mako ulauncher grim slurp swww wl-clipboard brightnessctl \
                playerctl network-manager-applet blueman gnome-keyring
 
 # 可选功能
@@ -82,6 +82,39 @@ yay -S youtube-music-bin lunar-calendar-bin
 ./dotfiles.sh sync      # 同步配置到仓库
 ./dotfiles.sh backup    # 创建配置备份
 ```
+
+## 🌐 网络代理配置
+
+### 全局代理支持
+本配置支持为所有GUI应用设置全局代理，包括Chrome、Firefox、VSCode等：
+
+```bash
+# 编辑 .env.local 配置代理
+vim ~/dotfiles/.env.local
+
+# 设置代理配置
+ENABLE_PROXY=true          # 启用代理
+PROXY_HOST=127.0.0.1       # 代理服务器地址  
+PROXY_PORT=7897            # 代理端口（clash默认）
+NO_PROXY=localhost,127.0.0.1  # 排除地址列表
+
+# 应用代理配置
+~/dotfiles/scripts/generate-proxy-env.sh  # 生成代理环境变量
+~/dotfiles/scripts/hyprland-startup-env.sh  # 应用到系统环境
+
+# 重启GUI应用使代理生效（或重新登录）
+```
+
+### 支持的代理类型
+- **HTTP/HTTPS代理** - 支持所有基于HTTP的代理
+- **SOCKS代理** - 需要本地HTTP代理转换
+- **Clash/V2Ray** - 完美支持常见代理客户端
+
+### 代理配置说明
+- 代理设置会自动应用到systemd用户环境和D-Bus激活环境
+- 新启动的GUI应用会自动继承代理设置
+- 终端应用通过zsh配置自动使用代理
+- 支持动态开启/关闭，无需重启系统
 
 ## 🔄 多设备同步
 
@@ -136,7 +169,7 @@ EYE_INTERVAL=60       # 护眼提醒
 | `Super + Q` | 打开终端 |
 | `Super + C` | 关闭窗口 |
 | `Super + E` | 文件管理器 |
-| `Super + R` | 应用启动器 |
+| `Alt + \`` | 应用启动器 (Ulauncher) |
 | `Super + W` | 随机切换壁纸 |
 
 ### 截图功能
@@ -152,6 +185,20 @@ EYE_INTERVAL=60       # 护眼提醒
 | `Super + 1-9` | 切换工作区 |
 | `Super + Shift + 1-9` | 移动窗口到工作区 |
 | `Alt + Tab` | 工作区切换 |
+
+### Obsidian 快速捕获
+| 快捷键 | 功能 |
+|--------|------|
+| `Alt + I` | 快速捕获想法/任务到 Obsidian |
+| `Alt + Shift + I` | 快速添加任务到 Obsidian |
+
+## 🔧 内置修复
+
+### 🖥️ 应用程序优化
+系统自动修复常见问题：
+- **WPS Office** - 修复高DPI下字体模糊锯齿问题
+- **微信文件** - 使用系统默认应用打开接收的文件
+- **字体渲染** - 优化整体字体显示效果
 
 ## 🔧 高级功能
 

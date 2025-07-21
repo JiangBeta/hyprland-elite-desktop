@@ -168,3 +168,6 @@ export NVM_DIR="$HOME/.nvm"
 
 
 export GOOGLE_CLOUD_PROJECT="gen-lang-client-0621376584"
+
+# dotfiles scripts
+export PATH="$HOME/dotfiles/scripts:$PATH"

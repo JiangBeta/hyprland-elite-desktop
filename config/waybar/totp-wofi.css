@@ -1,59 +1,65 @@
+/* TOTP Selector Wofi Styling */
+/* Matches waybar theme colors */
+
 * {
-    font-family: "JetBrainsMono Nerd Font", "Noto Sans CJK SC", sans-serif;
+    background-color: rgba(40, 44, 52, 0.9);
+    color: #eceff4;
+    font-family: 'JetBrains Mono', 'Noto Sans CJK SC', monospace;
     font-size: 14px;
+    border: none;
 }
 
-window {
-    background-color: rgba(0, 0, 0, 0.9);
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    border-radius: 12px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+#window {
+    background-color: rgba(40, 44, 52, 0.95);
+    border: 2px solid rgba(137, 180, 250, 0.3);
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
 
 #input {
-    background-color: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 8px;
-    padding: 8px 12px;
-    margin: 8px;
-    color: #ffffff;
-    font-weight: 600;
+    background-color: rgba(137, 180, 250, 0.1);
+    border: 1px solid rgba(137, 180, 250, 0.3);
+    color: #eceff4;
+    padding: 12px;
+    margin: 10px;
+    border-radius: 6px;
+    font-size: 16px;
 }
 
 #input:focus {
-    border-color: rgba(137, 180, 250, 0.6);
-    background-color: rgba(137, 180, 250, 0.1);
+    background-color: rgba(137, 180, 250, 0.2);
+    border-color: rgba(137, 180, 250, 0.5);
 }
 
 #inner-box {
-    margin: 8px;
+    background-color: transparent;
+    margin: 5px;
 }
 
 #outer-box {
-    margin: 0px;
+    background-color: transparent;
 }
 
 #scroll {
-    margin: 0px;
+    background-color: transparent;
 }
 
 #text {
-    color: #ffffff;
-    padding: 8px 12px;
+    color: #eceff4;
+    padding: 10px 15px;
     font-weight: 500;
 }
 
 #entry {
-    border: none;
-    border-radius: 6px;
-    margin: 2px;
     background-color: transparent;
-    transition: all 0.2s ease;
+    margin: 3px 5px;
+    padding: 8px;
+    border-radius: 6px;
 }
 
 #entry:selected {
     background-color: rgba(137, 180, 250, 0.2);
-    border: 1px solid rgba(137, 180, 250, 0.4);
+    color: #89b4fa;
 }
 
 #entry:hover {

@@ -1,0 +1,69 @@
+/* Nord Clean Theme - 极简输入框版本 */
+
+/* 隐藏所有容器和装饰元素 */
+.app, .app *, .window, .window *, .container, .container * {
+    background-color: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    background-image: none !important;
+}
+
+/* 隐藏所有可能的外层元素 */
+.prefs-btn, .preferences-btn, .settings-btn, .gear, .close-btn, .title-bar, .header {
+    display: none !important;
+}
+
+/* 隐藏结果容器 */
+.scrolled-window, .result-box, .result-list {
+    display: none !important;
+}
+
+/* 只显示输入框 */
+.input {
+    background-color: rgba(59, 66, 82, 0.9) !important;
+    border: 1px solid rgba(94, 129, 172, 0.3) !important;
+    border-radius: 6px !important;
+    color: #eceff4 !important;
+    font-size: 16px !important;
+    font-weight: 500 !important;
+    padding: 8px 12px !important;
+    margin: 0 !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
+}
+
+.input:focus {
+    border-color: rgba(94, 129, 172, 0.4);
+    background-color: rgba(94, 129, 172, 0.1);
+    outline: none;
+}
+
+/* 隐藏结果列表 */
+.result-item {
+    display: none;
+}
+
+.result-item:hover {
+    display: none;
+}
+
+.result-item:selected {
+    display: none;
+}
+
+.result-item .result-item-name {
+    color: #eceff4;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.result-item:selected .result-item-name {
+    color: #88c0d0;
+}
+
+.result-item .result-item-descr {
+    color: #81a1c1;
+    font-size: 12px;
+    opacity: 0.7;
+}

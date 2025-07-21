@@ -1,10 +1,12 @@
-! X resources configuration
-! DPI Settings
+! X resources configuration - WPS字体模糊修复
+! DPI Settings - 修正4K显示器DPI不匹配问题
 Xft.dpi: 144
 
-! Font rendering
+! Font rendering - 优化字体渲染
 Xft.antialias: true
 Xft.hinting: true
-Xft.hintstyle: hintslight
+Xft.hintstyle: hintfull
 Xft.rgba: rgb
 Xft.lcdfilter: lcddefault
+Xft.autohint: false
+Xft.embolden: false

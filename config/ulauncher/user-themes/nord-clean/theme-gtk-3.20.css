@@ -1,0 +1,57 @@
+/* Nord Clean Theme - GTK 3.20+ 简洁紧凑版本 */
+
+/* 基础样式 - 弱化边框，减少边距 */
+.app {
+    background-color: rgba(46, 52, 64, 0.95);
+    border: 1px solid rgba(94, 129, 172, 0.2);
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.input {
+    background-color: rgba(59, 66, 82, 0.6);
+    border: 1px solid rgba(94, 129, 172, 0.2);
+    border-radius: 6px;
+    color: #eceff4;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 8px 12px;
+    margin: 4px;
+}
+
+.input:focus {
+    border-color: rgba(94, 129, 172, 0.4);
+    background-color: rgba(94, 129, 172, 0.1);
+    outline: none;
+}
+
+.result-item {
+    border-radius: 6px;
+    margin: 1px 4px;
+    padding: 6px 8px;
+    background-color: transparent;
+}
+
+.result-item:hover {
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
+.result-item:selected {
+    background-color: rgba(94, 129, 172, 0.15);
+}
+
+.result-item .result-item-name {
+    color: #eceff4;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.result-item:selected .result-item-name {
+    color: #88c0d0;
+}
+
+.result-item .result-item-descr {
+    color: #81a1c1;
+    font-size: 12px;
+    opacity: 0.7;
+}
