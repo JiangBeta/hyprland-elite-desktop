@@ -68,7 +68,7 @@ deploy_optimized_theme() {
     log "部署优化的SDDM主题..."
     
     local theme_name="sugar-candy-optimized"
-    local source_dir="/home/laofahai/dotfiles/config/sddm/sugar-candy-compact"
+    local source_dir="$HOME/dotfiles/config/sddm/sugar-candy-compact"
     local target_dir="/usr/share/sddm/themes/$theme_name"
     
     # 检查源目录
