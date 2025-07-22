@@ -71,3 +71,6 @@ wallpapers/
 # 用户配置文件（包含个人隐私）
 .env.local
 shell/zshrc.local
+
+# 备份目录
+backups/

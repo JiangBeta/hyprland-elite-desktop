@@ -8,7 +8,8 @@
 set -e
 
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-BACKUP_DIR="$HOME/dotfiles_backup_$(date +%Y%m%d_%H%M%S)"
+BACKUP_DIR="$DOTFILES_DIR/backups/backup_$(date +%Y%m%d_%H%M%S)"
+MAX_BACKUPS=5
 
 # Color definitions
 RED='\033[0;31m'
@@ -16,6 +17,33 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
+
+# Cleanup old backups (keep only the last MAX_BACKUPS)
+cleanup_old_backups() {
+    local backup_base_dir="$DOTFILES_DIR/backups"
+    
+    if [[ ! -d "$backup_base_dir" ]]; then
+        return 0
+    fi
+    
+    # Count current backups
+    local backup_count=$(find "$backup_base_dir" -maxdepth 1 -name "backup_*" -type d | wc -l)
+    
+    if [[ $backup_count -gt $MAX_BACKUPS ]]; then
+        local excess_count=$((backup_count - MAX_BACKUPS))
+        log_info "Found $backup_count backups, removing oldest $excess_count"
+        
+        # Remove oldest backups
+        find "$backup_base_dir" -maxdepth 1 -name "backup_*" -type d -printf '%T@ %p\n' | \
+        sort -n | \
+        head -n $excess_count | \
+        cut -d' ' -f2- | \
+        while read -r old_backup; do
+            log_info "Removing old backup: $(basename "$old_backup")"
+            rm -rf "$old_backup"
+        done
+    fi
+}
 
 # Logging functions
 log_info() {
@@ -214,6 +242,9 @@ link_configs() {
     # Create backup and link
     mkdir -p "$BACKUP_DIR"
     
+    # Clean old backups before creating new one
+    cleanup_old_backups
+    
     for config in "${base_configs[@]}"; do
         IFS=':' read -r src dst <<< "$config"
         
@@ -350,12 +381,32 @@ cleanup_dotfiles() {
     
     local cleaned_items=0
     
-    # Clean old backups (keep only the last one)
+    # Clean old backups (keep only the last MAX_BACKUPS)
     log_info "Cleaning old backup files..."
-    local backup_dirs=($(ls -dt "$HOME"/dotfiles_backup_* 2>/dev/null | tail -n +2))
-    if [ ${#backup_dirs[@]} -gt 0 ]; then
-        for backup_dir in "${backup_dirs[@]}"; do
-            log_info "Deleting old backup: $(basename "$backup_dir")"
+    local backup_base_dir="$DOTFILES_DIR/backups"
+    if [[ -d "$backup_base_dir" ]]; then
+        local backup_count=$(find "$backup_base_dir" -maxdepth 1 -name "backup_*" -type d | wc -l)
+        if [[ $backup_count -gt $MAX_BACKUPS ]]; then
+            local excess_count=$((backup_count - MAX_BACKUPS))
+            log_info "Found $backup_count backups, removing oldest $excess_count"
+            
+            find "$backup_base_dir" -maxdepth 1 -name "backup_*" -type d -printf '%T@ %p\n' | \
+            sort -n | \
+            head -n $excess_count | \
+            cut -d' ' -f2- | \
+            while read -r old_backup; do
+                log_info "Deleting old backup: $(basename "$old_backup")"
+                rm -rf "$old_backup"
+                ((cleaned_items++))
+            done
+        fi
+    fi
+    
+    # Also clean any remaining old-style backups in home directory
+    local old_backup_dirs=($(ls -dt "$HOME"/dotfiles_backup_* 2>/dev/null))
+    if [ ${#old_backup_dirs[@]} -gt 0 ]; then
+        for backup_dir in "${old_backup_dirs[@]}"; do
+            log_info "Deleting legacy backup: $(basename "$backup_dir")"
             rm -rf "$backup_dir"
             ((cleaned_items++))
         done
@@ -450,6 +501,9 @@ backup_dotfiles() {
     
     mkdir -p "$BACKUP_DIR"
     
+    # Clean old backups before creating new one
+    cleanup_old_backups
+    
     for dir in "${backup_dirs[@]}"; do
         if [ -e "$dir" ]; then
             log_info "Backing up: $dir"
@@ -467,11 +521,16 @@ restore_dotfiles() {
     if [ -z "$backup_name" ]; then
         log_error "Please specify backup name"
         log_info "Available backups:"
-        ls -1 "$HOME"/dotfiles_backup_* 2>/dev/null | xargs -I {} basename {} || log_info "  No available backups"
+        find "$DOTFILES_DIR/backups" -maxdepth 1 -name "backup_*" -type d 2>/dev/null | xargs -I {} basename {} || log_info "  No available backups"
         exit 1
     fi
     
-    local backup_path="$HOME/$backup_name"
+    # Support both full path and just the backup name
+    if [[ "$backup_name" == backup_* ]]; then
+        local backup_path="$DOTFILES_DIR/backups/$backup_name"
+    else
+        local backup_path="$backup_name"
+    fi
     
     if [ ! -d "$backup_path" ]; then
         log_error "Backup does not exist: $backup_path"
