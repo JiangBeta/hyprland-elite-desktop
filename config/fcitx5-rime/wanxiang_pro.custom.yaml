@@ -2,36 +2,60 @@
 # 专门优化输入准确率，支持多种输入方案和云拼音
 
 patch:
-  # 1. 输入方案配置 - 使用全拼保证兼容性
-  "speller/algebra":
-    __patch:
-      - wanxiang_pro.schema:/全拼
+  # 1. 候选词数量设为9个，提高选择准确率
+  menu/page_size: 9
 
-  # 2. 增加候选词数量到10个，提高选择准确率
-  "menu/page_size": 10
+  # 2. 开关配置 - 默认简体中文输入
+  switches:
+    - name: ascii_mode
+      reset: 0
+      states: [ 中文, 西文 ]
+    - name: full_shape
+      reset: 0
+      states: [ 半角, 全角 ]
+    - name: simplification
+      reset: 1
+      states: [ 漢字, 汉字 ]
+    - name: ascii_punct
+      reset: 0
+      states: [ 。，, ．， ]
 
-  # 3. 开关配置 - 默认简体中文输入
-  "switches/@0/reset": 0  # ascii_mode: 默认中文模式
-  "switches/@1/reset": 0  # full_shape: 默认半角符号
-  "switches/@2/reset": 1  # simplification: 默认简体中文
-  "switches/@3/reset": 0  # ascii_punct: 默认中文标点
-
-  # 4. 强制启用用户词典和自动调频
-  "translator/enable_user_dict": true
-  "translator/enable_sentence": true
+  # 3. 启用用户词典和自动调频
+  translator/enable_user_dict: true
+  translator/enable_sentence: true
+  translator/enable_completion: true
+  translator/initial_quality: 1.3
   
-  # 5. 云拼音配置 - 提高输入准确率
-  "engine/processors/+":
-    - lua_processor@*
-    - recognizer@cloud
-  "engine/translators/+":
-    - table_translator@cloud
+  # 4. 翻译器配置
+  engine/translators:
+    - punct_translator
+    - script_translator
     
-  "cloud_provider":
-    provider: "google"
-    max_candidates: 8
-    timeout: 1.0
-    
-  # 6. 使用万象内置功能
-  "engine/processors/+":
-    - lua_processor@*
+  # 5. ASCII组合键配置 - 修复Shift键行为
+  ascii_composer:
+    good_old_caps_lock: true
+    switch_key:
+      Shift_L: inline_ascii
+      Shift_R: inline_ascii
+      Caps_Lock: clear
+      
+  # 6. 标点符号配置 - 确保中文标点
+  punctuator:
+    import_preset: symbols
+    half_shape:
+      ",": "，"
+      ".": "。"
+      "?": "？"
+      "!": "！"
+      ";": "；"
+      ":": "："
+      "\\": "、"
+      "/": "/"
+      
+  # 7. 按键绑定优化
+  key_binder/bindings:
+    __patch:
+      - key_bindings:/emacs_editing
+      - key_bindings:/move_by_word_with_tab  
+      - key_bindings:/paging_with_minus_equal
+      - key_bindings:/paging_with_comma_period

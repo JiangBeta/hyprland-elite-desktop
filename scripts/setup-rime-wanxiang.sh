@@ -63,6 +63,12 @@ install_basic_config() {
         log_info "Installed optimized wanxiang configuration"
     fi
     
+    # 复制万象专业版配置（如果存在）
+    if [[ -f "$DOTFILES_DIR/config/fcitx5-rime/wanxiang_pro.custom.yaml" ]]; then
+        cp "$DOTFILES_DIR/config/fcitx5-rime/wanxiang_pro.custom.yaml" "$RIME_DIR/"
+        log_info "Installed wanxiang professional configuration"
+    fi
+    
     log_success "Basic rime configuration installed with enhanced dictionaries"
 }
 

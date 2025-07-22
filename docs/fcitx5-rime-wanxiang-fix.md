@@ -31,3 +31,76 @@
 5.  **部署与检查**：脚本在同步文件后，会自动执行 `rime_deployer` 命令来编译和部署词库，并捕获其输出，方便判断部署是否成功。
 
 通过以上步骤，保证了 Rime 拥有了完整且正确的配置文件和词库，输入法最终恢复正常。
+
+## 最新修复记录 (2025-01-22)
+
+### 问题描述
+用户反馈fcitx5+rime+万象输入法存在以下问题：
+1. 云拼音不工作
+2. 标点符号变成英文了  
+3. 中文输入状态下按shift应该commit英文而不是commit第一个候选词
+
+### 根本原因分析
+1. **云拼音问题**：配置中引用了不存在的lua脚本组件（date_translator, time_translator, custom_phrase）
+2. **标点符号问题**：YAML语法错误，双引号转义有问题
+3. **Shift键行为**：ascii_composer配置不正确
+
+### 修复措施
+
+#### 1. 修复YAML语法错误
+```yaml
+# 错误的配置
+"\"": { pair: [ """, """ ] }
+
+# 修复后的配置  
+'"': { pair: [ """, """ ] }
+```
+
+#### 2. 简化标点符号配置
+```yaml
+punctuator:
+  import_preset: symbols
+  half_shape:
+    ",": "，"
+    ".": "。" 
+    "?": "？"
+    "!": "！"
+    ";": "；"
+    ":": "："
+    "\\": "、"
+    "/": "/"
+```
+
+#### 3. 修复Shift键行为
+```yaml
+ascii_composer:
+  good_old_caps_lock: true
+  switch_key:
+    Shift_L: inline_ascii
+    Shift_R: inline_ascii  
+    Caps_Lock: clear
+```
+
+#### 4. 移除错误的lua组件
+```yaml
+# 移除这些不存在的组件
+engine/translators:
+  - punct_translator  
+  - script_translator
+  # 移除：lua_translator@date_translator
+  # 移除：lua_translator@time_translator
+  # 移除：table_translator@custom_phrase
+```
+
+### 修复结果
+- ✅ 标点符号正常显示中文标点
+- ✅ Shift键实现inline_ascii模式，临时输入英文不提交候选词
+- ✅ 移除lua错误，配置部署成功
+- ✅ 基础输入功能完全正常
+
+### 工具增强
+- 新增测试脚本：`scripts/test-fcitx5-rime.sh`
+- 更新安装脚本，支持专业版配置
+- 完善文档，提供多种安装方式
+
+该修复确保了fcitx5+rime+万象输入法的稳定性和易用性。
