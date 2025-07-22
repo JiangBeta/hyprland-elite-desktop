@@ -1,43 +1,43 @@
 #!/bin/bash
 
-# TOTP脚本用于waybar显示
-# 需要先安装: sudo pacman -S oath-toolkit
+# TOTP script for waybar display
+# Install first: sudo pacman -S oath-toolkit
 
-# 配置文件路径 - 存储TOTP密钥
+# Configuration file path - store TOTP keys
 CONFIG_FILE="$HOME/.config/totp/secrets.conf"
 
-# 确保配置目录存在
+# Ensure configuration directory exists
 mkdir -p "$(dirname "$CONFIG_FILE")"
 
-# 如果配置文件不存在，创建示例文件
+# If config file doesn't exist, create sample file
 if [ ! -f "$CONFIG_FILE" ]; then
     cat > "$CONFIG_FILE" << 'EOF'
-# TOTP密钥配置文件
-# 格式: 服务名称:密钥
-# 示例:
+# TOTP key configuration file
+# Format: service_name:key
+# Example:
 # Google:JBSWY3DPEHPK3PXP
 # GitHub:ABCDEFGHIJKLMNOP
-# 请将此处替换为您的实际密钥
+# Please replace with your actual keys
 
 EOF
-    echo "请编辑 $CONFIG_FILE 添加您的TOTP密钥"
+    echo "Please edit $CONFIG_FILE to add your TOTP keys"
     exit 1
 fi
 
-# 读取配置文件
+# Read configuration file
 if [ ! -s "$CONFIG_FILE" ]; then
-    echo '{"text": "🔐 未配置", "tooltip": "请编辑 ~/.config/totp/secrets.conf 添加TOTP密钥"}'
+    echo '{"text": "🔐 Not Configured", "tooltip": "Please edit ~/.config/totp/secrets.conf to add TOTP keys"}'
     exit 0
 fi
 
-# 获取所有配置的服务
+# Get all configured services
 all_services=$(grep -v "^#" "$CONFIG_FILE" | grep ":")
 if [ -z "$all_services" ]; then
-    echo '{"text": "🔐 未配置", "tooltip": "请编辑 ~/.config/totp/secrets.conf 添加TOTP密钥"}'
+    echo '{"text": "🔐 Not Configured", "tooltip": "Please edit ~/.config/totp/secrets.conf to add TOTP keys"}'
     exit 0
 fi
 
-# 获取当前选中的服务索引
+# Get current selected service index
 CURRENT_INDEX_FILE="$HOME/.config/totp/current_index"
 if [ -f "$CURRENT_INDEX_FILE" ]; then
     current_index=$(cat "$CURRENT_INDEX_FILE")
@@ -45,29 +45,29 @@ else
     current_index=1
 fi
 
-# 获取总服务数量
+# Get total service count
 total_services=$(echo "$all_services" | wc -l)
 
-# 确保索引在有效范围内
+# Ensure index is within valid range
 if [ "$current_index" -gt "$total_services" ] || [ "$current_index" -lt 1 ]; then
     current_index=1
 fi
 
-# 获取当前服务
+# Get current service
 service_line=$(echo "$all_services" | sed -n "${current_index}p")
 service_name=$(echo "$service_line" | cut -d':' -f1)
 secret_key=$(echo "$service_line" | cut -d':' -f2)
 
-# 生成TOTP代码
+# Generate TOTP code
 if command -v oathtool >/dev/null 2>&1; then
     totp_code=$(oathtool --totp -b "$secret_key" 2>/dev/null)
     if [ $? -eq 0 ] && [ -n "$totp_code" ]; then
-        # 获取当前时间戳和剩余时间
+        # Get current timestamp and remaining time
         current_time=$(date +%s)
         time_window=30
         remaining=$((time_window - (current_time % time_window)))
         
-        # 根据剩余时间改变显示颜色
+        # Change display color based on remaining time
         if [ $remaining -le 5 ]; then
             color_class="critical"
         elif [ $remaining -le 10 ]; then
@@ -76,25 +76,25 @@ if command -v oathtool >/dev/null 2>&1; then
             color_class="normal"
         fi
         
-        # 生成服务列表用于tooltip
+        # Generate service list for tooltip
         services_list=""
         i=1
         while IFS= read -r line; do
             svc_name=$(echo "$line" | cut -d':' -f1)
             if [ $i -eq $current_index ]; then
-                services_list="${services_list}▶ $svc_name (当前)\\n"
+                services_list="${services_list}▶ $svc_name (current)\\n"
             else
                 services_list="${services_list}  $svc_name\\n"
             fi
             i=$((i + 1))
         done <<< "$all_services"
         
-        # 显示当前服务和验证码，以及所有可用服务
-        printf '{"text": "🔐 %s", "tooltip": "%s TOTP: %s\\n剩余时间: %d秒\\n\\n可用服务 (%d/%d):\\n%s\\n左键: 复制验证码\\n右键: 切换服务", "class": "%s"}\n' \
+        # Display current service and verification code, and all available services
+        printf '{"text": "🔐 %s", "tooltip": "%s TOTP: %s\\nRemaining: %d seconds\\n\\nAvailable services (%d/%d):\\n%s\\nLeft click: Copy code\\nRight click: Switch service", "class": "%s"}\n' \
             "$service_name" "$service_name" "$totp_code" "$remaining" "$current_index" "$total_services" "$services_list" "$color_class"
     else
-        echo '{"text": "🔐 错误", "tooltip": "TOTP生成失败，请检查密钥配置"}'
+        echo '{"text": "🔐 Error", "tooltip": "TOTP generation failed, please check key configuration"}'
     fi
 else
-    echo '{"text": "🔐 未安装", "tooltip": "请安装oath-toolkit: sudo pacman -S oath-toolkit"}'
+    echo '{"text": "🔐 Not Installed", "tooltip": "Please install oath-toolkit: sudo pacman -S oath-toolkit"}'
 fi

@@ -1,10 +1,10 @@
 #!/bin/bash
 
-# 新版番茄计时器控制脚本
+# New Pomodoro Timer Control Script
 STATE_FILE="$HOME/.config/waybar/pomodoro_state.json"
 CONFIG_FILE="$HOME/.config/waybar/pomodoro_config.json"
 
-# 读取配置
+# Read configuration
 read_config() {
     if [[ ! -f "$CONFIG_FILE" ]]; then
         cat > "$CONFIG_FILE" << 'EOF'
@@ -23,7 +23,7 @@ EOF
     POMODOROS_UNTIL_LONG=$(jq -r '.pomodoros_until_long_break' "$CONFIG_FILE")
 }
 
-# 读取状态
+# Read state
 read_state() {
     if [[ ! -f "$STATE_FILE" ]]; then
         cat > "$STATE_FILE" << 'EOF'
@@ -41,12 +41,12 @@ EOF
     cat "$STATE_FILE"
 }
 
-# 写入状态
+# Write state
 write_state() {
     echo "$1" > "$STATE_FILE"
 }
 
-# 获取当前时间
+# Get current time
 current_time() {
     date +%s
 }
@@ -102,7 +102,7 @@ left_click() {
         "idle")
             # 开始第一个番茄
             start_phase "work" $WORK_TIME 1
-            notify-send "🍅 番茄开始" "开始第1个番茄！专注工作25分钟" -t 3000
+            notify-send "🍅 Pomodoro Start" "Starting first pomodoro! Focus for 25 minutes" -t 3000
             ;;
         "work"|"short_break"|"long_break")
             if [[ $((total - elapsed)) -le 0 ]]; then
@@ -113,17 +113,17 @@ left_click() {
                         local completed=$(echo "$state" | jq -r '.completed_pomodoros')
                         if [[ $((completed % POMODOROS_UNTIL_LONG)) -eq 0 && $completed -gt 0 ]]; then
                             start_phase "long_break" $LONG_BREAK $cycle
-                            notify-send "🛌 长休息" "开始长休息15分钟！" -t 3000
+                            notify-send "🛌 Long Break" "Starting long break for 15 minutes!" -t 3000
                         else
                             start_phase "short_break" $SHORT_BREAK $cycle
-                            notify-send "☕ 短休息" "开始短休息5分钟！" -t 3000
+                            notify-send "☕ Short Break" "Starting short break for 5 minutes!" -t 3000
                         fi
                         ;;
                     "short_break"|"long_break")
                         # 休息完成，开始新番茄
                         local new_cycle=$((cycle + 1))
                         start_phase "work" $WORK_TIME $new_cycle
-                        notify-send "🍅 新番茄" "开始第${new_cycle}个番茄！" -t 3000
+                        notify-send "🍅 New Pomodoro" "Starting pomodoro #${new_cycle}!" -t 3000
                         ;;
                 esac
             else
@@ -132,12 +132,12 @@ left_click() {
                     # 暂停
                     state=$(echo "$state" | jq '.is_running = false')
                     write_state "$state"
-                    notify-send "⏸ 暂停" "计时已暂停" -t 2000
+                    notify-send "⏸ Pause" "Timer paused" -t 2000
                 else
                     # 继续
                     state=$(echo "$state" | jq ".is_running = true | .last_update = $(current_time)")
                     write_state "$state"
-                    notify-send "▶ 继续" "计时继续" -t 2000
+                    notify-send "▶ Resume" "Timer resumed" -t 2000
                 fi
             fi
             ;;
@@ -157,7 +157,7 @@ right_click() {
     case "$phase" in
         "idle")
             # 从空闲状态，打开设置或统计
-            notify-send "📊 番茄统计" "今日已完成: ${completed} 个番茄" -t 5000
+            notify-send "📊 Pomodoro Stats" "Today completed: ${completed} pomodoros" -t 5000
             ;;
         "work")
             # 从工作切换到休息
@@ -168,17 +168,17 @@ right_click() {
             
             if [[ $((completed % POMODOROS_UNTIL_LONG)) -eq 0 ]]; then
                 start_phase "long_break" $LONG_BREAK $cycle
-                notify-send "🛌 长休息" "跳过工作，开始长休息15分钟！" -t 3000
+                notify-send "🛌 Long Break" "Skip work, start long break for 15 minutes!" -t 3000
             else
                 start_phase "short_break" $SHORT_BREAK $cycle
-                notify-send "☕ 短休息" "跳过工作，开始短休息5分钟！" -t 3000
+                notify-send "☕ Short Break" "Skip work, start short break for 5 minutes!" -t 3000
             fi
             ;;
         "short_break"|"long_break")
             # 从休息切换到工作
             local new_cycle=$((cycle + 1))
             start_phase "work" $WORK_TIME $new_cycle
-            notify-send "🍅 新番茄" "跳过休息，开始第${new_cycle}个番茄！" -t 3000
+            notify-send "🍅 New Pomodoro" "Skip break, start pomodoro #${new_cycle}!" -t 3000
             ;;
     esac
 }
@@ -198,7 +198,7 @@ middle_click() {
     ")
     write_state "$state"
     
-    notify-send "🔄 重置" "番茄计时器已重置\\n今日完成: ${completed} 个番茄" -t 3000
+    notify-send "🔄 Reset" "Pomodoro timer reset\\nToday completed: ${completed} pomodoros" -t 3000
 }
 
 # 更新waybar显示

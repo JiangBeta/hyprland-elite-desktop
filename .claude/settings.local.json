@@ -62,7 +62,11 @@
       "Bash(dbus-update-activation-environment:*)",
       "Bash(fcitx5:*)",
       "Bash(xdg-settings get:*)",
-      "Bash(sudo pacman:*)"
+      "Bash(sudo pacman:*)",
+      "Bash(git pull:*)",
+      "Bash(bluetoothctl:*)",
+      "Bash(rfkill list:*)",
+      "Bash(shellcheck:*)"
     ],
     "deny": []
   }

@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Hyprland电源菜单脚本 - 增强版
-# 使用wofi显示美观的电源选项
+# Hyprland Power Menu Script - Enhanced Version
+# Display elegant power options using menu tools
 
 THEME_DIR="$HOME/.config/wofi"
 POWER_MENU_CSS="$THEME_DIR/power-menu.css"
@@ -89,75 +89,108 @@ window {
 EOF
 }
 
-# 检查必要工具
-if ! command -v wofi &> /dev/null; then
-    notify-send "错误" "需要安装wofi" --urgency=critical
+# 检查可用的菜单工具（不强制要求wofi）
+MENU_CMD=""
+if command -v wofi &> /dev/null; then
+    MENU_CMD="wofi"
+elif command -v rofi &> /dev/null; then
+    MENU_CMD="rofi"
+elif command -v fuzzel &> /dev/null; then
+    MENU_CMD="fuzzel"
+elif command -v dmenu &> /dev/null; then
+    MENU_CMD="dmenu"
+elif command -v zenity &> /dev/null; then
+    MENU_CMD="zenity"
+else
+    notify-send "Error" "Need to install a menu tool (wofi/rofi/fuzzel/dmenu/zenity)" --urgency=critical
     exit 1
 fi
 
-# 电源选项
-options="🔒 锁定屏幕
-💤 休眠
-🔄 重启
-⏹️ 关机
-🚪 注销
-📴 睡眠
-❌ 取消"
-
-# 确保样式文件存在
-create_power_menu_style
+# Power options
+options="🔒 Lock Screen
+💤 Suspend
+🔄 Reboot
+⏹️ Shutdown
+🚪 Logout
+📴 Hibernate
+❌ Cancel"
 
 # 显示菜单并获取选择
-selected=$(echo "$options" | wofi \
-    --dmenu \
-    --prompt="电源选项" \
-    --width=250 \
-    --height=350 \
-    --location=center \
-    --style="$POWER_MENU_CSS" \
-    --hide-scroll \
-    --no-actions \
-    --insensitive \
-    --cache-file=/dev/null)
+case $MENU_CMD in
+    "wofi")
+        # 确保样式文件存在
+        create_power_menu_style
+        selected=$(echo "$options" | wofi \
+            --dmenu \
+            --prompt="Power Options" \
+            --width=250 \
+            --height=350 \
+            --location=center \
+            --style="$POWER_MENU_CSS" \
+            --hide-scroll \
+            --no-actions \
+            --insensitive \
+            --cache-file=/dev/null)
+        ;;
+    "rofi")
+        selected=$(echo "$options" | rofi -dmenu -p "Power Options" -theme-str 'window {width: 250px;}' -no-custom)
+        ;;
+    "fuzzel")
+        selected=$(echo "$options" | fuzzel --dmenu --prompt="Power Options: " --width=30)
+        ;;
+    "dmenu")
+        selected=$(echo "$options" | dmenu -p "Power Options:")
+        ;;
+    "zenity")
+        selected=$(zenity --list --title="Power Options" --column="Select" --height=400 --width=300 \
+            "🔒 Lock Screen" \
+            "💤 Suspend" \
+            "🔄 Reboot" \
+            "⏹️ Shutdown" \
+            "🚪 Logout" \
+            "📴 Hibernate" \
+            "❌ Cancel")
+        ;;
+esac
 
 # 根据选择执行操作
 case $selected in
-    "🔒 锁定屏幕")
+    "🔒 Lock Screen")
         # 检查锁屏工具是否安装
         if command -v swaylock &> /dev/null; then
             swaylock -f --color 2e3440 --inside-color 3b4252 --ring-color 5e81ac --key-hl-color 88c0d0 --text-color eceff4
         elif command -v hyprlock &> /dev/null; then
             hyprlock
         else
-            notify-send "错误" "未安装锁屏工具 (swaylock/hyprlock)" --urgency=critical
+            notify-send "Error" "No lock screen tool installed (swaylock/hyprlock)" --urgency=critical
         fi
         ;;
-    "💤 休眠")
-        notify-send "系统" "正在休眠..." --urgency=normal
+    "💤 Suspend")
+        notify-send "System" "Suspending..." --urgency=normal
         sleep 1
         systemctl suspend
         ;;
-    "🔄 重启")
-        notify-send "系统" "正在重启..." --urgency=normal
+    "🔄 Reboot")
+        notify-send "System" "Rebooting..." --urgency=normal
         sleep 1
         systemctl reboot
         ;;
-    "⏹️ 关机")
-        notify-send "系统" "正在关机..." --urgency=normal
+    "⏹️ Shutdown")
+        notify-send "System" "Shutting down..." --urgency=normal
         sleep 1
         systemctl poweroff
         ;;
-    "🚪 注销")
-        notify-send "系统" "正在注销..." --urgency=normal
+    "🚪 Logout")
+        notify-send "System" "Logging out..." --urgency=normal
         sleep 1
         hyprctl dispatch exit
         ;;
-    "📴 睡眠")
-        notify-send "系统" "正在进入睡眠..." --urgency=normal
+    "📴 Hibernate")
+        notify-send "System" "Hibernating..." --urgency=normal
         sleep 1
         systemctl hibernate
         ;;
-    "❌ 取消")
-        # 什么都不做
+    "❌ Cancel")
+        # Do nothing
         ;;
 esac
