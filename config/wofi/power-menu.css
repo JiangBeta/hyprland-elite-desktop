@@ -1,0 +1,75 @@
+window {
+    margin: 0px;
+    border: none;
+    border-radius: 20px;
+    background-color: rgba(40, 44, 52, 0.95);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+#input {
+    all: unset;
+    margin: 10px;
+    padding: 12px 16px;
+    color: #abb2bf;
+    font-weight: bold;
+    background-color: rgba(97, 175, 239, 0.1);
+    border: 2px solid rgba(97, 175, 239, 0.3);
+    border-radius: 16px;
+    font-size: 16px;
+}
+
+#inner-box {
+    margin: 5px;
+    padding: 10px;
+    background-color: transparent;
+    border: none;
+    border-radius: 16px;
+}
+
+#outer-box {
+    margin: 5px;
+    padding: 10px;
+    background-color: transparent;
+    border: none;
+    border-radius: 20px;
+}
+
+#scroll {
+    margin-top: 5px;
+    border: none;
+    border-radius: 16px;
+    background-color: transparent;
+}
+
+#entry {
+    margin: 5px;
+    padding: 12px 16px;
+    border: none;
+    border-radius: 16px;
+    background-color: rgba(62, 68, 82, 0.6);
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+#entry:selected {
+    background-color: rgba(97, 175, 239, 0.8);
+    color: #ffffff;
+    box-shadow: 0 4px 16px rgba(97, 175, 239, 0.3);
+}
+
+#entry:hover {
+    background-color: rgba(97, 175, 239, 0.6);
+    color: #ffffff;
+    box-shadow: 0 3px 12px rgba(97, 175, 239, 0.2);
+}
+
+#text {
+    color: inherit;
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+    padding: 0;
+}

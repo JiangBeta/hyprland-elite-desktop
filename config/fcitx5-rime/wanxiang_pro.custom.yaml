@@ -1,0 +1,37 @@
+# wanxiang_pro.custom.yaml - 万象输入法专业版自定义配置
+# 专门优化输入准确率，支持多种输入方案和云拼音
+
+patch:
+  # 1. 输入方案配置 - 使用全拼保证兼容性
+  "speller/algebra":
+    __patch:
+      - wanxiang_pro.schema:/全拼
+
+  # 2. 增加候选词数量到10个，提高选择准确率
+  "menu/page_size": 10
+
+  # 3. 开关配置 - 默认简体中文输入
+  "switches/@0/reset": 0  # ascii_mode: 默认中文模式
+  "switches/@1/reset": 0  # full_shape: 默认半角符号
+  "switches/@2/reset": 1  # simplification: 默认简体中文
+  "switches/@3/reset": 0  # ascii_punct: 默认中文标点
+
+  # 4. 强制启用用户词典和自动调频
+  "translator/enable_user_dict": true
+  "translator/enable_sentence": true
+  
+  # 5. 云拼音配置 - 提高输入准确率
+  "engine/processors/+":
+    - lua_processor@*
+    - recognizer@cloud
+  "engine/translators/+":
+    - table_translator@cloud
+    
+  "cloud_provider":
+    provider: "google"
+    max_candidates: 8
+    timeout: 1.0
+    
+  # 6. 使用万象内置功能
+  "engine/processors/+":
+    - lua_processor@*

@@ -8,9 +8,9 @@ schema_list:
   - schema: wanxiang
   - schema: luna_pinyin_simp
 
-# 候选词显示设置
+# 候选词显示设置 - 增加数量提高准确率
 menu:
-  page_size: 7
+  page_size: 10
 
 # 保持简单的切换方式
 switcher:

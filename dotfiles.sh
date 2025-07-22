@@ -840,8 +840,8 @@ setup_input_method() {
                 log_info "Backed up existing config to: ~/$backup_name"
             fi
             
-            # 链接rime专用fcitx5配置
-            rm -f "$HOME/.config/fcitx5"
+            # 使用软连接链接fcitx5-rime配置
+            rm -rf "$HOME/.config/fcitx5"
             ln -sf "$DOTFILES_DIR/config/fcitx5-rime" "$HOME/.config/fcitx5"
             
             # 安装万象词库

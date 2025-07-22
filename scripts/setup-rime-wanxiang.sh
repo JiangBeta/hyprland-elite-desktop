@@ -51,9 +51,19 @@ install_basic_config() {
     
     # 复制基础配置文件
     cp "$DOTFILES_DIR/config/fcitx5-rime/default.yaml" "$RIME_DIR/"
-    cp "$DOTFILES_DIR/config/fcitx5-rime/luna_pinyin_simp.custom.yaml" "$RIME_DIR/"
     
-    log_success "Basic rime configuration installed"
+    # 复制自定义配置文件（如果存在）
+    if [[ -f "$DOTFILES_DIR/config/fcitx5-rime/luna_pinyin_simp.custom.yaml" ]]; then
+        cp "$DOTFILES_DIR/config/fcitx5-rime/luna_pinyin_simp.custom.yaml" "$RIME_DIR/"
+    fi
+    
+    # 复制万象自定义配置（优化版）
+    if [[ -f "$DOTFILES_DIR/config/fcitx5-rime/wanxiang.custom.yaml" ]]; then
+        cp "$DOTFILES_DIR/config/fcitx5-rime/wanxiang.custom.yaml" "$RIME_DIR/"
+        log_info "Installed optimized wanxiang configuration"
+    fi
+    
+    log_success "Basic rime configuration installed with enhanced dictionaries"
 }
 
 # 下载万象词库（多源策略）
