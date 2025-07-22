@@ -74,3 +74,4 @@ shell/zshrc.local
 
 # 备份目录
 backups/
+.claude/settings.local.json
