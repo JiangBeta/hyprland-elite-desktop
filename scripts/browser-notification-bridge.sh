@@ -112,11 +112,13 @@ handle_browser_notification() {
 monitor_browser_notifications() {
     echo "🔍 启动浏览器通知监听..."
     
-    # 创建命名管道用于接收通知
-    local pipe="/tmp/browser-notifications.pipe"
-    if [[ ! -p "$pipe" ]]; then
-        mkfifo "$pipe"
-    fi
+    # 创建安全的命名管道用于接收通知
+    local pipe=$(mktemp -u -p /tmp "browser-notifications-XXXXXX.pipe")
+    mkfifo "$pipe"
+    chmod 600 "$pipe"
+    
+    # 确保退出时清理管道
+    trap "rm -f '$pipe'" EXIT
     
     echo "📡 监听管道: $pipe"
     echo "💡 浏览器可以通过以下方式发送通知："

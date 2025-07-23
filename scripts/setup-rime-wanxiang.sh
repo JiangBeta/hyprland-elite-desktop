@@ -83,7 +83,8 @@ download_wanxiang() {
         "https://hub.fastgit.xyz/amzxyz/rime_wanxiang.git"
     )
     
-    local temp_dir="/tmp/rime_wanxiang_$$"
+    local temp_dir=$(mktemp -d -t "rime_wanxiang-XXXXXX")
+    trap "rm -rf '$temp_dir'" EXIT
     local success=false
     
     if ! command -v git >/dev/null 2>&1; then

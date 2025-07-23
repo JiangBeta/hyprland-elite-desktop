@@ -162,7 +162,7 @@
         "exec": "~/.config/waybar/totp.sh",
         "interval": 1,
         "return-type": "json",
-        "on-click": "~/.config/waybar/totp-selector.sh",
+        "on-click": "~/.config/waybar/totp-copy.sh",
         "on-click-right": "~/.config/waybar/totp-selector.sh",
         "signal": 8,
         "tooltip": true

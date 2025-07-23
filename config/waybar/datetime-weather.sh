@@ -4,26 +4,48 @@
 # Displays: 🌤️ 15°C  14:25  Fri Jan 20
 # Author: Hyprland Elite Desktop
 
+set -euo pipefail
+
 WEATHER_CACHE_FILE="/tmp/waybar_weather_cache"
+CITY_CACHE_FILE="/tmp/waybar_city_cache"
 WEATHER_CACHE_DURATION=1800  # 30 minutes
+CITY_CACHE_DURATION=86400    # 24 hours
 MANUAL_CITY=""  # Set your city, leave empty for auto-detect
 
-# Get city name
+# Get city name with caching
 get_city() {
     if [ -n "$MANUAL_CITY" ]; then
         echo "$MANUAL_CITY"
         return
     fi
     
+    # Check city cache first
+    if [[ -f "$CITY_CACHE_FILE" ]]; then
+        local cache_time=$(stat -c %Y "$CITY_CACHE_FILE" 2>/dev/null || echo 0)
+        local current_time=$(date +%s)
+        local cache_age=$((current_time - cache_time))
+        
+        if [[ $cache_age -lt $CITY_CACHE_DURATION ]]; then
+            cat "$CITY_CACHE_FILE" 2>/dev/null && return
+        fi
+    fi
+    
     # Auto-detect via IP (without proxy)
     local ip_info=$(env -u http_proxy -u https_proxy -u HTTP_PROXY -u HTTPS_PROXY \
                     curl -s --connect-timeout 5 --noproxy "*" \
                     "http://ip-api.com/json/?lang=en" 2>/dev/null)
+    
+    local city="Beijing"  # default fallback
     if [ -n "$ip_info" ]; then
-        echo "$ip_info" | grep -o '"city":"[^"]*"' | cut -d'"' -f4
-    else
-        echo "Beijing"
+        city=$(echo "$ip_info" | grep -o '"city":"[^"]*"' | cut -d'"' -f4)
+        if [ -z "$city" ]; then
+            city="Beijing"
+        fi
     fi
+    
+    # Cache the city for future use
+    echo "$city" > "$CITY_CACHE_FILE"
+    echo "$city"
 }
 
 # Get weather with caching
@@ -105,7 +127,7 @@ main() {
 }
 
 # Handle different actions
-case "$1" in
+case "${1:-}" in
     "--weather-details")
         # Show detailed weather
         city=$(get_city)

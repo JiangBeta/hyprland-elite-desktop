@@ -3,6 +3,8 @@
 # Notification Center Control Script
 # Handle various notification operations
 
+set -euo pipefail
+
 if ! command -v makoctl &>/dev/null; then
     notify-send "Error" "mako not installed or unavailable"
     exit 1
@@ -14,13 +16,16 @@ if ! pgrep -x mako > /dev/null; then
     exit 1
 fi
 
+# Get notification status once for all operations
+NOTIFICATION_DATA=$(makoctl list 2>/dev/null)
+VISIBLE_COUNT=$(echo "$NOTIFICATION_DATA" | jq '.data[][] | length' 2>/dev/null | head -1)
+if [[ -z "$VISIBLE_COUNT" ]] || [[ "$VISIBLE_COUNT" == "null" ]]; then
+    VISIBLE_COUNT=0
+fi
+
 case "$1" in
     "left"|"restore")
         # Left click: restore recent notifications (only when history exists and no visible notifications)
-        VISIBLE_COUNT=$(makoctl list 2>/dev/null | jq '.data[][] | length' 2>/dev/null | head -1)
-        if [[ -z "$VISIBLE_COUNT" ]] || [[ "$VISIBLE_COUNT" == "null" ]]; then
-            VISIBLE_COUNT=0
-        fi
         
         if [[ "$VISIBLE_COUNT" -gt 0 ]]; then
             # If there are visible notifications, close them first
@@ -54,12 +59,7 @@ case "$1" in
         fi
         ;;
     "middle"|"dismiss")
-        # Middle click: close all current notifications (does not affect history)
-        VISIBLE_COUNT=$(makoctl list 2>/dev/null | jq '.data[][] | length' 2>/dev/null | head -1)
-        if [[ -z "$VISIBLE_COUNT" ]] || [[ "$VISIBLE_COUNT" == "null" ]]; then
-            VISIBLE_COUNT=0
-        fi
-        
+        # Middle click: close all current notifications (does not affect history)        
         if [[ "$VISIBLE_COUNT" -gt 0 ]]; then
             makoctl dismiss --all
             notify-send "Notification" "Closed $VISIBLE_COUNT notifications" -t 2000
@@ -69,10 +69,6 @@ case "$1" in
         ;;
     "right"|"clear")
         # Right click: clear all (current + history)
-        VISIBLE_COUNT=$(makoctl list 2>/dev/null | jq '.data[][] | length' 2>/dev/null | head -1)
-        if [[ -z "$VISIBLE_COUNT" ]] || [[ "$VISIBLE_COUNT" == "null" ]]; then
-            VISIBLE_COUNT=0
-        fi
         # Get history notification count, filter system control notifications
         HISTORY_COUNT=$(makoctl history 2>/dev/null | grep -A2 "^Notification" | grep -v "已清空" | grep -v "没有可恢复" | grep -v "已关闭" | grep -v "没有通知" | grep -v "通知模式" | grep -v "正在清空" | grep "^Notification" | wc -l)
         
@@ -82,21 +78,31 @@ case "$1" in
             
             # Method to clear history: use temporary config to disable history
             if [[ "$HISTORY_COUNT" -gt 0 ]]; then
-                # Create temporary config file to disable history
-                TEMP_CONFIG="/tmp/mako_no_history_$$.conf"
+                # Create secure temporary config file to disable history
+                TEMP_CONFIG=$(mktemp -t "mako_no_history-XXXXXX.conf")
+                trap "rm -f '$TEMP_CONFIG'" EXIT
+                
                 # Add global config at the beginning of config file
                 echo "max-history=0" > "$TEMP_CONFIG"
                 cat "$HOME/.config/mako/config" >> "$TEMP_CONFIG"
                 
-                # Reload configuration
-                pkill mako
-                sleep 0.3
+                # Reload configuration safely
+                # Get current mako PID to avoid killing other processes
+                local mako_pid=$(pgrep -u "$USER" mako)
+                if [[ -n "$mako_pid" ]]; then
+                    kill "$mako_pid"
+                    sleep 0.3
+                fi
+                
                 mako -c "$TEMP_CONFIG" &
+                local temp_mako_pid=$!
                 sleep 0.5
                 
                 # Restore original configuration
-                pkill mako
-                sleep 0.3
+                if [[ -n "$temp_mako_pid" ]] && kill -0 "$temp_mako_pid" 2>/dev/null; then
+                    kill "$temp_mako_pid"
+                    sleep 0.3
+                fi
                 mako &
                 sleep 0.3
                 
