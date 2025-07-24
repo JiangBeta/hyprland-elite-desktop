@@ -75,3 +75,6 @@ shell/zshrc.local
 # 备份目录
 backups/
 .claude/settings.local.json
+
+# 动态生成的代理配置
+config/hypr/proxy-env.conf
