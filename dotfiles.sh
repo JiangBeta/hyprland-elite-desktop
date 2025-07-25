@@ -216,6 +216,7 @@ link_configs() {
         "$DOTFILES_DIR/config/wofi:$HOME/.config/wofi"
         "$DOTFILES_DIR/shell/bashrc:$HOME/.bashrc"
         "$DOTFILES_DIR/shell/zshrc:$HOME/.zshrc"
+        "$DOTFILES_DIR/claude/CLAUDE.md:$HOME/.claude/CLAUDE.md"
         "$DOTFILES_DIR/.Xresources:$HOME/.Xresources"
     )
     
@@ -615,6 +616,7 @@ quick_setup() {
     log_info "Creating directory structure..."
     mkdir -p "$HOME/.config" "$HOME/.local/bin" "$HOME/.local/var/log/dotfiles"
     mkdir -p "$HOME/.config/totp" && chmod 700 "$HOME/.config/totp"
+    mkdir -p "$HOME/.claude"
     
     # Backup existing configurations
     backup_dotfiles
